@@ -1,20 +1,41 @@
 security:
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
     encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
         App\Entity\User:
             algorithm: argon2i
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
+        in_memory_user_provider:
+            memory:
+                users:
+                    testuser: { password: 'user', roles: ['ROLE_USER'] }
+                    testadmin: { password: 'admin', roles: ['ROLE_ADMIN'] }
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+        all_user_providers:
+            chain:
+                providers: ['in_memory_user_provider', 'app_user_provider']
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            pattern: ^/
+            provider: all_user_providers
             anonymous: true
+            form_login:
+                login_path: login
+                check_path: login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: index
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
             # activate different ways to authenticate
 
@@ -27,6 +48,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/(?!login), roles: ROLE_USER }
+         - { path: ^/admin, roles: ROLE_ADMIN }
+
 
