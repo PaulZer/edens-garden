@@ -28,12 +28,12 @@ class ClimaticArea
     private $name;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", name="max_latitude")
      */
     private $maxLatitude;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", name="min_latitude")
      */
     private $minLatitude;
 

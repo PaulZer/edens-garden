@@ -28,23 +28,23 @@ class Plant
     private $name;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", name="latin_name")
      */
     private $latinName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", name="picture_path")
      */
     private $picturePath;
 
     /**
      * @ORM\ManyToOne(targetEntity="PlantFamily")
-     * @ORM\JoinColumn(name="idPlantFamily", referencedColumnName="id")
+     * @ORM\JoinColumn(name="plant_family_id", referencedColumnName="id")
      */
     private $plantFamily;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="water_frequency")
      */
     private $waterFrequency;
 
@@ -76,7 +76,7 @@ class Plant
      *      inverseJoinColumns={@ORM\JoinColumn(name="planting_date_interval_id", referencedColumnName="id")}
      *      )
      */
-    private $plantingDateInterval;
+    private $plantingDateIntervals;
 
     /**
      * Many Plant may have Many LifeCycleStep.
@@ -86,6 +86,6 @@ class Plant
      *      inverseJoinColumns={@ORM\JoinColumn(name="life_cycle_step_id", referencedColumnName="id")}
      *      )
      */
-    private $lifeCycleStep;
+    private $lifeCycleSteps;
 
 }

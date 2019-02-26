@@ -24,19 +24,19 @@ class PlantingDateInterval
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Util\Month")
-     * @ORM\JoinColumn(name="id_month_begin", referencedColumnName="id")
+     * @ORM\JoinColumn(name="month_begin_id", referencedColumnName="id")
      */
     private $monthBegin;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Util\Month")
-     * @ORM\JoinColumn(name="id_month_end", referencedColumnName="id")
+     * @ORM\JoinColumn(name="month_end_id", referencedColumnName="id")
      */
     private $monthEnd;
 
     /**
      * @ORM\ManyToOne(targetEntity="ClimaticArea")
-     * @ORM\JoinColumn(name="id_climatic_area", referencedColumnName="id")
+     * @ORM\JoinColumn(name="climatic_area_id", referencedColumnName="id")
      */
     private $climaticArea;
 

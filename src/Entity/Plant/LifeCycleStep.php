@@ -33,7 +33,7 @@ class LifeCycleStep
     private $order;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="nb_day_from_previous_step")
      */
     private $nbDayFromPreviousStep;
 

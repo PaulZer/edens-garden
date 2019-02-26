@@ -34,6 +34,26 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $lastname;
+
+    /**
+     * Many User may have Many Garden.
+     * @ORM\ManyToMany(targetEntity="App\Entity\Garden\Garden")
+     * @ORM\JoinTable(name="user_garden",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="garden_id", referencedColumnName="id")}
+     *      )
+     */
+    private $gardens;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,6 +69,16 @@ class User implements UserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getLastname()
+    {
+        return $this->lastname;
     }
 
     /**
