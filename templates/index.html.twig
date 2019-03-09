@@ -3,5 +3,7 @@
 {% block title %}Index{% endblock %}
 
 {% block body %}
-    bonjour pd
+    welcome {{ app.user.firstName }}
+
+    {{ dump(app.user.roles) }}
 {% endblock %}

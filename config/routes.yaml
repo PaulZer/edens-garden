@@ -1,6 +1,18 @@
+admin:
+    path: /admin
+    controller: App\Controller\SecurityController::admin
+
 login:
     path: /login
     controller: App\Controller\SecurityController::login
+
+register:
+    path: /register
+    controller: App\Controller\SecurityController::register
+
+logout:
+    path: /logout
+    methods: GET
 
 index:
     path: /
