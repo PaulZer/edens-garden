@@ -64,4 +64,94 @@ class Plot
      * @ORM\JoinColumn(name="garden_id", referencedColumnName="id")
      */
     private $garden;
+
+    /**
+     * Plot constructor.
+     * @param $id
+     * @param $name
+     * @param $height
+     * @param $length
+     * @param $sunExposureType
+     * @param $soilType
+     * @param $specimens
+     * @param $garden
+     */
+    public function __construct(string $id,string $name,float $height,float $length,SunExposureType $sunExposureType,SoilType $soilType,Garden $garden)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->height = $height;
+        $this->length = $length;
+        $this->sunExposureType = $sunExposureType;
+        $this->soilType = $soilType;
+        $this->specimens = new ArrayCollection();
+        $this->garden = $garden;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return float
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLength()
+    {
+        return $this->length;
+    }
+
+    /**
+     * @return SunExposureType
+     */
+    public function getSunExposureType()
+    {
+        return $this->sunExposureType;
+    }
+
+    /**
+     * @return SoilType
+     */
+    public function getSoilType()
+    {
+        return $this->soilType;
+    }
+
+    /**
+     * @return \App\Entity\Garden\Specimen[]
+     */
+    public function getSpecimens()
+    {
+        return $this->specimens;
+    }
+
+    /**
+     * @return Garden
+     */
+    public function getGarden()
+    {
+        return $this->garden;
+    }
+
+
+
 }

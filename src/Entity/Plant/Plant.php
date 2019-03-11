@@ -88,4 +88,111 @@ class Plant
      */
     private $lifeCycleSteps;
 
+    /**
+     * Plant constructor.
+     * @param $id
+     * @param $name
+     * @param $latinName
+     * @param $picturePath
+     * @param $plantFamily
+     * @param $waterFrequency
+     * @param $preferedSunExposureTypes
+     * @param $preferedSoilTypes
+     * @param $plantingDateIntervals
+     * @param $lifeCycleSteps
+     */
+    public function __construct(string $id,string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->latinName = $latinName;
+        $this->picturePath = $picturePath;
+        $this->plantFamily = $plantFamily;
+        $this->waterFrequency = $waterFrequency;
+        $this->preferedSunExposureTypes = new ArrayCollection();
+        $this->preferedSoilTypes = new ArrayCollection();
+        $this->plantingDateIntervals = new ArrayCollection();
+        $this->lifeCycleSteps = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLatinName()
+    {
+        return $this->latinName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicturePath()
+    {
+        return $this->picturePath;
+    }
+
+    /**
+     * @return PlantFamily
+     */
+    public function getPlantFamily()
+    {
+        return $this->plantFamily;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaterFrequency()
+    {
+        return $this->waterFrequency;
+    }
+
+    /**
+     * @return \App\Entity\Plant\SunExposureType[]
+     */
+    public function getPreferedSunExposureTypes()
+    {
+        return $this->preferedSunExposureTypes;
+    }
+
+    /**
+     * @return \App\Entity\Plant\SoilType[]
+     */
+    public function getPreferedSoilTypes()
+    {
+        return $this->preferedSoilTypes;
+    }
+
+    /**
+     * @return \App\Entity\Plant\PlantingDateInterval[]
+     */
+    public function getPlantingDateIntervals()
+    {
+        return $this->plantingDateIntervals;
+    }
+
+    /**
+     * @return \App\Entity\Plant\LifeCycleStep[]
+     */
+    public function getLifeCycleSteps()
+    {
+        return $this->lifeCycleSteps;
+    }
+
 }

@@ -8,6 +8,7 @@
 
 namespace App\Entity\Garden;
 
+use App\Entity\Plant\LifeCycleStep;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\Fertilizer;
@@ -62,4 +63,94 @@ class Specimen
      * @ORM\JoinColumn(name="plot_id", referencedColumnName="id")
      */
     private $plot;
+
+    /**
+     * Specimen constructor.
+     * @param $id
+     * @param $plant
+     * @param $plantationDate
+     * @param $lastWateredDate
+     * @param $fertilizer
+     * @param $lastFertilizedDate
+     * @param $currentLifeCycleStep
+     * @param $plot
+     */
+    public function __construct( string $id,Plant $plant, \DateTimeImmutable $plantationDate, \DateTimeImmutable $lastWateredDate, Fertilizer $fertilizer, \DateTimeImmutable $lastFertilizedDate, LifeCycleStep $currentLifeCycleStep, Plot $plot)
+    {
+        $this->id = $id;
+        $this->plant = $plant;
+        $this->plantationDate = $plantationDate;
+        $this->lastWateredDate = $lastWateredDate;
+        $this->fertilizer = $fertilizer;
+        $this->lastFertilizedDate = $lastFertilizedDate;
+        $this->currentLifeCycleStep = $currentLifeCycleStep;
+        $this->plot = $plot;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Plant
+     */
+    public function getPlant()
+    {
+        return $this->plant;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getPlantationDate()
+    {
+        return $this->plantationDate;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getLastWateredDate()
+    {
+        return $this->lastWateredDate;
+    }
+
+    /**
+     * @return Fertilizer
+     */
+    public function getFertilizer()
+    {
+        return $this->fertilizer;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getLastFertilizedDate()
+    {
+        return $this->lastFertilizedDate;
+    }
+
+    /**
+     * @return LifeCycleStep
+     */
+    public function getCurrentLifeCycleStep()
+    {
+        return $this->currentLifeCycleStep;
+    }
+
+    /**
+     * @return Plot
+     */
+    public function getPlot()
+    {
+        return $this->plot;
+    }
+
+
+
 }

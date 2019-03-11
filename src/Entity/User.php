@@ -54,6 +54,16 @@ class User implements UserInterface
      */
     private $gardens;
 
+    /**
+     * @return \App\Entity\Garden\Garden[]
+     */
+    public function getGardens()
+    {
+        return $this->gardens;
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
