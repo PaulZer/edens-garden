@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -45,6 +47,36 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $lastname;
+
+    /**
+     * Many User may have Many Garden.
+     * @ORM\ManyToMany(targetEntity="App\Entity\Garden\Garden")
+     * @ORM\JoinTable(name="user_garden",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="garden_id", referencedColumnName="id")}
+     *      )
+     */
+    private $gardens;
+
+    /**
+     * @return \App\Entity\Garden\Garden[]
+     */
+    public function getGardens()
+    {
+        return $this->gardens;
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +94,16 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -69,7 +111,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -96,7 +138,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
