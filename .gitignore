@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -12,6 +11,10 @@
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> jetbrains/phpstorm ###
+/.idea/
+###< jetbrains/phpstorm ###
 
 ###> symfony/web-server-bundle ###
 /.web-server-pid

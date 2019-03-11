@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index{% endblock %}
+
+{% block body %}
+    welcome {{ app.user.firstName }}
+
+    {{ dump(app.user.roles) }}
+{% endblock %}
