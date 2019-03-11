@@ -63,7 +63,8 @@ class SecurityController extends AbstractController
                 'main' // firewall name in security.yaml
             );
 
-            return $this->render('index.html.twig');
+            $this->addFlash('notice', "Your account is created ! Welcome to Eden's Garden !");
+            return $this->redirectToRoute('index');
         }
 
         return $this->render('auth/register.html.twig', [
