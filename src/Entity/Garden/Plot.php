@@ -8,6 +8,8 @@
 
 namespace App\Entity\Garden;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\SunExposureType;
 use App\Entity\Plant\SoilType;
@@ -150,6 +152,71 @@ class Plot
     public function getGarden()
     {
         return $this->garden;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setHeight(float $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function setLength(float $length): self
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    public function setSunExposureType(?SunExposureType $sunExposureType): self
+    {
+        $this->sunExposureType = $sunExposureType;
+
+        return $this;
+    }
+
+    public function setSoilType(?SoilType $soilType): self
+    {
+        $this->soilType = $soilType;
+
+        return $this;
+    }
+
+    public function addSpecimen(Specimen $specimen): self
+    {
+        if (!$this->specimens->contains($specimen)) {
+            $this->specimens[] = $specimen;
+            $specimen->setPlot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecimen(Specimen $specimen): self
+    {
+        if ($this->specimens->contains($specimen)) {
+            $this->specimens->removeElement($specimen);
+            // set the owning side to null (unless already changed)
+            if ($specimen->getPlot() === $this) {
+                $specimen->setPlot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function setGarden(?Garden $garden): self
+    {
+        $this->garden = $garden;
+
+        return $this;
     }
 
 

@@ -88,5 +88,26 @@ class PlantFertilizer
         return $this->nbDayBeforeFertilizing;
     }
 
+    public function setNbDayBeforeFertilizing(int $nbDayBeforeFertilizing): self
+    {
+        $this->nbDayBeforeFertilizing = $nbDayBeforeFertilizing;
+
+        return $this;
+    }
+
+    public function setPlant(?Plant $plant): self
+    {
+        $this->plant = $plant;
+
+        return $this;
+    }
+
+    public function setFertilizer(?Fertilizer $fertilizer): self
+    {
+        $this->fertilizer = $fertilizer;
+
+        return $this;
+    }
+
 
 }

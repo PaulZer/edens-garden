@@ -84,5 +84,26 @@ class ClimaticArea
         return $this->minLatitude;
     }
 
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setMaxLatitude(float $maxLatitude): self
+    {
+        $this->maxLatitude = $maxLatitude;
+
+        return $this;
+    }
+
+    public function setMinLatitude(float $minLatitude): self
+    {
+        $this->minLatitude = $minLatitude;
+
+        return $this;
+    }
+
 
 }

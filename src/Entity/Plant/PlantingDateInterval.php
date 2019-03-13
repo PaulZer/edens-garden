@@ -87,5 +87,26 @@ class PlantingDateInterval
         return $this->climaticArea;
     }
 
+    public function setMonthBegin(?Month $monthBegin): self
+    {
+        $this->monthBegin = $monthBegin;
+
+        return $this;
+    }
+
+    public function setMonthEnd(?Month $monthEnd): self
+    {
+        $this->monthEnd = $monthEnd;
+
+        return $this;
+    }
+
+    public function setClimaticArea(?ClimaticArea $climaticArea): self
+    {
+        $this->climaticArea = $climaticArea;
+
+        return $this;
+    }
+
 
 }

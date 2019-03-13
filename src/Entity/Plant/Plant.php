@@ -8,6 +8,8 @@
 
 namespace App\Entity\Plant;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -101,9 +103,8 @@ class Plant
      * @param $plantingDateIntervals
      * @param $lifeCycleSteps
      */
-    public function __construct(string $id,string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
+    public function __construct(string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->latinName = $latinName;
         $this->picturePath = $picturePath;
@@ -193,6 +194,113 @@ class Plant
     public function getLifeCycleSteps()
     {
         return $this->lifeCycleSteps;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setLatinName(string $latinName): self
+    {
+        $this->latinName = $latinName;
+
+        return $this;
+    }
+
+    public function setPicturePath(string $picturePath): self
+    {
+        $this->picturePath = $picturePath;
+
+        return $this;
+    }
+
+    public function setWaterFrequency(int $waterFrequency): self
+    {
+        $this->waterFrequency = $waterFrequency;
+
+        return $this;
+    }
+
+    public function setPlantFamily(?PlantFamily $plantFamily): self
+    {
+        $this->plantFamily = $plantFamily;
+
+        return $this;
+    }
+
+    public function addPreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    {
+        if (!$this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
+            $this->preferedSunExposureTypes[] = $preferedSunExposureType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    {
+        if ($this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
+            $this->preferedSunExposureTypes->removeElement($preferedSunExposureType);
+        }
+
+        return $this;
+    }
+
+    public function addPreferedSoilType(SoilType $preferedSoilType): self
+    {
+        if (!$this->preferedSoilTypes->contains($preferedSoilType)) {
+            $this->preferedSoilTypes[] = $preferedSoilType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedSoilType(SoilType $preferedSoilType): self
+    {
+        if ($this->preferedSoilTypes->contains($preferedSoilType)) {
+            $this->preferedSoilTypes->removeElement($preferedSoilType);
+        }
+
+        return $this;
+    }
+
+    public function addPlantingDateInterval(PlantingDateInterval $plantingDateInterval): self
+    {
+        if (!$this->plantingDateIntervals->contains($plantingDateInterval)) {
+            $this->plantingDateIntervals[] = $plantingDateInterval;
+        }
+
+        return $this;
+    }
+
+    public function removePlantingDateInterval(PlantingDateInterval $plantingDateInterval): self
+    {
+        if ($this->plantingDateIntervals->contains($plantingDateInterval)) {
+            $this->plantingDateIntervals->removeElement($plantingDateInterval);
+        }
+
+        return $this;
+    }
+
+    public function addLifeCycleStep(LifeCycleStep $lifeCycleStep): self
+    {
+        if (!$this->lifeCycleSteps->contains($lifeCycleStep)) {
+            $this->lifeCycleSteps[] = $lifeCycleStep;
+        }
+
+        return $this;
+    }
+
+    public function removeLifeCycleStep(LifeCycleStep $lifeCycleStep): self
+    {
+        if ($this->lifeCycleSteps->contains($lifeCycleStep)) {
+            $this->lifeCycleSteps->removeElement($lifeCycleStep);
+        }
+
+        return $this;
     }
 
 }

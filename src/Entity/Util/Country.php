@@ -104,5 +104,33 @@ class Country
         return $this->southArea;
     }
 
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setNorthArea(?ClimaticArea $northArea): self
+    {
+        $this->northArea = $northArea;
+
+        return $this;
+    }
+
+    public function setMiddleArea(?ClimaticArea $middleArea): self
+    {
+        $this->middleArea = $middleArea;
+
+        return $this;
+    }
+
+    public function setSouthArea(?ClimaticArea $southArea): self
+    {
+        $this->southArea = $southArea;
+
+        return $this;
+    }
+
 
 }

@@ -151,6 +151,55 @@ class Specimen
         return $this->plot;
     }
 
+    public function setPlantationDate(\DateTimeInterface $plantationDate): self
+    {
+        $this->plantationDate = $plantationDate;
+
+        return $this;
+    }
+
+    public function setLastWateredDate(\DateTimeInterface $lastWateredDate): self
+    {
+        $this->lastWateredDate = $lastWateredDate;
+
+        return $this;
+    }
+
+    public function setLastFertilizedDate(\DateTimeInterface $lastFertilizedDate): self
+    {
+        $this->lastFertilizedDate = $lastFertilizedDate;
+
+        return $this;
+    }
+
+    public function setPlant(?Plant $plant): self
+    {
+        $this->plant = $plant;
+
+        return $this;
+    }
+
+    public function setFertilizer(?Fertilizer $fertilizer): self
+    {
+        $this->fertilizer = $fertilizer;
+
+        return $this;
+    }
+
+    public function setCurrentLifeCycleStep(?LifeCycleStep $currentLifeCycleStep): self
+    {
+        $this->currentLifeCycleStep = $currentLifeCycleStep;
+
+        return $this;
+    }
+
+    public function setPlot(?Plot $plot): self
+    {
+        $this->plot = $plot;
+
+        return $this;
+    }
+
 
 
 }

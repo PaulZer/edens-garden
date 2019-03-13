@@ -9,9 +9,11 @@
 namespace App\Entity\Plant;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @UniqueEntity(fields={"code"}, message="There is already a LifeCycleStep with this code.")
  */
 class LifeCycleStep
 {
@@ -33,6 +35,16 @@ class LifeCycleStep
     private $order;
 
     /**
+     * @ORM\Column(type="string", length=10, unique=true)
+     */
+    private $code;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $description;
+
+    /**
      * @ORM\Column(type="integer", name="nb_day_from_previous_step")
      */
     private $nbDayFromPreviousStep;
@@ -44,12 +56,14 @@ class LifeCycleStep
      * @param $order
      * @param $nbDayFromPreviousStep
      */
-    public function __construct(string $id, string $name, integer $order, integer $nbDayFromPreviousStep)
+
+    public function __construct(string $name, string $order, string $code, string $description)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->order = $order;
-        $this->nbDayFromPreviousStep = $nbDayFromPreviousStep;
+        $this->code = $code;
+        $this->description = $description;
+        $this->nbDayFromPreviousStep = 0;
     }
 
     /**
@@ -82,6 +96,51 @@ class LifeCycleStep
     public function getNbDayFromPreviousStep()
     {
         return $this->nbDayFromPreviousStep;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setOrder(int $order): self
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    public function setNbDayFromPreviousStep(int $nbDayFromPreviousStep): self
+    {
+        $this->nbDayFromPreviousStep = $nbDayFromPreviousStep;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
 
