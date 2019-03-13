@@ -9,9 +9,11 @@
 namespace App\Entity\Plant;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @UniqueEntity(fields={"code"}, message="There is already a ClimaticArea with this code.")
  */
 class ClimaticArea
 {
@@ -26,6 +28,11 @@ class ClimaticArea
      * @ORM\Column(type="string")
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=10, unique=true)
+     */
+    private $code;
 
     /**
      * @ORM\Column(type="float", name="max_latitude")
@@ -44,10 +51,10 @@ class ClimaticArea
      * @param $maxLatitude
      * @param $minLatitude
      */
-    public function __construct(string $id, string $name, float $maxLatitude, float $minLatitude)
+    public function __construct(string $name, string $code, float $maxLatitude, float $minLatitude)
     {
-        $this->id = $id;
         $this->name = $name;
+        $this->code = $code;
         $this->maxLatitude = $maxLatitude;
         $this->minLatitude = $minLatitude;
     }
@@ -101,6 +108,18 @@ class ClimaticArea
     public function setMinLatitude(float $minLatitude): self
     {
         $this->minLatitude = $minLatitude;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

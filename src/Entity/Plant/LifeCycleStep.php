@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lp
- * Date: 22/02/2019
- * Time: 11:53
- */
 
 namespace App\Entity\Plant;
 
@@ -48,10 +42,9 @@ class LifeCycleStep
      * @param $nbDayFromPreviousStep
      */
 
-    public function __construct(string $name, string $order, string $code, string $description)
+    public function __construct(string $name, string $code, string $description)
     {
         $this->name = $name;
-        $this->order = $order;
         $this->code = $code;
         $this->description = $description;
     }
