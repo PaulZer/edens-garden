@@ -80,15 +80,6 @@ class Plant
      */
     private $plantingDateIntervals;
 
-    /**
-     * Many Plant may have Many LifeCycleStep.
-     * @ORM\ManyToMany(targetEntity="LifeCycleStep")
-     * @ORM\JoinTable(name="plant_life_cycle_step",
-     *      joinColumns={@ORM\JoinColumn(name="plant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="life_cycle_step_id", referencedColumnName="id")}
-     *      )
-     */
-    private $lifeCycleSteps;
 
     /**
      * Plant constructor.
@@ -101,7 +92,6 @@ class Plant
      * @param $preferedSunExposureTypes
      * @param $preferedSoilTypes
      * @param $plantingDateIntervals
-     * @param $lifeCycleSteps
      */
     public function __construct(string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
     {
@@ -113,7 +103,6 @@ class Plant
         $this->preferedSunExposureTypes = new ArrayCollection();
         $this->preferedSoilTypes = new ArrayCollection();
         $this->plantingDateIntervals = new ArrayCollection();
-        $this->lifeCycleSteps = new ArrayCollection();
     }
 
     /**
@@ -188,13 +177,6 @@ class Plant
         return $this->plantingDateIntervals;
     }
 
-    /**
-     * @return \App\Entity\Plant\LifeCycleStep[]
-     */
-    public function getLifeCycleSteps()
-    {
-        return $this->lifeCycleSteps;
-    }
 
     public function setName(string $name): self
     {
@@ -285,22 +267,5 @@ class Plant
         return $this;
     }
 
-    public function addLifeCycleStep(LifeCycleStep $lifeCycleStep): self
-    {
-        if (!$this->lifeCycleSteps->contains($lifeCycleStep)) {
-            $this->lifeCycleSteps[] = $lifeCycleStep;
-        }
-
-        return $this;
-    }
-
-    public function removeLifeCycleStep(LifeCycleStep $lifeCycleStep): self
-    {
-        if ($this->lifeCycleSteps->contains($lifeCycleStep)) {
-            $this->lifeCycleSteps->removeElement($lifeCycleStep);
-        }
-
-        return $this;
-    }
 
 }

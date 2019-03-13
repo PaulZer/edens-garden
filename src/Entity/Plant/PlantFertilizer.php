@@ -23,7 +23,7 @@ class PlantFertilizer
     private $id;
 
     /**
-     * One Plant Fertilizer is relative to One Plant.
+     * One PlantFertilizer is relative to One Plant.
      * @ORM\OneToOne(targetEntity="Plant")
      * @ORM\JoinColumn(name="plant_id", referencedColumnName="id")
      */

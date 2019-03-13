@@ -30,11 +30,6 @@ class LifeCycleStep
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $order;
-
-    /**
      * @ORM\Column(type="string", length=10, unique=true)
      */
     private $code;
@@ -44,10 +39,6 @@ class LifeCycleStep
      */
     private $description;
 
-    /**
-     * @ORM\Column(type="integer", name="nb_day_from_previous_step")
-     */
-    private $nbDayFromPreviousStep;
 
     /**
      * LifeCycleStep constructor.
@@ -63,7 +54,6 @@ class LifeCycleStep
         $this->order = $order;
         $this->code = $code;
         $this->description = $description;
-        $this->nbDayFromPreviousStep = 0;
     }
 
     /**
@@ -82,39 +72,11 @@ class LifeCycleStep
         return $this->name;
     }
 
-    /**
-     * @return integer
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
 
-    /**
-     * @return integer
-     */
-    public function getNbDayFromPreviousStep()
-    {
-        return $this->nbDayFromPreviousStep;
-    }
 
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function setOrder(int $order): self
-    {
-        $this->order = $order;
-
-        return $this;
-    }
-
-    public function setNbDayFromPreviousStep(int $nbDayFromPreviousStep): self
-    {
-        $this->nbDayFromPreviousStep = $nbDayFromPreviousStep;
 
         return $this;
     }
