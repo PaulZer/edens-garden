@@ -38,6 +38,28 @@ class CurrentWeather
         return json_decode($resp, true);
     }
 
+    function formatCurrentWeatherArray($weatherArray)
+    {
+        foreach($weatherArray['weather'] as $weatherId => $weatherData)
+        {
+            $formattedWeatherArray['weather'] = $weatherData['main'];
+            $formattedWeatherArray['weather_description'] = $weatherData['description'];
+        }
+        
+        $formattedWeatherArray['current_temperature'] = $weatherArray['main']['temp'];
+        $formattedWeatherArray['pressure'] = $weatherArray['main']['pressure'];
+        $formattedWeatherArray['humidity'] = $weatherArray['main']['humidity'];
+        $formattedWeatherArray['minimum_temperature'] = $weatherArray['main']['temp_min'];
+        $formattedWeatherArray['maximum_temperature'] = $weatherArray['main']['temp_max'];
+        $formattedWeatherArray['clouds'] = $weatherArray['clouds']['all'];
+        $formattedWeatherArray['location_country'] = $weatherArray['sys']['country'];
+        $formattedWeatherArray['sunrise'] = $weatherArray['sys']['sunrise'];
+        $formattedWeatherArray['sunset'] = $weatherArray['sys']['sunset'];
+        $formattedWeatherArray['last_weather_update'] = $weatherArray['dt'];
+
+        return $formattedWeatherArray;
+    }
+
 }
 
 

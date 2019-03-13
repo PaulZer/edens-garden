@@ -45,8 +45,7 @@ class WeatherForecast
         }
         return $formattedWeatherForecastArray;
     }
-
-
+    
 }
 
 
