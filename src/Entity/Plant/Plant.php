@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lp
- * Date: 22/02/2019
- * Time: 09:16
- */
 
 namespace App\Entity\Plant;
 
@@ -71,6 +65,12 @@ class Plant
     private $preferedSoilTypes;
 
     /**
+     * One Plant may have Many PlantFertilizerType.
+     * @ORM\OneToMany(targetEntity="PlantFertilizerType", mappedBy="plant", cascade={"persist"})
+     */
+    private $preferedFertilizerTypes;
+
+    /**
      * Many Plant may have Many PlantingDateInterval.
      * @ORM\ManyToMany(targetEntity="PlantingDateInterval")
      * @ORM\JoinTable(name="plant_planting_date_interval",
@@ -79,7 +79,6 @@ class Plant
      *      )
      */
     private $plantingDateIntervals;
-
 
     /**
      * Plant constructor.
@@ -102,6 +101,7 @@ class Plant
         $this->waterFrequency = $waterFrequency;
         $this->preferedSunExposureTypes = new ArrayCollection();
         $this->preferedSoilTypes = new ArrayCollection();
+        $this->preferedFertilizerTypes = new ArrayCollection();
         $this->plantingDateIntervals = new ArrayCollection();
     }
 
@@ -262,6 +262,32 @@ class Plant
     {
         if ($this->plantingDateIntervals->contains($plantingDateInterval)) {
             $this->plantingDateIntervals->removeElement($plantingDateInterval);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FertilizerType[]
+     */
+    public function getPreferedFertilizerTypes(): Collection
+    {
+        return $this->preferedFertilizerTypes;
+    }
+
+    public function addPreferedFertilizerType(PlantFertilizerType $preferedFertilizerType): self
+    {
+        if (!$this->preferedFertilizerTypes->contains($preferedFertilizerType)) {
+            $this->preferedFertilizerTypes[] = $preferedFertilizerType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedFertilizerType(PlantFertilizerType $preferedFertilizerType): self
+    {
+        if ($this->preferedFertilizerTypes->contains($preferedFertilizerType)) {
+            $this->preferedFertilizerTypes->removeElement($preferedFertilizerType);
         }
 
         return $this;

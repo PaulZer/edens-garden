@@ -4,8 +4,10 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Plant\ClimaticArea;
+use App\Entity\Plant\FertilizerType;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantFamily;
+use App\Entity\Plant\PlantFertilizerType;
 use App\Entity\Plant\PlantingDateInterval;
 use App\Entity\Plant\SoilType;
 use App\Entity\Plant\SunExposureType;
@@ -34,6 +36,11 @@ class PlantFixtures extends Fixture
         return $manager->getRepository("App\Entity\Plant\SunExposureType")->findOneBy(array('code' => $code));
     }
 
+    public function getFertilizerType(ObjectManager $manager, string $code): FertilizerType
+    {
+        return $manager->getRepository("App\Entity\Plant\FertilizerType")->findOneBy(array('code' => $code));
+    }
+
     public function getPlantingDateInterval(ObjectManager $manager, string $climaticAreaCode, int $numMonthBegin, int $numMonthEnd): PlantingDateInterval
     {
         $monthBegin = $manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthBegin));
@@ -47,124 +54,126 @@ class PlantFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $plant1 = new Plant(
+        $tomato = new Plant(
             'Plant de tomate',
             'Solanum lycopersicum',
             '',
             $this->getPlantFamily($manager, 'fructable'),
             12
         );
-        $plant1->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 10));
-        $plant1->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 9));
-        $plant1->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 8));
-        $plant1->addPreferedSoilType($this->getSoilType($manager, 'humus'));
-        $plant1->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant1->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $tomato->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 10));
+        $tomato->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 9));
+        $tomato->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 8));
+        $tomato->addPreferedSoilType($this->getSoilType($manager, 'humus'));
+        $tomato->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $tomato->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $tomato->addPreferedFertilizerType(new PlantFertilizerType($tomato, $this->getFertilizerType($manager, 'N-K'), 9));
+        //$tomato->
 
-        $plant2 = new Plant(
+        $appleTree = new Plant(
             'Pommier',
             'Malus',
             '',
             $this->getPlantFamily($manager, 'fructable'),
             12
         );
-        $plant2->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 2));
-        $plant2->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 11, 2));
-        $plant2->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 11, 2));
-        $plant2->addPreferedSoilType($this->getSoilType($manager, 'limestone'));
-        $plant2->addPreferedSoilType($this->getSoilType($manager, 'silica'));
-        $plant2->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant2->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $appleTree->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 2));
+        $appleTree->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 11, 2));
+        $appleTree->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 11, 2));
+        $appleTree->addPreferedSoilType($this->getSoilType($manager, 'limestone'));
+        $appleTree->addPreferedSoilType($this->getSoilType($manager, 'silica'));
+        $appleTree->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $appleTree->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
 
-        $plant3 = new Plant(
+        $carrot = new Plant(
             'Carotte',
             'Daucus carota',
             '',
             $this->getPlantFamily($manager, 'eatable'),
             12
         );
-        $plant3->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 4, 7));
-        $plant3->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 7));
-        $plant3->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 6));
-        $plant3->addPreferedSoilType($this->getSoilType($manager, 'humus'));
-        $plant3->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant3->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $carrot->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 4, 7));
+        $carrot->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 7));
+        $carrot->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 6));
+        $carrot->addPreferedSoilType($this->getSoilType($manager, 'humus'));
+        $carrot->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $carrot->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
 
-        $plant4 = new Plant(
+        $radish = new Plant(
             'Radis',
             'Raphanus sativus',
             '',
             $this->getPlantFamily($manager, 'eatable'),
             12
         );
-        $plant4->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 4, 6));
-        $plant4->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 6));
-        $plant4->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 5));
-        $plant4->addPreferedSoilType($this->getSoilType($manager, 'humus'));
-        $plant4->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant4->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
-        $plant4->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
+        $radish->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 4, 6));
+        $radish->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 6));
+        $radish->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 5));
+        $radish->addPreferedSoilType($this->getSoilType($manager, 'humus'));
+        $radish->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $radish->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $radish->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
 
-        $plant5 = new Plant(
+        $geranium = new Plant(
             'Géranium',
             'Geranium',
             '',
             $this->getPlantFamily($manager, 'flower'),
             12
         );
-        $plant5->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 10));
-        $plant5->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 5, 10));
-        $plant5->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 9));
-        $plant5->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant5->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
-        $plant5->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
-        $plant5->addPreferedSunExposureType($this->getSunExposureType($manager, 'shadow'));
+        $geranium->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 10));
+        $geranium->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 5, 10));
+        $geranium->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 9));
+        $geranium->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
+        $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'shadow'));
 
-        $plant6 = new Plant(
+        $daffodil = new Plant(
             'Jonquille véritable',
             'Narcissus jonquilla',
             '',
             $this->getPlantFamily($manager, 'flower'),
             12
         );
-        $plant6->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 6));
-        $plant6->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 10, 5));
-        $plant6->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 9, 4));
-        $plant6->addPreferedSoilType($this->getSoilType($manager, 'clay'));
-        $plant6->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
-        $plant6->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
+        $daffodil->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 6));
+        $daffodil->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 10, 5));
+        $daffodil->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 9, 4));
+        $daffodil->addPreferedSoilType($this->getSoilType($manager, 'clay'));
+        $daffodil->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $daffodil->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
 
-        $plant7 = new Plant(
+        $fir = new Plant(
             'Sapin',
             'Abies',
             '',
             $this->getPlantFamily($manager, 'other'),
             1
         );
-        $plant7->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 11));
-        $plant7->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 10));
-        $plant7->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 10));
-        $plant7->addPreferedSoilType($this->getSoilType($manager, 'humus'));
-        $plant7->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $fir->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 11));
+        $fir->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 10));
+        $fir->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 10));
+        $fir->addPreferedSoilType($this->getSoilType($manager, 'humus'));
+        $fir->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
 
-        $plant8 = new Plant(
+        $fern = new Plant(
             'Fougère',
             'Filicophyta',
             '',
             $this->getPlantFamily($manager, 'other'),
             12
         );
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 11));
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 10));
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 10));
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 5));
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 10, 4));
-        $plant8->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 10, 4));
-        $plant8->addPreferedSoilType($this->getSoilType($manager, 'peaty'));
-        $plant8->addPreferedSunExposureType($this->getSunExposureType($manager, 'shadow'));
-        $plant8->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 5, 11));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 10));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 4, 10));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-n', 11, 5));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 10, 4));
+        $fern->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 10, 4));
+        $fern->addPreferedSoilType($this->getSoilType($manager, 'peaty'));
+        $fern->addPreferedSunExposureType($this->getSunExposureType($manager, 'shadow'));
+        $fern->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
 
-        foreach ([$plant1, $plant2, $plant3, $plant4, $plant5, $plant6, $plant7, $plant8] as $obj) {
+        foreach ([$tomato, $appleTree, $carrot, $radish, $geranium, $daffodil, $fir, $fern] as $obj) {
             $manager->persist($obj);
         }
 

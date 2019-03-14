@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class PlantFertilizer
+class PlantFertilizerType
 {
     /**
      * @ORM\Id
@@ -23,16 +23,16 @@ class PlantFertilizer
     private $id;
 
     /**
-     * One PlantFertilizer is relative to One Plant.
-     * @ORM\OneToOne(targetEntity="Plant")
+     * Many PlantFertilizerType is relative to One Plant.
+     * @ORM\ManyToOne(targetEntity="Plant", inversedBy="preferedFertilizerTypes")
      * @ORM\JoinColumn(name="plant_id", referencedColumnName="id")
      */
     private $plant;
 
     /**
-     * One Plant Fertilizer is relative to One Fertilizer.
-     * @ORM\OneToOne(targetEntity="Fertilizer")
-     * @ORM\JoinColumn(name="fertilizer_id", referencedColumnName="id")
+     * Many PlantFertilizerType is relative to One FertilizerType.
+     * @ORM\ManyToOne(targetEntity="FertilizerType", inversedBy="plantFertilizerTypes")
+     * @ORM\JoinColumn(name="fertilizer_type_id", referencedColumnName="id")
      */
     private $fertilizer;
 
@@ -42,15 +42,14 @@ class PlantFertilizer
     private $nbDayBeforeFertilizing;
 
     /**
-     * PlantFertilizer constructor.
+     * PlantFertilizerType constructor.
      * @param $id
      * @param $plant
      * @param $fertilizer
      * @param $nbDayBeforeFertilizing
      */
-    public function __construct(string $id, Plant $plant, Fertilizer $fertilizer, int $nbDayBeforeFertilizing)
+    public function __construct(Plant $plant, FertilizerType $fertilizer, int $nbDayBeforeFertilizing)
     {
-        $this->id = $id;
         $this->plant = $plant;
         $this->fertilizer = $fertilizer;
         $this->nbDayBeforeFertilizing = $nbDayBeforeFertilizing;
@@ -73,7 +72,7 @@ class PlantFertilizer
     }
 
     /**
-     * @return Fertilizer
+     * @return FertilizerType
      */
     public function getFertilizer()
     {
@@ -102,12 +101,10 @@ class PlantFertilizer
         return $this;
     }
 
-    public function setFertilizer(?Fertilizer $fertilizer): self
+    public function setFertilizer(?FertilizerType $fertilizer): self
     {
         $this->fertilizer = $fertilizer;
 
         return $this;
     }
-
-
 }

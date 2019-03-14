@@ -33,7 +33,6 @@ class LifeCycleStep
      */
     private $description;
 
-
     /**
      * LifeCycleStep constructor.
      * @param $id

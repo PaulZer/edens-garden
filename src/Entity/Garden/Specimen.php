@@ -11,7 +11,7 @@ namespace App\Entity\Garden;
 use App\Entity\Plant\LifeCycleStep;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
-use App\Entity\Plant\Fertilizer;
+use App\Entity\Plant\FertilizerType;
 
 /**
  * @ORM\Entity
@@ -42,7 +42,7 @@ class Specimen
     private $lastWateredDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\Fertilizer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\FertilizerType")
      * @ORM\JoinColumn(name="fertilizer_id", referencedColumnName="id")
      */
     private $fertilizer;
@@ -75,7 +75,7 @@ class Specimen
      * @param $currentLifeCycleStep
      * @param $plot
      */
-    public function __construct( string $id,Plant $plant, \DateTimeImmutable $plantationDate, \DateTimeImmutable $lastWateredDate, Fertilizer $fertilizer, \DateTimeImmutable $lastFertilizedDate, LifeCycleStep $currentLifeCycleStep, Plot $plot)
+    public function __construct(string $id, Plant $plant, \DateTimeImmutable $plantationDate, \DateTimeImmutable $lastWateredDate, FertilizerType $fertilizer, \DateTimeImmutable $lastFertilizedDate, LifeCycleStep $currentLifeCycleStep, Plot $plot)
     {
         $this->id = $id;
         $this->plant = $plant;
@@ -120,7 +120,7 @@ class Specimen
     }
 
     /**
-     * @return Fertilizer
+     * @return FertilizerType
      */
     public function getFertilizer()
     {
@@ -179,7 +179,7 @@ class Specimen
         return $this;
     }
 
-    public function setFertilizer(?Fertilizer $fertilizer): self
+    public function setFertilizer(?FertilizerType $fertilizer): self
     {
         $this->fertilizer = $fertilizer;
 
