@@ -71,6 +71,12 @@ class Plant
     private $preferedFertilizerTypes;
 
     /**
+     * One Plant may have Many LifeCycleStep.
+     * @ORM\OneToMany(targetEntity="PlantLifeCycleStep", mappedBy="plant", cascade={"persist"})
+     */
+    private $lifeCycleSteps;
+
+    /**
      * Many Plant may have Many PlantingDateInterval.
      * @ORM\ManyToMany(targetEntity="PlantingDateInterval")
      * @ORM\JoinTable(name="plant_planting_date_interval",
@@ -103,6 +109,7 @@ class Plant
         $this->preferedSoilTypes = new ArrayCollection();
         $this->preferedFertilizerTypes = new ArrayCollection();
         $this->plantingDateIntervals = new ArrayCollection();
+        $this->lifeCycleSteps = new ArrayCollection();
     }
 
     /**
@@ -288,6 +295,37 @@ class Plant
     {
         if ($this->preferedFertilizerTypes->contains($preferedFertilizerType)) {
             $this->preferedFertilizerTypes->removeElement($preferedFertilizerType);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlantLifeCycleStep[]
+     */
+    public function getLifeCycleSteps(): Collection
+    {
+        return $this->lifeCycleSteps;
+    }
+
+    public function addLifeCycleStep(PlantLifeCycleStep $lifeCyclestep): self
+    {
+        if (!$this->lifeCycleSteps->contains($lifeCyclestep)) {
+            $this->lifeCycleSteps[] = $lifeCyclestep;
+            $lifeCyclestep->setPlant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLifeCycleStep(PlantLifeCycleStep $lifeCyclestep): self
+    {
+        if ($this->lifeCycleSteps->contains($lifeCyclestep)) {
+            $this->lifeCycleSteps->removeElement($lifeCyclestep);
+            // set the owning side to null (unless already changed)
+            if ($lifeCyclestep->getPlant() === $this) {
+                $lifeCyclestep->setPlant(null);
+            }
         }
 
         return $this;

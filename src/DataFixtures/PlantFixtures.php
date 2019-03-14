@@ -5,10 +5,12 @@ namespace App\DataFixtures;
 
 use App\Entity\Plant\ClimaticArea;
 use App\Entity\Plant\FertilizerType;
+use App\Entity\Plant\LifeCycleStep;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\PlantFertilizerType;
 use App\Entity\Plant\PlantingDateInterval;
+use App\Entity\Plant\PlantLifeCycleStep;
 use App\Entity\Plant\SoilType;
 use App\Entity\Plant\SunExposureType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -41,6 +43,11 @@ class PlantFixtures extends Fixture
         return $manager->getRepository("App\Entity\Plant\FertilizerType")->findOneBy(array('code' => $code));
     }
 
+    public function getLifeCycleStep(ObjectManager $manager, string $code): LifeCycleStep
+    {
+        return $manager->getRepository("App\Entity\Plant\LifeCycleStep")->findOneBy(array('code' => $code));
+    }
+
     public function getPlantingDateInterval(ObjectManager $manager, string $climaticAreaCode, int $numMonthBegin, int $numMonthEnd): PlantingDateInterval
     {
         $monthBegin = $manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthBegin));
@@ -68,7 +75,11 @@ class PlantFixtures extends Fixture
         $tomato->addPreferedSoilType($this->getSoilType($manager, 'clay'));
         $tomato->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
         $tomato->addPreferedFertilizerType(new PlantFertilizerType($tomato, $this->getFertilizerType($manager, 'N-K'), 9));
-        //$tomato->
+        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStep($manager, 'germing'), 9, 1));
+        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStep($manager, 'growth'), 120, 2));
+        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStep($manager, 'flowering'), 7, 3));
+        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStep($manager, 'fruct'), 45, 4));
+        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStep($manager, 'harvest'), 7, 5));
 
         $appleTree = new Plant(
             'Pommier',
@@ -84,6 +95,13 @@ class PlantFixtures extends Fixture
         $appleTree->addPreferedSoilType($this->getSoilType($manager, 'silica'));
         $appleTree->addPreferedSoilType($this->getSoilType($manager, 'clay'));
         $appleTree->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $appleTree->addPreferedFertilizerType(new PlantFertilizerType($appleTree, $this->getFertilizerType($manager, 'N-K'), 15));
+        $appleTree->addPreferedFertilizerType(new PlantFertilizerType($appleTree, $this->getFertilizerType($manager, 'N'), 9));
+        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStep($manager, 'germing'), 9, 1));
+        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStep($manager, 'growth'), 1095, 2));
+        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStep($manager, 'pollinate'), 15, 3));
+        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStep($manager, 'flowering'), 7, 4));
+        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStep($manager, 'fruct'), 90, 5));
 
         $carrot = new Plant(
             'Carotte',
@@ -98,6 +116,10 @@ class PlantFixtures extends Fixture
         $carrot->addPreferedSoilType($this->getSoilType($manager, 'humus'));
         $carrot->addPreferedSoilType($this->getSoilType($manager, 'clay'));
         $carrot->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
+        $carrot->addPreferedFertilizerType(new PlantFertilizerType($carrot, $this->getFertilizerType($manager, 'K-P'), 15));
+        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStep($manager, 'germing'), 30, 1));
+        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStep($manager, 'growth'), 150, 2));
+        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStep($manager, 'harvest'), 7, 3));
 
         $radish = new Plant(
             'Radis',
@@ -110,9 +132,14 @@ class PlantFixtures extends Fixture
         $radish->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-m', 4, 6));
         $radish->addPlantingDateInterval($this->getPlantingDateInterval($manager, 'fra-s', 3, 5));
         $radish->addPreferedSoilType($this->getSoilType($manager, 'humus'));
+        $radish->addPreferedSoilType($this->getSoilType($manager, 'sand'));
         $radish->addPreferedSoilType($this->getSoilType($manager, 'clay'));
         $radish->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
         $radish->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
+        $radish->addPreferedFertilizerType(new PlantFertilizerType($radish, $this->getFertilizerType($manager, 'K-P'), 15));
+        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStep($manager, 'germing'), 8, 1));
+        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStep($manager, 'growth'), 120, 2));
+        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStep($manager, 'harvest'), 7, 3));
 
         $geranium = new Plant(
             'Géranium',
@@ -128,6 +155,10 @@ class PlantFixtures extends Fixture
         $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'sun'));
         $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'half-sun'));
         $geranium->addPreferedSunExposureType($this->getSunExposureType($manager, 'shadow'));
+        $geranium->addPreferedFertilizerType(new PlantFertilizerType($geranium, $this->getFertilizerType($manager, 'K'), 15));
+        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStep($manager, 'germing'), 8, 1));
+        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStep($manager, 'growth'), 90, 2));
+        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStep($manager, 'flowering'), 180, 3));
 
         $daffodil = new Plant(
             'Jonquille véritable',

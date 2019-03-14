@@ -23,15 +23,15 @@ class PlantLifeCycleStep
     private $id;
 
     /**
-     * One PlantLifeCycleStep is relative to One Plant.
-     * @ORM\OneToOne(targetEntity="Plant")
+     * Many PlantLifeCycleStep is relative to One Plant.
+     * @ORM\ManyToOne(targetEntity="Plant", inversedBy="lifeCyclesteps")
      * @ORM\JoinColumn(name="plant_id", referencedColumnName="id")
      */
     private $plant;
 
     /**
-     * One PlantLifeCycleStep is relative to One LifeCycleStep.
-     * @ORM\OneToOne(targetEntity="LifeCycleStep")
+     * Many PlantLifeCycleStep is relative to One LifeCycleStep.
+     * @ORM\ManyToOne(targetEntity="LifeCycleStep")
      * @ORM\JoinColumn(name="life_cycle_step_id", referencedColumnName="id")
      */
     private $lifeCycleStep;
@@ -39,10 +39,10 @@ class PlantLifeCycleStep
     /**
      * @ORM\Column(type="integer", name="nb_day_from_previous_step")
      */
-    private $nbDayFromPreviousStep;
+    private $stepDaysDuration;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="step_order")
      */
     private $order;
 
@@ -50,14 +50,14 @@ class PlantLifeCycleStep
      * PlantLifeCycleStep constructor.
      * @param $plant
      * @param $lifeCycleStep
-     * @param $nbDayFromPreviousStep
+     * @param $stepDaysDuration
      * @param $order
      */
-    public function __construct(Plant $plant, LifeCycleStep $lifeCycleStep, int $nbDayFromPreviousStep, int $order)
+    public function __construct(Plant $plant, LifeCycleStep $lifeCycleStep, int $stepDaysDuration, int $order)
     {
         $this->plant = $plant;
         $this->lifeCycleStep = $lifeCycleStep;
-        $this->nbDayFromPreviousStep = $nbDayFromPreviousStep;
+        $this->stepDaysDuration = $stepDaysDuration;
         $this->order = $order;
     }
 
@@ -106,15 +106,15 @@ class PlantLifeCycleStep
      */
     public function getNbDayFromPreviousStep()
     {
-        return $this->nbDayFromPreviousStep;
+        return $this->stepDaysDuration;
     }
 
     /**
-     * @param int $nbDayFromPreviousStep
+     * @param int $stepDaysDuration
      */
-    public function setNbDayFromPreviousStep(int $nbDayFromPreviousStep): void
+    public function setNbDayFromPreviousStep(int $stepDaysDuration): void
     {
-        $this->nbDayFromPreviousStep = $nbDayFromPreviousStep;
+        $this->stepDaysDuration = $stepDaysDuration;
     }
 
     /**
