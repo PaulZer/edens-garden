@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Garden\Garden;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -48,16 +51,6 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $lastname;
-
-    /**
      * Many User may have Many Garden.
      * @ORM\ManyToMany(targetEntity="App\Entity\Garden\Garden")
      * @ORM\JoinTable(name="user_garden",
@@ -66,6 +59,11 @@ class User implements UserInterface
      *      )
      */
     private $gardens;
+
+    public function __construct()
+    {
+        $this->gardens = new ArrayCollection();
+    }
 
     /**
      * @return \App\Entity\Garden\Garden[]
@@ -92,16 +90,6 @@ class User implements UserInterface
         $this->email = $email;
 
         return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getLastname()
-    {
-        return $this->lastname;
     }
 
     /**
@@ -185,6 +173,24 @@ class User implements UserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function addGarden(Garden $garden): self
+    {
+        if (!$this->gardens->contains($garden)) {
+            $this->gardens[] = $garden;
+        }
+
+        return $this;
+    }
+
+    public function removeGarden(Garden $garden): self
+    {
+        if ($this->gardens->contains($garden)) {
+            $this->gardens->removeElement($garden);
+        }
 
         return $this;
     }

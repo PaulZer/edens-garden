@@ -1,17 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lp
- * Date: 22/02/2019
- * Time: 09:16
- */
 
 namespace App\Entity\Plant;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\PlantRepository")
  */
 class Plant
 {
@@ -69,6 +65,18 @@ class Plant
     private $preferedSoilTypes;
 
     /**
+     * One Plant may have Many PlantFertilizerType.
+     * @ORM\OneToMany(targetEntity="PlantFertilizerType", mappedBy="plant", cascade={"persist"})
+     */
+    private $preferedFertilizerTypes;
+
+    /**
+     * One Plant may have Many LifeCycleStep.
+     * @ORM\OneToMany(targetEntity="PlantLifeCycleStep", mappedBy="plant", cascade={"persist"})
+     */
+    private $lifeCycleSteps;
+
+    /**
      * Many Plant may have Many PlantingDateInterval.
      * @ORM\ManyToMany(targetEntity="PlantingDateInterval")
      * @ORM\JoinTable(name="plant_planting_date_interval",
@@ -77,16 +85,6 @@ class Plant
      *      )
      */
     private $plantingDateIntervals;
-
-    /**
-     * Many Plant may have Many LifeCycleStep.
-     * @ORM\ManyToMany(targetEntity="LifeCycleStep")
-     * @ORM\JoinTable(name="plant_life_cycle_step",
-     *      joinColumns={@ORM\JoinColumn(name="plant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="life_cycle_step_id", referencedColumnName="id")}
-     *      )
-     */
-    private $lifeCycleSteps;
 
     /**
      * Plant constructor.
@@ -99,11 +97,9 @@ class Plant
      * @param $preferedSunExposureTypes
      * @param $preferedSoilTypes
      * @param $plantingDateIntervals
-     * @param $lifeCycleSteps
      */
-    public function __construct(string $id,string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
+    public function __construct(string $name,string $latinName,string $picturePath,PlantFamily $plantFamily,int $waterFrequency)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->latinName = $latinName;
         $this->picturePath = $picturePath;
@@ -111,6 +107,7 @@ class Plant
         $this->waterFrequency = $waterFrequency;
         $this->preferedSunExposureTypes = new ArrayCollection();
         $this->preferedSoilTypes = new ArrayCollection();
+        $this->preferedFertilizerTypes = new ArrayCollection();
         $this->plantingDateIntervals = new ArrayCollection();
         $this->lifeCycleSteps = new ArrayCollection();
     }
@@ -187,12 +184,152 @@ class Plant
         return $this->plantingDateIntervals;
     }
 
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setLatinName(string $latinName): self
+    {
+        $this->latinName = $latinName;
+
+        return $this;
+    }
+
+    public function setPicturePath(string $picturePath): self
+    {
+        $this->picturePath = $picturePath;
+
+        return $this;
+    }
+
+    public function setWaterFrequency(int $waterFrequency): self
+    {
+        $this->waterFrequency = $waterFrequency;
+
+        return $this;
+    }
+
+    public function setPlantFamily(?PlantFamily $plantFamily): self
+    {
+        $this->plantFamily = $plantFamily;
+
+        return $this;
+    }
+
+    public function addPreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    {
+        if (!$this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
+            $this->preferedSunExposureTypes[] = $preferedSunExposureType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    {
+        if ($this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
+            $this->preferedSunExposureTypes->removeElement($preferedSunExposureType);
+        }
+
+        return $this;
+    }
+
+    public function addPreferedSoilType(SoilType $preferedSoilType): self
+    {
+        if (!$this->preferedSoilTypes->contains($preferedSoilType)) {
+            $this->preferedSoilTypes[] = $preferedSoilType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedSoilType(SoilType $preferedSoilType): self
+    {
+        if ($this->preferedSoilTypes->contains($preferedSoilType)) {
+            $this->preferedSoilTypes->removeElement($preferedSoilType);
+        }
+
+        return $this;
+    }
+
+    public function addPlantingDateInterval(PlantingDateInterval $plantingDateInterval): self
+    {
+        if (!$this->plantingDateIntervals->contains($plantingDateInterval)) {
+            $this->plantingDateIntervals[] = $plantingDateInterval;
+        }
+
+        return $this;
+    }
+
+    public function removePlantingDateInterval(PlantingDateInterval $plantingDateInterval): self
+    {
+        if ($this->plantingDateIntervals->contains($plantingDateInterval)) {
+            $this->plantingDateIntervals->removeElement($plantingDateInterval);
+        }
+
+        return $this;
+    }
+
     /**
-     * @return \App\Entity\Plant\LifeCycleStep[]
+     * @return Collection|FertilizerType[]
      */
-    public function getLifeCycleSteps()
+    public function getPreferedFertilizerTypes(): Collection
+    {
+        return $this->preferedFertilizerTypes;
+    }
+
+    public function addPreferedFertilizerType(PlantFertilizerType $preferedFertilizerType): self
+    {
+        if (!$this->preferedFertilizerTypes->contains($preferedFertilizerType)) {
+            $this->preferedFertilizerTypes[] = $preferedFertilizerType;
+        }
+
+        return $this;
+    }
+
+    public function removePreferedFertilizerType(PlantFertilizerType $preferedFertilizerType): self
+    {
+        if ($this->preferedFertilizerTypes->contains($preferedFertilizerType)) {
+            $this->preferedFertilizerTypes->removeElement($preferedFertilizerType);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlantLifeCycleStep[]
+     */
+    public function getLifeCycleSteps(): Collection
     {
         return $this->lifeCycleSteps;
     }
+
+    public function addLifeCycleStep(PlantLifeCycleStep $lifeCyclestep): self
+    {
+        if (!$this->lifeCycleSteps->contains($lifeCyclestep)) {
+            $this->lifeCycleSteps[] = $lifeCyclestep;
+            $lifeCyclestep->setPlant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLifeCycleStep(PlantLifeCycleStep $lifeCyclestep): self
+    {
+        if ($this->lifeCycleSteps->contains($lifeCyclestep)) {
+            $this->lifeCycleSteps->removeElement($lifeCyclestep);
+            // set the owning side to null (unless already changed)
+            if ($lifeCyclestep->getPlant() === $this) {
+                $lifeCyclestep->setPlant(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }

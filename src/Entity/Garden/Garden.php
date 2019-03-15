@@ -8,6 +8,8 @@
 
 namespace App\Entity\Garden;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Util\Country;
 /**
@@ -145,6 +147,71 @@ class Garden
     public function getPlots()
     {
         return $this->plots;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setLatitude(float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function setLongitude(float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function setHeight(float $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function setLength(float $length): self
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function addPlot(Plot $plot): self
+    {
+        if (!$this->plots->contains($plot)) {
+            $this->plots[] = $plot;
+            $plot->setGarden($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlot(Plot $plot): self
+    {
+        if ($this->plots->contains($plot)) {
+            $this->plots->removeElement($plot);
+            // set the owning side to null (unless already changed)
+            if ($plot->getGarden() === $this) {
+                $plot->setGarden(null);
+            }
+        }
+
+        return $this;
     }
 
 
