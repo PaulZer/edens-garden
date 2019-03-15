@@ -133,6 +133,18 @@ class PlantLifeCycleStep
         $this->order = $order;
     }
 
+    public function getStepDaysDuration(): ?int
+    {
+        return $this->stepDaysDuration;
+    }
+
+    public function setStepDaysDuration(int $stepDaysDuration): self
+    {
+        $this->stepDaysDuration = $stepDaysDuration;
+
+        return $this;
+    }
+
 
 
 }
