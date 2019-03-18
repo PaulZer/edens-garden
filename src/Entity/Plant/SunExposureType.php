@@ -8,6 +8,8 @@
 
 namespace App\Entity\Plant;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -39,6 +41,11 @@ class SunExposureType
      */
     private $description;
 
+    /**
+     * One Plant may have Many SunExposureType.
+     * @ORM\OneToMany(targetEntity="PlantSunExposureType", mappedBy="sunExposureType")
+     */
+    private $plantSunExposureType;
 
     /**
      * SunExposureType constructor.
@@ -50,6 +57,7 @@ class SunExposureType
         $this->name = $name;
         $this->code = $code;
         $this->description = $description;
+        $this->plantSunExposureType = new ArrayCollection();
     }
 
     /**
@@ -96,6 +104,37 @@ class SunExposureType
     public function setCode(string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlantSunExposureType[]
+     */
+    public function getPlantSunExposureType()
+    {
+        return $this->plantSunExposureType;
+    }
+
+    public function addPlantSunExposureType(PlantSunExposureType $plantSunExposureType): self
+    {
+        if (!$this->plantSunExposureType->contains($plantSunExposureType)) {
+            $this->plantSunExposureType[] = $plantSunExposureType;
+            $plantSunExposureType->setSunExposureType($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlantSunExposureType(PlantSunExposureType $plantSunExposureType): self
+    {
+        if ($this->plantSunExposureType->contains($plantSunExposureType)) {
+            $this->plantSunExposureType->removeElement($plantSunExposureType);
+            // set the owning side to null (unless already changed)
+            if ($plantSunExposureType->getSunExposureType() === $this) {
+                $plantSunExposureType->getSunExposureType(null);
+            }
+        }
 
         return $this;
     }

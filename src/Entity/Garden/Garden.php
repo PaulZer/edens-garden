@@ -84,7 +84,7 @@ class Garden
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
