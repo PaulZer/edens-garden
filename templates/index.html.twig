@@ -5,8 +5,6 @@
 {% block body %}
     welcome {{ app.user.firstName }}
 
-    {{ dump(app.user.roles) }}
-
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
@@ -14,8 +12,24 @@
 
 {% block javascripts %}
     <script>
-        $("#addGarden").on('click', (event) => {
 
+        $(document).on('hidden.bs.modal', () =>{
+            $('#modal').remove();
+            $('script[role="modal-script"]').remove();
+        });
+
+        $("#addGarden").on('click', (event) => {
+            console.log(event);
+            console.log($("#addGarden"));
+            $.post('{{ path("garden_create") }}', {
+
+            }, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
         });
     </script>
 {% endblock %}
