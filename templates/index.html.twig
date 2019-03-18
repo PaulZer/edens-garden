@@ -6,7 +6,16 @@
     welcome {{ app.user.firstName }}
 
     {{ dump(app.user.roles) }}
+
+    <button id="addGarden" class="btn btn-warning">
+        Ajouter un jardin
+    </button>
 {% endblock %}
 
 {% block javascripts %}
+    <script>
+        $("#addGarden").on('click', (event) => {
+
+        });
+    </script>
 {% endblock %}

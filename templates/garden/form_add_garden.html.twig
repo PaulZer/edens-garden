@@ -1,0 +1,10 @@
+{{ form_start(addGarden) }}
+    {{ form_row(addGarden.name, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.latitude, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.longitude, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.height, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.length, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.country, {'attr': {'class': 'form-control'}}) }}
+    {{ form_row(addGarden.save, {'attr': {'class': 'btn btn-success'}}) }}
+    {{ form_rest(addGarden) }}
+{{ form_end(addGarden) }}

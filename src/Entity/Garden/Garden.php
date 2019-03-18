@@ -64,7 +64,6 @@ class Garden
 
     /**
      * Garden constructor.
-     * @param $id
      * @param $name
      * @param $latitude
      * @param $longitude
@@ -73,9 +72,8 @@ class Garden
      * @param $length
      * @param $plots
      */
-    public function __construct(string $id,string $name,float $latitude,float $longitude,Country $country,float $height,float $length)
+    public function __construct(string $name,float $latitude,float $longitude,Country $country,float $height,float $length)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
