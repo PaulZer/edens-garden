@@ -9,10 +9,10 @@
         {{ form_row(registrationForm.firstName) }}
         {{ form_row(registrationForm.lastName) }}
         {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword) }}
 
-        <button class="btn">Register</button>
+        <button class="btn btn-success">Register</button>
+    {{ form_rest(registrationForm) }}
     {{ form_end(registrationForm) }}
     <h2>or <a href="{{ path('login') }}">Sign in</a></h2>
 {% endblock %}
