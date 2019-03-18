@@ -10,6 +10,10 @@ register:
     path: /register
     controller: App\Controller\SecurityController::register
 
+plants:
+    path: /plants
+    controller: App\Controller\PlantController::view
+
 logout:
     path: /logout
     methods: GET
