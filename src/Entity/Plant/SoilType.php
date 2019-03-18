@@ -2,6 +2,8 @@
 
 namespace App\Entity\Plant;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -110,13 +112,6 @@ class SoilType
         $this->description = $description;
     }
 
-    /**
-     * @return Collection|PlantSoilType[]
-     */
-    public function getPlantSoilType()
-    {
-        return $this->plantSoilType;
-    }
 
 
     public function addPlantSoilType(PlantSoilType $plantSoilType): self
@@ -140,6 +135,14 @@ class SoilType
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|PlantSoilType[]
+     */
+    public function getPlantSoilTypes(): Collection
+    {
+        return $this->plantSoilTypes;
     }
 
 }
