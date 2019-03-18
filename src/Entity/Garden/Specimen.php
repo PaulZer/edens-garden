@@ -14,7 +14,7 @@ use App\Entity\Plant\Plant;
 use App\Entity\Plant\FertilizerType;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SpecimenRepository")
  */
 class Specimen
 {
@@ -88,7 +88,7 @@ class Specimen
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -199,7 +199,6 @@ class Specimen
 
         return $this;
     }
-
 
 
 }

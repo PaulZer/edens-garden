@@ -62,7 +62,7 @@ class PlantLifeCycleStep
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

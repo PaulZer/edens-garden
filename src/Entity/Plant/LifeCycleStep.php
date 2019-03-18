@@ -49,7 +49,7 @@ class LifeCycleStep
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
