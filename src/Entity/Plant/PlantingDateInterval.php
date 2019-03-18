@@ -47,9 +47,8 @@ class PlantingDateInterval
      * @param $monthEnd
      * @param $climaticArea
      */
-    public function __construct(string $id, Month $monthBegin, Month $monthEnd, ClimaticArea $climaticArea)
+    public function __construct(Month $monthBegin, Month $monthEnd, ClimaticArea $climaticArea)
     {
-        $this->id = $id;
         $this->monthBegin = $monthBegin;
         $this->monthEnd = $monthEnd;
         $this->climaticArea = $climaticArea;
@@ -85,6 +84,27 @@ class PlantingDateInterval
     public function getClimaticArea()
     {
         return $this->climaticArea;
+    }
+
+    public function setMonthBegin(?Month $monthBegin): self
+    {
+        $this->monthBegin = $monthBegin;
+
+        return $this;
+    }
+
+    public function setMonthEnd(?Month $monthEnd): self
+    {
+        $this->monthEnd = $monthEnd;
+
+        return $this;
+    }
+
+    public function setClimaticArea(?ClimaticArea $climaticArea): self
+    {
+        $this->climaticArea = $climaticArea;
+
+        return $this;
     }
 
 

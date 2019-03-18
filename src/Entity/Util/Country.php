@@ -10,9 +10,11 @@ namespace App\Entity\Util;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\ClimaticArea;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @UniqueEntity(fields={"code"}, message="There is already a Country with this code.")
  */
 class Country
 {
@@ -27,6 +29,11 @@ class Country
      * @ORM\Column(type="string")
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=10, unique=true)
+     */
+    private $code;
 
     /**
      * One Country has One North Area.
@@ -55,10 +62,10 @@ class Country
      * @param $middleArea
      * @param $southArea
      */
-    public function __construct(string $id, string $name, ClimaticArea $northArea, ClimaticArea $middleArea, ClimaticArea $southArea)
+    public function __construct(string $name, string $code, ClimaticArea $northArea, ClimaticArea $middleArea, ClimaticArea $southArea)
     {
-        $this->id = $id;
         $this->name = $name;
+        $this->code = $code;
         $this->northArea = $northArea;
         $this->middleArea = $middleArea;
         $this->southArea = $southArea;
@@ -102,6 +109,46 @@ class Country
     public function getSouthArea()
     {
         return $this->southArea;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setNorthArea(?ClimaticArea $northArea): self
+    {
+        $this->northArea = $northArea;
+
+        return $this;
+    }
+
+    public function setMiddleArea(?ClimaticArea $middleArea): self
+    {
+        $this->middleArea = $middleArea;
+
+        return $this;
+    }
+
+    public function setSouthArea(?ClimaticArea $southArea): self
+    {
+        $this->southArea = $southArea;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
 

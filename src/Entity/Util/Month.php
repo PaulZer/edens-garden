@@ -9,9 +9,11 @@
 namespace App\Entity\Util;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @UniqueEntity(fields={"num"}, message="There is already a Month with this num.")
  */
 class Month
 {
@@ -28,14 +30,19 @@ class Month
     private $name;
 
     /**
-     * Month constructor.
-     * @param $id
-     * @param $name
+     * @ORM\Column(type="integer", name="num", unique=true)
      */
-    public function __construct(string $id, string $name)
+    private $num;
+
+    /**
+     * Month constructor.
+     * @param $name
+     * @param $num
+     */
+    public function __construct(string $name, int $num)
     {
-        $this->id = $id;
         $this->name = $name;
+        $this->num = $num;
     }
 
     /**
@@ -52,6 +59,25 @@ class Month
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getNum(): ?int
+    {
+        return $this->num;
+    }
+
+    public function setNum(int $num): self
+    {
+        $this->num = $num;
+
+        return $this;
     }
 
 
