@@ -34,7 +34,6 @@ class SecurityTest extends WebTestCase
 
         $form['registration_form[firstName]'] = 'Lucas';
         $form['registration_form[lastName]'] = 'Hey there!';
-        $random =
         $form['registration_form[email]'] = uniqid().'@test.com';
         $form['registration_form[plainPassword][first]'] = '123456';
         $form['registration_form[plainPassword][second]'] = '123456';
