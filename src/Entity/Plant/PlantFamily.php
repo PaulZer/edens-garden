@@ -52,7 +52,7 @@ class PlantFamily
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

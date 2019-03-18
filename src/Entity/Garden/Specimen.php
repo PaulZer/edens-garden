@@ -88,7 +88,7 @@ class Specimen
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

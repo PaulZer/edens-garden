@@ -39,6 +39,11 @@ class PlantFertilizerType
     /**
      * @ORM\Column(type="integer")
      */
+    private $efficiency;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
     private $nbDayBeforeFertilizing;
 
     /**
@@ -48,15 +53,16 @@ class PlantFertilizerType
      * @param $fertilizer
      * @param $nbDayBeforeFertilizing
      */
-    public function __construct(Plant $plant, FertilizerType $fertilizer, int $nbDayBeforeFertilizing)
+    public function __construct(Plant $plant, FertilizerType $fertilizer,int $efficiency, int $nbDayBeforeFertilizing)
     {
         $this->plant = $plant;
         $this->fertilizer = $fertilizer;
         $this->nbDayBeforeFertilizing = $nbDayBeforeFertilizing;
+        $this->efficiency = $efficiency;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -107,4 +113,22 @@ class PlantFertilizerType
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getEfficiency()
+    {
+        return $this->efficiency;
+    }
+
+    /**
+     * @param int $efficiency
+     */
+    public function setEfficiency($efficiency): void
+    {
+        $this->efficiency = $efficiency;
+    }
+
+
 }

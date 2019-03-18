@@ -72,7 +72,7 @@ class Country
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

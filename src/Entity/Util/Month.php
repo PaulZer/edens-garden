@@ -46,7 +46,7 @@ class Month
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

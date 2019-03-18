@@ -45,22 +45,14 @@ class Plant
     private $waterFrequency;
 
     /**
-     * Many Plant may have Many SunExposureType.
-     * @ORM\ManyToMany(targetEntity="SunExposureType")
-     * @ORM\JoinTable(name="plant_sun_exposure_type",
-     *      joinColumns={@ORM\JoinColumn(name="plant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="sun_exposure_type_id", referencedColumnName="id")}
-     *      )
+     * One Plant may have Many PlantSunExposureType.
+     * @ORM\OneToMany(targetEntity="PlantSunExposureType", mappedBy="plant", cascade={"persist"})
      */
     private $preferedSunExposureTypes;
 
     /**
-     * Many Plant may have Many SoilType.
-     * @ORM\ManyToMany(targetEntity="SoilType")
-     * @ORM\JoinTable(name="plant_soil_type",
-     *      joinColumns={@ORM\JoinColumn(name="plant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="soil_type_id", referencedColumnName="id")}
-     *      )
+     * One Plant may have Many PlantSoilType.
+     * @ORM\OneToMany(targetEntity="PlantSoilType", mappedBy="plant", cascade={"persist"})
      */
     private $preferedSoilTypes;
 
@@ -113,7 +105,7 @@ class Plant
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

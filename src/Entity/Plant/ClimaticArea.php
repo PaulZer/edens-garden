@@ -60,7 +60,7 @@ class ClimaticArea
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
