@@ -14,11 +14,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class PlantController extends AbstractController
+class PlantFamilyController extends AbstractController
 {
     
 
-    public function view(): Response
+    public function viewAll(): Response
     {
         $plantFamilyRepository = $this->getDoctrine()
             ->getRepository(PlantFamily::class);
@@ -31,7 +31,7 @@ class PlantController extends AbstractController
         }
         $plantFamilies = $plantFamilyRepository->findAll();
         
-        return $this->render('plant/plant.html.twig', [
+        return $this->render('plant/plantFamilies.html.twig', [
             'families' => $plantFamilies,
         ]);
     }
