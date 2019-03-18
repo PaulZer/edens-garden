@@ -48,7 +48,7 @@ class SoilType
      * @param $description
      * @param $plantSoilType
      */
-    public function __construct(string $name,int $code,string $description)
+    public function __construct(string $name,string $code,string $description)
     {
         $this->name = $name;
         $this->code = $code;

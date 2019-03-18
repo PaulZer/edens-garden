@@ -153,7 +153,7 @@ class Plant
     }
 
     /**
-     * @return \App\Entity\Plant\SunExposureType[]
+     * @return \App\Entity\Plant\PlantSunExposureType[]
      */
     public function getPreferedSunExposureTypes()
     {
@@ -161,7 +161,7 @@ class Plant
     }
 
     /**
-     * @return \App\Entity\Plant\SoilType[]
+     * @return \App\Entity\Plant\PlantSoilType[]
      */
     public function getPreferedSoilTypes()
     {
@@ -212,7 +212,7 @@ class Plant
         return $this;
     }
 
-    public function addPreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    public function addPreferedSunExposureType(PlantSunExposureType $preferedSunExposureType): self
     {
         if (!$this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
             $this->preferedSunExposureTypes[] = $preferedSunExposureType;
@@ -221,7 +221,7 @@ class Plant
         return $this;
     }
 
-    public function removePreferedSunExposureType(SunExposureType $preferedSunExposureType): self
+    public function removePreferedSunExposureType(PlantSunExposureType $preferedSunExposureType): self
     {
         if ($this->preferedSunExposureTypes->contains($preferedSunExposureType)) {
             $this->preferedSunExposureTypes->removeElement($preferedSunExposureType);
@@ -230,7 +230,7 @@ class Plant
         return $this;
     }
 
-    public function addPreferedSoilType(SoilType $preferedSoilType): self
+    public function addPreferedSoilType(PlantSoilType $preferedSoilType): self
     {
         if (!$this->preferedSoilTypes->contains($preferedSoilType)) {
             $this->preferedSoilTypes[] = $preferedSoilType;
@@ -239,7 +239,7 @@ class Plant
         return $this;
     }
 
-    public function removePreferedSoilType(SoilType $preferedSoilType): self
+    public function removePreferedSoilType(PlantSoilType $preferedSoilType): self
     {
         if ($this->preferedSoilTypes->contains($preferedSoilType)) {
             $this->preferedSoilTypes->removeElement($preferedSoilType);
@@ -322,6 +322,4 @@ class Plant
 
         return $this;
     }
-
-
 }
