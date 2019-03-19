@@ -4,7 +4,7 @@
             {{ form_row(addGarden.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
         </div>
         <div class="form-group">
-            {{ form_row(addGarden.country, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(addGarden.country, {'attr': {'class': 'form-control is-valid'}}) }}
         </div>
         <div class="form-group">
             <button id="btnCollapseOSMap" class="btn btn-sm btn-warning" data-toggle="collapse" href="#collapseOSMap">Cacher la carte</button>
@@ -59,11 +59,30 @@
     <script type="text/javascript" role="modal-script">
         console.log('form add garden');
         var btnCollapseOSMap = document.getElementById('btnCollapseOSMap');
+        var gardenNameInput = document.getElementById('garden_name');
+        var gardenLengthInput = document.getElementById('garden_length');
+        var gardenHeightInput = document.getElementById('garden_height');
 
         btnCollapseOSMap.addEventListener('click', (event) => {
             event.target.firstChild.data = event.target.firstChild.data == "Cacher la carte" ? "Montrer la carte" : "Cacher la carte";
             event.target.classList.toggle('btn-primary');
             event.target.classList.toggle('btn-warning');
         });
+
+        gardenNameInput.addEventListener('change', (event) => {
+            if(event.target.value.length > 0) {
+                event.target.classList.add('is-valid');
+            } else event.target.classList.remove('is-valid');
+        });
+
+        [gardenNameInput, gardenNameInput, gardenHeightInput].forEach((el) => {
+            el.addEventListener('keydown', (event) => {
+               if(event.which == 13) {
+                   event.preventDefault();
+                   return;
+               }
+            });
+        });
+
     </script>
 {% endblock %}

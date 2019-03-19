@@ -17,14 +17,23 @@
 {% block javascripts %}
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script>
+        var modalShown = 0;
+
         $(document).on('hidden.bs.modal', () =>{
             $('#modal').remove();
             $('script[role="modal-script"]').remove();
+            modalShown = 0;
         });
 
+
         $("#addGarden").on('click', (event) => {
-            console.log(event);
-            console.log($("#addGarden"));
+            console.log(modalShown);
+
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
             $.post('{{ path("garden_create") }}', {
 
             }, (modal) => {

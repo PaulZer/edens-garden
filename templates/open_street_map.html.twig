@@ -42,6 +42,9 @@
                     latInput.value = _lat;
                     lngInput.value = _lng;
                     latInput.dispatchEvent(new Event('change'));
+                    [latInput, lngInput].forEach((el) => {
+                       if(!el.classList.contains('is-valid')) el.classList.add('is-valid');
+                    });
                 }
             }).addEventListener('move', () => {
                 osmap.invalidateSize();

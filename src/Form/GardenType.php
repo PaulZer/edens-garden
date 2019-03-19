@@ -7,6 +7,7 @@ use App\Entity\Util\Country;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\DataTransformer\IntegerToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,8 +21,12 @@ class GardenType extends AbstractType
             ->add('name')
             ->add('latitude')
             ->add('longitude')
-            ->add('height', IntegerType::class)
-            ->add('length', IntegerType::class)
+            ->add('height', IntegerType::class, [
+                'rounding_mode' => IntegerToLocalizedStringTransformer::ROUND_DOWN
+            ])
+            ->add('length', IntegerType::class, [
+                'rounding_mode' => IntegerToLocalizedStringTransformer::ROUND_DOWN
+            ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',
