@@ -5,7 +5,7 @@
 {% block body %}
     <form method="post">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="alert alert-danger" style="margin-top: 1em;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
         <h2 class="">Please sign in</h2>
         <div class="form-group">

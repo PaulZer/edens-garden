@@ -10,9 +10,13 @@
     </button>
 {% endblock %}
 
-{% block javascripts %}
-    <script>
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+{% endblock %}
 
+{% block javascripts %}
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script>
         $(document).on('hidden.bs.modal', () =>{
             $('#modal').remove();
             $('script[role="modal-script"]').remove();

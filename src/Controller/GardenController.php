@@ -7,7 +7,6 @@ use App\Form\GardenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class GardenController extends AbstractController
 {
@@ -23,7 +22,10 @@ class GardenController extends AbstractController
         $form = $this->createForm(GardenType::class, $garden);
         $form->handleRequest($request);
 
+        dump($form->isSubmitted());
         if ($form->isSubmitted() && $form->isValid()) {
+
+            dump($garden);exit;
 
             $this->addFlash('notice', "Your garden is created ! You can add your plants now !");
             return $this->redirectToRoute('index');

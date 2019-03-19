@@ -15,7 +15,7 @@
             {# read and display several types of flash messages #}
             {% for label, messages in app.flashes(['notice', 'success', 'warning']) %}
                 {% for message in messages %}
-                    <div class="flash-{{ label }}">
+                    <div class="flash-{{ label }}" style="margin-top: 1em;">
                         {{ message }}
                     </div>
                 {% endfor %}
