@@ -9,6 +9,7 @@
 
 {% block javascripts %}
     <script type="text/javascript">
+
         // On initialise la latitude et la longitude de Bourk (centre de la carte)
         var lat = 46.215083;
         var lng = 5.241825;
@@ -40,6 +41,7 @@
                 if(latInput && lngInput ){
                     latInput.value = _lat;
                     lngInput.value = _lng;
+                    latInput.dispatchEvent(new Event('change'));
                 }
             }).addEventListener('move', () => {
                 osmap.invalidateSize();
@@ -63,6 +65,7 @@
 
         [latInput, lngInput].forEach((el) => {
             el.addEventListener('change', () => {
+                console.log(latInput.value);
                 let _lat = latInput.value;
                 let _lng = lngInput.value;
                 centerMap(_lat, _lng);
