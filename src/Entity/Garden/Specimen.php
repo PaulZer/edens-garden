@@ -12,6 +12,7 @@ use App\Entity\Plant\LifeCycleStep;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\FertilizerType;
+use App\Entity\Util\Logger;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SpecimenRepository")
@@ -65,6 +66,13 @@ class Specimen
     private $plot;
 
     /**
+     * One Specimen has One Logger.
+     * @OneToOne(targetEntity="App\Entity\Util\Logger")
+     * @JoinColumn(name="logger_id", referencedColumnName="id")
+     */
+    private $logger;
+
+    /**
      * Specimen constructor.
      * @param $id
      * @param $plant
@@ -85,6 +93,7 @@ class Specimen
         $this->lastFertilizedDate = $lastFertilizedDate;
         $this->currentLifeCycleStep = $currentLifeCycleStep;
         $this->plot = $plot;
+        $this->logger = new Logger();
     }
 
     /**
@@ -198,6 +207,11 @@ class Specimen
         $this->plot = $plot;
 
         return $this;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 
 
