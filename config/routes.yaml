@@ -18,11 +18,14 @@ index:
     path: /
     controller: App\Controller\DefaultController::index
 
-plant:
-    path: /plant
+plants:
+    path: /plants
+    controller: App\Controller\DefaultController::plants
 
 garden:
     path: /garden
+    controller: App\Controller\SecurityController::garden
 
 account:
     path: /account
+    controller: App\Controller\SecurityController::account

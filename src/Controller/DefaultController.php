@@ -11,4 +11,9 @@ class DefaultController extends AbstractController
     {
         return $this->render('index.html.twig');
     }
+
+    public function plants(): Response
+    {
+        return $this->render('plants/plants.html.twig');
+    }
 }
