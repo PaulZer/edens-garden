@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Jardins : {{garden.name}}{% endblock %}
+{% block body %}
+    hello <b>{{ app.user.firstName }}</b>
+    <table border="1px">
+        <th>Name</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Height</th>
+        <th>Length</th>
+        <tr>
+            <td>{{garden.name}}</td>
+            <td>{{garden.latitude}}</td>
+            <td>{{garden.longitude}}</td>
+            <td>{{garden.height}}</td>
+            <td>{{garden.length}}</td>
+        </tr>
+    </table>
+{% endblock %}

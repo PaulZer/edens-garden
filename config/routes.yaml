@@ -25,6 +25,22 @@ plants:
 plant:
     path: /plant/{id}
     controller: App\Controller\PlantController::viewPlant
+    
+gardens:
+    path: /gardens
+    controller: App\Controller\GardenController::viewAll
+
+garden:
+    path: /garden/{id}
+    controller: App\Controller\GardenController::viewGarden
+
+plots:
+    path: /plots
+    controller: App\Controller\PlotController::viewAll
+
+plot:
+    path: /plot/{id}
+    controller: App\Controller\PlotController::viewPlot
 
 logout:
     path: /logout
