@@ -42,15 +42,15 @@ class PlantController extends AbstractController
             ->findBy(
                 ['id' => $id]
             );
-        dump($plant);
 
         if (!$plant) {
             throw $this->createNotFoundException(
                 'Please add a plant to this plant family to continue'
             );
         }
+        dump($plant);
 
-        return $this->render('plant/plant.html.twig', ['plant' => $plant]);
+        return $this->render('plant/plant.html.twig', ['plant' => $plant['0']]);
 
     }
 }
