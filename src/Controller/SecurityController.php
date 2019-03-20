@@ -17,8 +17,17 @@ class SecurityController extends AbstractController
 {
     public function admin(): Response
     {
-
         return $this->render('admin/admin.html.twig');
+    }
+
+    public function garden(): Response
+    {
+        return $this->render('garden/garden.html.twig');
+    }
+
+    public function account(): Response
+    {
+        return $this->render('account/account.html.twig');
     }
 
     public function login(AuthenticationUtils $authenticationUtils): Response
