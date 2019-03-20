@@ -48,8 +48,7 @@ class PlantController extends AbstractController
                 'Please add a plant to this plant family to continue'
             );
         }
-        dump($plant);
-
+       
         return $this->render('plant/plant.html.twig', ['plant' => $plant]);
 
     }
