@@ -57,7 +57,6 @@
 
 {% block javascripts %}
     <script type="text/javascript" role="modal-script">
-        console.log('form add garden');
         var btnCollapseOSMap = document.getElementById('btnCollapseOSMap');
         var gardenNameInput = document.getElementById('garden_name');
         var gardenLengthInput = document.getElementById('garden_length');
@@ -100,7 +99,6 @@
                         event.target.classList.add('is-valid');
                     }
                     else {
-                        console.log(parseInt(event.target.value));
                         event.target.value = parseInt(event.target.value);
                         event.target.classList.remove('is-valid');
                         event.preventDefault();
