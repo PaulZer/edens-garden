@@ -39,7 +39,7 @@ class PlantController extends AbstractController
     {
         $plant = $this->getDoctrine()
             ->getRepository(Plant::class)
-            ->findBy(
+            ->findOneBy(
                 ['id' => $id]
             );
 
@@ -50,7 +50,7 @@ class PlantController extends AbstractController
         }
         dump($plant);
 
-        return $this->render('plant/plant.html.twig', ['plant' => $plant['0']]);
+        return $this->render('plant/plant.html.twig', ['plant' => $plant]);
 
     }
 }

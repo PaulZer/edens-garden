@@ -8,7 +8,7 @@
     <th>Latin Name</th>
         {% for plant in plants %}
             <tr>
-                <td>{{plant.name}}</td>
+                <td><a href='/plant/{{plant.id}}'>{{plant.name}}</a></td>
                 <td>{{plant.latinName}}</td>
             </tr>
         {% endfor %}

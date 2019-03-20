@@ -8,7 +8,7 @@
     <th>Description</th>
         {% for family in families %}
             <tr>
-                <td>{{family.name}}</td>
+                <td><a href='/plant_family/{{family.id}}'> {{family.name}}</a></td>
                 <td>{{family.description}}</td>
             </tr>
         {% endfor %}

@@ -12,7 +12,7 @@
         <th align='center'>Water Frequency</th>
     {% for plant in plants %}
         <tr>
-            <td align='center'>{{plant.name}}</td>
+            <td align='center'><a href='/plant/{{plant.id}}'>{{plant.name}}</td>
             <td align='center'>{{plant.latinName}}</td>
             <td align='center'>{{plant.waterFrequency}}</td>
         </tr>
