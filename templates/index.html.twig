@@ -5,8 +5,44 @@
 {% block body %}
     welcome {{ app.user.firstName }}
 
-    {{ dump(app.user.roles) }}
+    <button id="addGarden" class="btn btn-warning">
+        Ajouter un jardin
+    </button>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
 {% endblock %}
 
 {% block javascripts %}
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script>
+        var modalShown = 0;
+
+        $(document).on('hidden.bs.modal', () =>{
+            $('#modal').remove();
+            $('script[role="modal-script"]').remove();
+            modalShown = 0;
+        });
+
+
+        $("#addGarden").on('click', (event) => {
+            console.log(modalShown);
+
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
+            $.post('{{ path("garden_create") }}', {
+
+            }, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
+        });
+    </script>
 {% endblock %}

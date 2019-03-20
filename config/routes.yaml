@@ -14,9 +14,15 @@ logout:
     path: /logout
     methods: GET
 
+# GARDEN
+
 index:
     path: /
-    controller: App\Controller\DefaultController::index
+    controller: App\Controller\GardenController::index
+
+garden_create:
+    path: /garden
+    controller: App\Controller\GardenController::createGarden
 
 plants:
     path: /plants
