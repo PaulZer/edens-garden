@@ -17,20 +17,21 @@ class SecurityController extends AbstractController
 {
     public function admin(): Response
     {
-
         return $this->render('admin/admin.html.twig');
     }
 
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
+    public function account(): Response
+    {
+        return $this->render('account/account.html.twig');
+    }
+
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the auth error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        if($request->getMethod() == 'POST'){
-            dump($request);
-        }
+      
         return $this->render('auth/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error
