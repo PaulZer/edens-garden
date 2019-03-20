@@ -63,26 +63,50 @@
         var gardenLengthInput = document.getElementById('garden_length');
         var gardenHeightInput = document.getElementById('garden_height');
 
+        document.getElementById('modal').addEventListener('keydown', (event) => {
+           if(event.which == 13) {
+               event.preventDefault();
+               return;
+           }
+        });
+
         btnCollapseOSMap.addEventListener('click', (event) => {
             event.target.firstChild.data = event.target.firstChild.data == "Cacher la carte" ? "Montrer la carte" : "Cacher la carte";
             event.target.classList.toggle('btn-primary');
             event.target.classList.toggle('btn-warning');
         });
 
-        gardenNameInput.addEventListener('change', (event) => {
+        gardenNameInput.addEventListener('keyup', (event) => {
             if(event.target.value.length > 0) {
                 event.target.classList.add('is-valid');
-            } else event.target.classList.remove('is-valid');
+            } else {
+                event.target.classList.remove('is-valid');
+            }
         });
 
-        [gardenNameInput, gardenNameInput, gardenHeightInput].forEach((el) => {
-            el.addEventListener('keydown', (event) => {
-               if(event.which == 13) {
-                   event.preventDefault();
-                   return;
-               }
+        [gardenLengthInput, gardenHeightInput].forEach((el) => {
+            ['keyup', 'change'].forEach((inputEvent) => {
+                el.addEventListener(inputEvent, (event) =>{
+                    let inputMin = parseInt(el.getAttribute('min'));
+                    let inputMax = parseInt(el.getAttribute('max'));
+                    if(event.target.value < inputMin){
+                        event.target.value = inputMin;
+                    } else if(event.target.value > inputMax) {
+                        event.target.value = inputMax;
+                    }
+
+                    if(event.target.value > 0) {
+                        event.target.value = parseInt(event.target.value);
+                        event.target.classList.add('is-valid');
+                    }
+                    else {
+                        console.log(parseInt(event.target.value));
+                        event.target.value = parseInt(event.target.value);
+                        event.target.classList.remove('is-valid');
+                        event.preventDefault();
+                    }
+                });
             });
         });
-
     </script>
 {% endblock %}

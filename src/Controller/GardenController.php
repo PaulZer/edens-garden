@@ -19,13 +19,13 @@ class GardenController extends AbstractController
     public function createGarden(Request $request):Response
     {
         $garden = new Garden('', 0, 0, 0, 0);
-        $form = $this->createForm(GardenType::class, $garden);
+        $form = $this->createForm(GardenType::class, $garden, ['action' => $this->generateUrl('garden_create')]);
         $form->handleRequest($request);
 
         dump($form->isSubmitted());
         if ($form->isSubmitted() && $form->isValid()) {
 
-            dump($garden);exit;
+            dump($garden);
 
             $this->addFlash('notice', "Your garden is created ! You can add your plants now !");
             return $this->redirectToRoute('index');
@@ -34,8 +34,7 @@ class GardenController extends AbstractController
         return $this->render('garden/modals.html.twig', [
             'modalTitle' => 'Créer un jardin',
             'template' => 'form_add_garden',
-            'view' => $form->createView(),
-
+            'view' => $form->createView()
         ]);
     }
 }

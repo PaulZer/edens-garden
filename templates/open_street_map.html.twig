@@ -32,7 +32,7 @@
             osmap = L.map('map', {
                 center: [lat, lng],
                 zoom: 12
-            })/*.setView([lat, lng], 12)*/.addEventListener('click', (event) => {
+            }).addEventListener('click', (event) => {
                 osmap.removeLayer(marker);
                 let _lat = event.latlng.lat.toFixed(6);
                 let _lng = event.latlng.lng.toFixed(6);
@@ -43,7 +43,7 @@
                     lngInput.value = _lng;
                     latInput.dispatchEvent(new Event('change'));
                     [latInput, lngInput].forEach((el) => {
-                       if(!el.classList.contains('is-valid')) el.classList.add('is-valid');
+
                     });
                 }
             }).addEventListener('move', () => {
@@ -61,20 +61,39 @@
 
             setTimeout(function() {
                 osmap.invalidateSize();
-                console.log('lat : '+ lat +'; lng : '+ lng);
                 marker = L.marker([lat, lng]).addTo(osmap).bindPopup('Choisissez la position de votre jardin sur la carte !').openPopup();
             }, 500)
         }
 
+        const defaultLatLngValue = 0;
         [latInput, lngInput].forEach((el) => {
-            el.addEventListener('change', () => {
-                console.log(latInput.value);
-                let _lat = latInput.value;
-                let _lng = lngInput.value;
-                centerMap(_lat, _lng);
-            });
-        });
+            ['change'].forEach((inputEvent) => {
+                el.addEventListener(inputEvent, () => {
+                    let _lat = parseFloat(latInput.value);
+                    let _lng = parseFloat(lngInput.value);
 
+                    if(isNaN(_lat)) _lat = defaultLatLngValue;
+                    else {
+                        if(_lat < -90) _lat = -90;
+                        if(_lat > 90) _lat = 90;
+                    }
+                    if(isNaN(_lng)) _lng = defaultLatLngValue;
+                    else {
+                        if(_lng < -180) _lng = -180;
+                        if(_lng > 180) _lng = 180;
+                    }
+                    latInput.value = _lat.toFixed(6);
+                    lngInput.value = _lng.toFixed(6);
+                    if(latInput && lngInput ){
+                        [latInput, lngInput].forEach((elt) => {
+                            elt.classList.add('is-valid');
+                        });
+                        centerMap(_lat.toFixed(6), _lng.toFixed(6));
+                    }
+                });
+            });
+
+        });
         initMap();
     </script>
 {% endblock %}
