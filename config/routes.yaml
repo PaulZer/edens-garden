@@ -14,6 +14,18 @@ plantFamilies:
     path: /plant_families
     controller: App\Controller\PlantFamilyController::viewAll
 
+plantFamily:
+    path: /plant_family/{id}
+    controller: App\Controller\PlantFamilyController::viewFamily
+
+plants:
+    path: /plants
+    controller: App\Controller\PlantController::viewAll
+
+plant:
+    path: /plant/{id}
+    controller: App\Controller\PlantController::viewPlant
+
 logout:
     path: /logout
     methods: GET

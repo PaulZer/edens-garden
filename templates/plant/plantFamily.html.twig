@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plant Family : {{ family.name }}{% endblock %}
+{% block body %}
+    hello <b>{{ app.user.firstName }}</b>
+    <div id='title'>Here are plants for the family : <b>{{ family.name }}</b> </div>
+    <div id='description'>Description : <b>{{ family.description }}</b> </div>
+
+    <table border="1px">
+        <th align='center'>Name</th>
+        <th align='center'>Latin Name</th>
+        <th align='center'>Water Frequency</th>
+    {% for plant in plants %}
+        <tr>
+            <td align='center'>{{plant.name}}</td>
+            <td align='center'>{{plant.latinName}}</td>
+            <td align='center'>{{plant.waterFrequency}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
