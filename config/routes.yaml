@@ -17,3 +17,12 @@ logout:
 index:
     path: /
     controller: App\Controller\DefaultController::index
+
+plant:
+    path: /plant
+
+garden:
+    path: /garden
+
+account:
+    path: /account
