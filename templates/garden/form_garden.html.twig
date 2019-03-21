@@ -56,13 +56,12 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
     <script type="text/javascript" role="modal-script">
         var btnCollapseOSMap = document.getElementById('btnCollapseOSMap');
         var gardenNameInput = document.getElementById('garden_name');
         var gardenLengthInput = document.getElementById('garden_length');
         var gardenHeightInput = document.getElementById('garden_height');
-        var formGarden = $('form[name="garden"]')[0];
-        console.log(formGarden);
 
         document.getElementById('modal').addEventListener('keydown', (event) => {
            if(event.which == 13) {
@@ -77,37 +76,10 @@
             event.target.classList.toggle('btn-warning');
         });
 
-        // input integer > 0
-        gardenNameInput.addEventListener('keyup', (event) => {
-            if(event.target.value.length > 0) {
-                event.target.classList.add('is-valid');
-            } else {
-                event.target.classList.remove('is-valid');
-            }
-        });
+        bindTextInputValidation(gardenNameInput, ['keyup'], 0, 80);
 
-        // input beetween min and max
         [gardenLengthInput, gardenHeightInput].forEach((el) => {
-            ['keyup', 'change'].forEach((inputEvent) => {
-                el.addEventListener(inputEvent, (event) =>{
-                    let inputMin = parseInt(el.getAttribute('min'));
-                    let inputMax = parseInt(el.getAttribute('max'));
-                    if(event.target.value < inputMin){
-                        event.target.value = inputMin;
-                    } else if(event.target.value > inputMax) {
-                        event.target.value = inputMax;
-                    }
-
-                    if(event.target.value >= inputMin) {
-                        event.target.value = parseInt(event.target.value);
-                        event.target.classList.add('is-valid');
-                    }
-                    else {
-                        event.target.value = parseInt(event.target.value);
-                        event.target.classList.remove('is-valid');
-                        event.preventDefault();
-                    }
-                });
-            });
-        });    </script>
+            bindInputIntegerValidation(el, ['keyup', 'change'], parseInt(el.getAttribute('min')), parseInt(el.getAttribute('max')));
+        });
+    </script>
 {% endblock %}
