@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" role="modal-script">
 
         // On initialise la latitude et la longitude de Bourk (centre de la carte)
         var lat = 46.215083;
@@ -64,13 +64,13 @@
                 latInput.dispatchEvent(new Event('change'));
                 marker = L.marker([lat, lng]).addTo(osmap).bindPopup('Choisissez la position de votre jardin sur la carte !').openPopup();
 
-            }, 500)
+            }, 500);
         }
 
-        const defaultLatLngValue = 0;
+        var defaultLatLngValue = 0;
         [latInput, lngInput].forEach((el) => {
             ['change'].forEach((inputEvent) => {
-                el.addEventListener(inputEvent, () => {
+                el.addEventListener(inputEvent, () => { //input latitude and longitude
                     let _lat = parseFloat(latInput.value);
                     let _lng = parseFloat(lngInput.value);
 
@@ -94,7 +94,6 @@
                     }
                 });
             });
-
         });
         initMap();
     </script>
