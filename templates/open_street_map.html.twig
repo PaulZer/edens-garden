@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" role="modal-script">
+    <script type="text/javascript">
 
         // On initialise la latitude et la longitude de Bourk (centre de la carte)
         var lat = 46.215083;
@@ -67,34 +67,7 @@
             }, 500);
         }
 
-        var defaultLatLngValue = 0;
-        [latInput, lngInput].forEach((el) => {
-            ['change'].forEach((inputEvent) => {
-                el.addEventListener(inputEvent, () => { //input latitude and longitude
-                    let _lat = parseFloat(latInput.value);
-                    let _lng = parseFloat(lngInput.value);
-
-                    if(isNaN(_lat)) _lat = defaultLatLngValue;
-                    else {
-                        if(_lat < -90) _lat = -90;
-                        if(_lat > 90) _lat = 90;
-                    }
-                    if(isNaN(_lng)) _lng = defaultLatLngValue;
-                    else {
-                        if(_lng < -180) _lng = -180;
-                        if(_lng > 180) _lng = 180;
-                    }
-                    latInput.value = _lat.toFixed(6);
-                    lngInput.value = _lng.toFixed(6);
-                    if(latInput && lngInput ){
-                        [latInput, lngInput].forEach((elt) => {
-                            elt.classList.add('is-valid');
-                        });
-                        centerMap(_lat.toFixed(6), _lng.toFixed(6));
-                    }
-                });
-            });
-        });
+        bindLatLngInputsValidation(['change'], latInput, lngInput, 0);
         initMap();
     </script>
 {% endblock %}
