@@ -1,4 +1,4 @@
 {% block admin_header %}
-    <a class="btn" href="{{ path('admin')}}"><i class="fas fa-tools"></i> ADMINISTRATION</a>
+    <a class="btn btn-success {% if app.request.pathInfo == '/admin' %} active{% endif %}" href="{{ path('admin')}}"><i class="fas fa-tools"></i> ADMINISTRATION</a>
     {% include 'header/subheaders/users.html.twig' %}
 {% endblock %}

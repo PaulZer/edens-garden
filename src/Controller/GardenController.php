@@ -33,7 +33,7 @@ class GardenController extends AbstractController
 
         return $this->render('garden/modals.html.twig', [
             'modalTitle' => 'Créer un jardin',
-            'template' => 'form_add_garden',
+            'template' => 'form_garden',
             'view' => $form->createView()
         ]);
     }

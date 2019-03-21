@@ -61,6 +61,8 @@
         var gardenNameInput = document.getElementById('garden_name');
         var gardenLengthInput = document.getElementById('garden_length');
         var gardenHeightInput = document.getElementById('garden_height');
+        var formGarden = $('form[name="garden"]')[0];
+        console.log(formGarden);
 
         document.getElementById('modal').addEventListener('keydown', (event) => {
            if(event.which == 13) {
@@ -75,6 +77,7 @@
             event.target.classList.toggle('btn-warning');
         });
 
+        // input integer > 0
         gardenNameInput.addEventListener('keyup', (event) => {
             if(event.target.value.length > 0) {
                 event.target.classList.add('is-valid');
@@ -83,6 +86,7 @@
             }
         });
 
+        // input beetween min and max
         [gardenLengthInput, gardenHeightInput].forEach((el) => {
             ['keyup', 'change'].forEach((inputEvent) => {
                 el.addEventListener(inputEvent, (event) =>{
@@ -94,7 +98,7 @@
                         event.target.value = inputMax;
                     }
 
-                    if(event.target.value > 0) {
+                    if(event.target.value >= inputMin) {
                         event.target.value = parseInt(event.target.value);
                         event.target.classList.add('is-valid');
                     }
@@ -105,6 +109,5 @@
                     }
                 });
             });
-        });
-    </script>
+        });    </script>
 {% endblock %}

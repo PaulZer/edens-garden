@@ -1,7 +1,8 @@
 
-<nav id="header">
-    <a class="btn" href="{{ path('index')}}"><i class="fas fa-home"></i> ACCUEIL</a>
-    <a class="btn" href="{{ path('plants')}}"><i class="fas fa-spa"></i> PLANTES</a>
+<nav id="header" class="navbar bg-success">
+
+    <a class="btn btn-success {% if app.request.pathInfo == '/' %} active{% endif %}" href="{{ path('index')}}"><i class="fas fa-home"></i> ACCUEIL</a>
+    <a class="btn btn-success {% if app.request.pathInfo == '/plants' %} active{% endif %}" href="{{ path('plants')}}"><i class="fas fa-spa"></i> PLANTES</a>
 
     {% if app.user %}
 
@@ -20,36 +21,14 @@
 
 {% block stylesheets %}
 <style>
-
-    #header
-    {
-        width: 100% !important;
-
-        background-color: #718C00;
-
-        text-align: center;
-    }
-
-    #header a
-    {
-        position: relative;
-
-        color: black;
-        background-color: #718C00;
-
-        border: none;
-
-        font-size: large;
-        font-weight: bold;
-
+    #header > a.btn-success:not('.active') {
         color: black;
     }
-
-    #header a:hover
-    {
-        color: #718C00;
-        background-color: black;
-    }
-
 </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+    </script>
 {% endblock %}
