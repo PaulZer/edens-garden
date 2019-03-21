@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Jardins : {{plot.name}}{% endblock %}
+{% block body %}
+    hello <b>{{ app.user.firstName }}</b>
+    <table border="1px">
+        <th>Name</th>
+        <th>Height</th>
+        <th>Length</th>
+        <tr>
+            <td>{{plot.name}}</td>
+            <td>{{plot.height}}</td>
+            <td>{{plot.length}}</td>
+        </tr>
+    </table>
+{% endblock %}

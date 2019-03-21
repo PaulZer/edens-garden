@@ -10,6 +10,38 @@ register:
     path: /register
     controller: App\Controller\SecurityController::register
 
+plantFamilies:
+    path: /plant_families
+    controller: App\Controller\PlantFamilyController::viewAll
+
+plantFamily:
+    path: /plant_family/{id}
+    controller: App\Controller\PlantFamilyController::viewFamily
+
+plants:
+    path: /plants
+    controller: App\Controller\PlantController::viewAll
+
+plant:
+    path: /plant/{id}
+    controller: App\Controller\PlantController::viewPlant
+    
+gardens:
+    path: /gardens
+    controller: App\Controller\GardenController::viewAll
+
+garden:
+    path: /garden/{id}
+    controller: App\Controller\GardenController::viewGarden
+
+plots:
+    path: /plots
+    controller: App\Controller\PlotController::viewAll
+
+plot:
+    path: /plot/{id}
+    controller: App\Controller\PlotController::viewPlot
+
 logout:
     path: /logout
     methods: GET

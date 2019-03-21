@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plots{% endblock %}
+{% block body %}
+    hello {{ app.user.firstName }}
+    <table border="1px">
+    <th>Name</th>
+    <th>Height</th>
+    <th>Length</th>
+        {% for plot in plots %}
+            <tr>
+                <td><a href='/plot/{{plot.id}}'>{{plot.name}}</a></td>
+                <td>{{plot.height}}</td>
+                <td>{{plot.length}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plant Families{% endblock %}
+{% block body %}
+    hello {{ app.user.firstName }}
+    <table border="1px">
+    <th>Name</th>
+    <th>Description</th>
+        {% for family in families %}
+            <tr>
+                <td><a href='/plant_family/{{family.id}}'> {{family.name}}</a></td>
+                <td>{{family.description}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

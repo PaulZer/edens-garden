@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plante : {{plant.name}}{% endblock %}
+{% block body %}
+    hello <b>{{ app.user.firstName }}</b>
+    <table border="1px">
+        <th align='center'>Name</th>
+        <th align='center'>Latin Name</th>
+        <th align='center'>Water Frequency</th>
+        <tr>
+            <td align='center'>{{plant.name}}</td>
+            <td align='center'>{{plant.latinName}}</td>
+            <td align='center'>{{plant.waterFrequency}}</td>
+        </tr>
+    </table>
+{% endblock %}
