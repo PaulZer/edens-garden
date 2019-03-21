@@ -91,7 +91,7 @@ class Plot
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

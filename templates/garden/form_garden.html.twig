@@ -1,0 +1,113 @@
+{% block body %}
+    {{ form_start(addGarden) }}
+        <div class="form-group">
+            {{ form_row(addGarden.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(addGarden.country, {'attr': {'class': 'form-control is-valid'}}) }}
+        </div>
+        <div class="form-group">
+            <button id="btnCollapseOSMap" class="btn btn-sm btn-warning" data-toggle="collapse" href="#collapseOSMap">Cacher la carte</button>
+
+            <div class="form-group" id="collapseOSMapFormGroup">
+                <div class="collapse show" id="collapseOSMap">
+                    {% include 'open_street_map.html.twig' %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-6">
+                    {{ form_row(addGarden.latitude, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-6">
+                    {{ form_row(addGarden.longitude, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-6">
+                    {{ form_row(addGarden.height, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-6">
+                    {{ form_row(addGarden.length, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right">
+            {{ form_row(addGarden.save, {'attr': {'class': 'btn btn-success'}}) }}
+        </div>
+        {{ form_rest(addGarden) }}
+    {{ form_end(addGarden) }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #collapseOSMap {
+            margin-top: 1em;
+        }
+
+        #collapseOSMapFormGroup {
+            border-left: 2px solid lightgray;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" role="modal-script">
+        var btnCollapseOSMap = document.getElementById('btnCollapseOSMap');
+        var gardenNameInput = document.getElementById('garden_name');
+        var gardenLengthInput = document.getElementById('garden_length');
+        var gardenHeightInput = document.getElementById('garden_height');
+        var formGarden = $('form[name="garden"]')[0];
+        console.log(formGarden);
+
+        document.getElementById('modal').addEventListener('keydown', (event) => {
+           if(event.which == 13) {
+               event.preventDefault();
+               return;
+           }
+        });
+
+        btnCollapseOSMap.addEventListener('click', (event) => {
+            event.target.firstChild.data = event.target.firstChild.data == "Cacher la carte" ? "Montrer la carte" : "Cacher la carte";
+            event.target.classList.toggle('btn-primary');
+            event.target.classList.toggle('btn-warning');
+        });
+
+        // input integer > 0
+        gardenNameInput.addEventListener('keyup', (event) => {
+            if(event.target.value.length > 0) {
+                event.target.classList.add('is-valid');
+            } else {
+                event.target.classList.remove('is-valid');
+            }
+        });
+
+        // input beetween min and max
+        [gardenLengthInput, gardenHeightInput].forEach((el) => {
+            ['keyup', 'change'].forEach((inputEvent) => {
+                el.addEventListener(inputEvent, (event) =>{
+                    let inputMin = parseInt(el.getAttribute('min'));
+                    let inputMax = parseInt(el.getAttribute('max'));
+                    if(event.target.value < inputMin){
+                        event.target.value = inputMin;
+                    } else if(event.target.value > inputMax) {
+                        event.target.value = inputMax;
+                    }
+
+                    if(event.target.value >= inputMin) {
+                        event.target.value = parseInt(event.target.value);
+                        event.target.classList.add('is-valid');
+                    }
+                    else {
+                        event.target.value = parseInt(event.target.value);
+                        event.target.classList.remove('is-valid');
+                        event.preventDefault();
+                    }
+                });
+            });
+        });    </script>
+{% endblock %}

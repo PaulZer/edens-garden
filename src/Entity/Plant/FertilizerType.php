@@ -59,7 +59,7 @@ class FertilizerType
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -81,6 +81,9 @@ class FertilizerType
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCode(): ?string
     {
         return $this->code;
@@ -93,6 +96,9 @@ class FertilizerType
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDescription(): ?string
     {
         return $this->description;

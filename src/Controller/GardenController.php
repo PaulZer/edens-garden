@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Controller;
-
-
 use App\Entity\User;
 use App\Entity\Garden\Garden;
 use App\Entity\Garden\Plot;
@@ -50,5 +48,27 @@ class GardenController extends AbstractController
         }
        
         return $this->render('garden/garden.html.twig', ['garden' => $garden]);
+    }
+  
+    public function createGarden(Request $request):Response
+    {
+        $garden = new Garden('', 0, 0, 0, 0);
+        $form = $this->createForm(GardenType::class, $garden, ['action' => $this->generateUrl('garden_create')]);
+        $form->handleRequest($request);
+
+        dump($form->isSubmitted());
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            dump($garden);
+
+            $this->addFlash('notice', "Your garden is created ! You can add your plants now !");
+            return $this->redirectToRoute('index');
+        }
+
+        return $this->render('garden/modals.html.twig', [
+            'modalTitle' => 'Créer un jardin',
+            'template' => 'form_garden',
+            'view' => $form->createView()
+        ]);
     }
 }

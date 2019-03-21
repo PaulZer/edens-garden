@@ -1,0 +1,100 @@
+{% block body %}
+    <div style="max-width: 90%;border: 2px solid #000; margin:auto;">
+        <div id="map" style="height: 35vh;width: 100%;">
+            <!-- Ici s'affichera la carte -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" role="modal-script">
+
+        // On initialise la latitude et la longitude de Bourk (centre de la carte)
+        var lat = 46.215083;
+        var lng = 5.241825;
+        var osmap = null;
+        var marker = null;
+        var latInput = document.getElementById('garden_latitude');
+        var lngInput = document.getElementById('garden_longitude');
+
+        function centerMap(_lat, _lng) {
+            if(marker) osmap.removeLayer(marker);
+            osmap.panTo([_lat, _lng]);
+            osmap.invalidateSize();
+            marker = L.marker([_lat, _lng]).addTo(osmap);
+        }
+
+        // Fonction d'initialisation de la carte
+        function initMap() {
+
+            // Créer l'objet "osmap" et l'insèrer dans l'élément HTML qui a l'ID "map"
+            osmap = L.map('map', {
+                center: [lat, lng],
+                zoom: 12
+            }).addEventListener('click', (event) => {
+                osmap.removeLayer(marker);
+                let _lat = event.latlng.lat.toFixed(6);
+                let _lng = event.latlng.lng.toFixed(6);
+                marker = L.marker([_lat, _lng]).addTo(osmap);
+
+                if(latInput && lngInput ){
+                    latInput.value = _lat;
+                    lngInput.value = _lng;
+                    latInput.dispatchEvent(new Event('change'));
+                    [latInput, lngInput].forEach((el) => {
+
+                    });
+                }
+            }).addEventListener('move', () => {
+                osmap.invalidateSize();
+            }).addEventListener('resize', () => {
+                osmap.invalidateSize();
+            });
+            // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer. Ici, openstreetmap.fr
+            L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                // Il est toujours bien de laisser le lien vers la source des données
+                attribution: "données © <a href='//osm.org/copyright'>OpenStreetMap</a>/ODbL - rendu <a href='//openstreetmap.fr'>OSM France</a>",
+                minZoom: 3,
+                maxZoom: 20
+            }).addTo(osmap);
+
+            setTimeout(function() {
+                osmap.invalidateSize();
+                latInput.dispatchEvent(new Event('change'));
+                marker = L.marker([lat, lng]).addTo(osmap).bindPopup('Choisissez la position de votre jardin sur la carte !').openPopup();
+
+            }, 500);
+        }
+
+        var defaultLatLngValue = 0;
+        [latInput, lngInput].forEach((el) => {
+            ['change'].forEach((inputEvent) => {
+                el.addEventListener(inputEvent, () => { //input latitude and longitude
+                    let _lat = parseFloat(latInput.value);
+                    let _lng = parseFloat(lngInput.value);
+
+                    if(isNaN(_lat)) _lat = defaultLatLngValue;
+                    else {
+                        if(_lat < -90) _lat = -90;
+                        if(_lat > 90) _lat = 90;
+                    }
+                    if(isNaN(_lng)) _lng = defaultLatLngValue;
+                    else {
+                        if(_lng < -180) _lng = -180;
+                        if(_lng > 180) _lng = 180;
+                    }
+                    latInput.value = _lat.toFixed(6);
+                    lngInput.value = _lng.toFixed(6);
+                    if(latInput && lngInput ){
+                        [latInput, lngInput].forEach((elt) => {
+                            elt.classList.add('is-valid');
+                        });
+                        centerMap(_lat.toFixed(6), _lng.toFixed(6));
+                    }
+                });
+            });
+        });
+        initMap();
+    </script>
+{% endblock %}

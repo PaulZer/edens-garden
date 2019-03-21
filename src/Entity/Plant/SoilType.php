@@ -2,6 +2,8 @@
 
 namespace App\Entity\Plant;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -34,19 +36,28 @@ class SoilType
     private $description;
 
     /**
-     * SoilType constructor.
-     * @param $id
-     * @param $name
+     * One Plant may have Many SoilType.
+     * @ORM\OneToMany(targetEntity="PlantSoilType", mappedBy="soilType")
      */
-    public function __construct(string $name, string $code, string $description)
+    private $plantSoilTypes;
+
+    /**
+     * SoilType constructor.
+     * @param $name
+     * @param $code
+     * @param $description
+     * @param $plantSoilType
+     */
+    public function __construct(string $name,string $code,string $description)
     {
         $this->name = $name;
         $this->code = $code;
         $this->description = $description;
+        $this->plantSoilTypes = new ArrayCollection();
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -61,36 +72,77 @@ class SoilType
         return $this->name;
     }
 
-    public function setName(string $name): self
+    /**
+     * @param string $name
+     */
+    public function setName($name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCode(): ?string
+    /**
+     * @return string
+     */
+    public function getCode()
     {
         return $this->code;
     }
 
-    public function setCode(string $code): self
+    /**
+     * @param string $code
+     */
+    public function setCode($code): void
     {
         $this->code = $code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+
+
+    public function addPlantSoilType(PlantSoilType $plantSoilType): self
+    {
+        if (!$this->plantSoilTypes->contains($plantSoilType)) {
+            $this->plantSoilTypes[] = $plantSoilType;
+            $plantSoilType->setSoilType($this);
+        }
 
         return $this;
     }
 
+    public function removePlantSoilType(PlantSoilType $plantSoilType): self
+    {
+        if ($this->plantSoilTypes->contains($plantSoilType)) {
+            $this->plantSoilTypes->removeElement($plantSoilType);
+            // set the owning side to null (unless already changed)
+            if ($plantSoilType->getSoilType() === $this) {
+                $plantSoilType->getSoilType(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlantSoilType[]
+     */
+    public function getPlantSoilTypes(): Collection
+    {
+        return $this->plantSoilTypes;
+    }
 
 }
