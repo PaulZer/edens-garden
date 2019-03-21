@@ -12,7 +12,9 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+    {% if app.user %}
         {% include 'header/header.html.twig' %}
+    {% endif %}
         <div class="container-fluid">
             {# read and display several types of flash messages #}
             {% for label, messages in app.flashes(['notice', 'success', 'warning']) %}

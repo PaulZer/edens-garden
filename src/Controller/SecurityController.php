@@ -25,21 +25,11 @@ class SecurityController extends AbstractController
         return $this->render('account/account.html.twig');
     }
 
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function authentication(Request $request, UserPasswordEncoderInterface $passwordEncoder,
+                                   GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator,
+                                   AuthenticationUtils $authenticationUtils): Response
     {
-        // get the auth error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-      
-        return $this->render('auth/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error
-        ]);
-    }
-
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
-    {
+        //REGISTER
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -71,8 +61,18 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
-        return $this->render('auth/register.html.twig', [
-            'registrationForm' => $form->createView(),
+        //LOGIN
+        // get the auth error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        //RENDER
+        return $this->render('auth/auth.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+            'registrationForm' => $form->createView()
         ]);
     }
+
 }

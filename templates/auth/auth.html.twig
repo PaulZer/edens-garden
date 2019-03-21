@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+    <div id="background" class="row" >
+        <div class="col-md-6">
+            <div class="form-container mx-auto rounded">
+                {% include 'auth/login.html.twig'
+                    with {'last_username' : last_username, 'error' : error} %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-container mx-auto rounded">
+
+                {% include 'auth/register.html.twig'
+                    with {'registrationForm' : registrationForm} %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+    <style>
+
+        body
+        {
+            background: url("{{ asset('assets/media/images/background-garden-images.jpg') }}") no-repeat;
+            background-size: auto;
+        }
+
+        .form-container
+        {
+            background-color: rgba(0,0,0,0.7);
+            max-width: 350px;
+            margin: 2em;
+        }
+
+        .form
+        {
+            color: white;
+        }
+
+    </style>
+
+{% endblock %}

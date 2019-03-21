@@ -12,15 +12,11 @@ plots:
 
 login:
     path: /login
-    controller: App\Controller\SecurityController::login
+    controller: App\Controller\SecurityController::authentication
 
 logout:
     path: /logout
     methods: GET
-
-register:
-    path: /register
-    controller: App\Controller\SecurityController::register
 
 # ACCOUNT
 
