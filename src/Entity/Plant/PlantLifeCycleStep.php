@@ -24,7 +24,7 @@ class PlantLifeCycleStep
 
     /**
      * Many PlantLifeCycleStep is relative to One Plant.
-     * @ORM\ManyToOne(targetEntity="Plant", inversedBy="lifeCyclesteps")
+     * @ORM\ManyToOne(targetEntity="Plant", inversedBy="lifeCycleSteps")
      * @ORM\JoinColumn(name="plant_id", referencedColumnName="id")
      */
     private $plant;

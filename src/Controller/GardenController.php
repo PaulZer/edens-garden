@@ -1,20 +1,19 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\User;
 use App\Entity\Garden\Garden;
-use App\Entity\Garden\Plot;
-use App\Form\RegistrationFormType;
-use App\Security\LoginFormAuthenticator;
+use App\Form\GardenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class GardenController extends AbstractController
 {
+    public function index(): Response
+    {
+        return $this->render('index.html.twig');
+    }
+
     public function viewAll(): Response
     {
         $gardenRepository = $this->getDoctrine()
@@ -56,10 +55,7 @@ class GardenController extends AbstractController
         $form = $this->createForm(GardenType::class, $garden, ['action' => $this->generateUrl('garden_create')]);
         $form->handleRequest($request);
 
-        dump($form->isSubmitted());
         if ($form->isSubmitted() && $form->isValid()) {
-
-            dump($garden);
 
             $this->addFlash('notice', "Your garden is created ! You can add your plants now !");
             return $this->redirectToRoute('index');

@@ -56,10 +56,6 @@ garden_create:
     path: /garden
     controller: App\Controller\GardenController::createGarden
 
-plants:
-    path: /plants
-    controller: App\Controller\DefaultController::plants
-
 account:
     path: /account
     controller: App\Controller\SecurityController::account

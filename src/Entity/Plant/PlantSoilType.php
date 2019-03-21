@@ -31,7 +31,7 @@ class PlantSoilType
 
     /**
      * Many PlantSoilType is relative to One SoilType.
-     * @ORM\ManyToOne(targetEntity="SoilType", inversedBy="plantSoilType")
+     * @ORM\ManyToOne(targetEntity="SoilType", inversedBy="plantSoilTypes")
      * @ORM\JoinColumn(name="soil_type_id", referencedColumnName="id")
      */
     private $soilType;
