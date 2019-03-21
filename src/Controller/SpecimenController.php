@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Repository\SpecimenRepository;
+
 use App\Service\SpecimenService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Garden\Specimen;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class SpecimenController extends AbstractController
 {

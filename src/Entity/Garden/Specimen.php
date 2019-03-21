@@ -9,6 +9,8 @@
 namespace App\Entity\Garden;
 
 use App\Entity\Plant\LifeCycleStep;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\FertilizerType;
@@ -67,11 +69,16 @@ class Specimen
 
     /**
      * One Specimen has One Logger.
-     * @OneToOne(targetEntity="App\Entity\Util\Logger")
-     * @JoinColumn(name="logger_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="App\Entity\Util\Logger")
+     * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
      */
     private $logger;
 
+    /**
+     * One Specimen may have Many SpecimenLifeResult.
+     * @ORM\OneToMany(targetEntity="SpecimenLifeResult", mappedBy="specimen", cascade={"persist"})
+     */
+    private $specimenLifeResults;
     /**
      * Specimen constructor.
      * @param $id
@@ -94,6 +101,7 @@ class Specimen
         $this->currentLifeCycleStep = $currentLifeCycleStep;
         $this->plot = $plot;
         $this->logger = new Logger();
+        $this->specimenLifeResults = new ArrayCollection();
     }
 
     /**
@@ -213,6 +221,47 @@ class Specimen
     {
         return $this->logger;
     }
+
+    public function setLogger(?Logger $logger): self
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpecimenLifeResult[]
+     */
+    public function getSpecimenLifeResults(): Collection
+    {
+        return $this->specimenLifeResults;
+    }
+
+    public function addSpecimenLifeResult(SpecimenLifeResult $specimenLifeResult): self
+    {
+        if (!$this->specimenLifeResults->contains($specimenLifeResult)) {
+            $this->specimenLifeResults[] = $specimenLifeResult;
+            $specimenLifeResult->setSpecimen($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecimenLifeResult(SpecimenLifeResult $specimenLifeResult): self
+    {
+        if ($this->specimenLifeResults->contains($specimenLifeResult)) {
+            $this->specimenLifeResults->removeElement($specimenLifeResult);
+            // set the owning side to null (unless already changed)
+            if ($specimenLifeResult->getSpecimen() === $this) {
+                $specimenLifeResult->setSpecimen(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
 
 
 }
