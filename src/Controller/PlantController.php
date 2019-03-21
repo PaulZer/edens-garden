@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\Plant;
+use App\Entity\Plant\PlantSunExposureType;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +30,7 @@ class PlantController extends AbstractController
             );
         }
         $plants = $plantRepository->findAll();
-        
+
         return $this->render('plant/plants.html.twig', [
             'plants' => $plants
         ]);
