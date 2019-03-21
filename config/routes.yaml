@@ -1,14 +1,34 @@
+# ADMIN
+
 admin:
     path: /admin
     controller: App\Controller\SecurityController::admin
+
+plots:
+    path: /plots
+    controller: App\Controller\PlotController::viewAll
+
+# AUTH
 
 login:
     path: /login
     controller: App\Controller\SecurityController::login
 
+logout:
+    path: /logout
+    methods: GET
+
 register:
     path: /register
     controller: App\Controller\SecurityController::register
+
+# ACCOUNT
+
+account:
+    path: /account
+    controller: App\Controller\SecurityController::account
+
+# PLANTS
 
 plantFamilies:
     path: /plant_families
@@ -25,7 +45,9 @@ plants:
 plant:
     path: /plant/{id}
     controller: App\Controller\PlantController::viewPlant
-    
+
+# GARDEN
+
 gardens:
     path: /gardens
     controller: App\Controller\GardenController::viewAll
@@ -33,20 +55,6 @@ gardens:
 garden:
     path: /garden/{id}
     controller: App\Controller\GardenController::viewGarden
-
-plots:
-    path: /plots
-    controller: App\Controller\PlotController::viewAll
-
-plot:
-    path: /plot/{id}
-    controller: App\Controller\PlotController::viewPlot
-
-logout:
-    path: /logout
-    methods: GET
-
-# GARDEN
 
 index:
     path: /
@@ -56,6 +64,6 @@ garden_create:
     path: /garden
     controller: App\Controller\GardenController::createGarden
 
-account:
-    path: /account
-    controller: App\Controller\SecurityController::account
+plot:
+    path: /plot/{id}
+    controller: App\Controller\PlotController::viewPlot
