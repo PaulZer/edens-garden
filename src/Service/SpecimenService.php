@@ -10,6 +10,7 @@ namespace App\Service;
 
 
 use App\Entity\Garden\Specimen;
+use App\Entity\Garden\SpecimenLifeResult;
 use App\Repository\SpecimenRepository;
 use Doctrine\ORM\EntityManager;
 
@@ -80,5 +81,22 @@ class SpecimenService
         }
 
         $this->updateSpecimen($specimen);
+    }
+
+    public function dailyLifeResult(int $specimenId)
+    {
+        $specimen = $this->specimenRepository->find($specimenId);
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
+        $specimenWaterFrequency =$specimen->getPlant()->getWaterFrequency();
+
+        $waterEfficiency = 100;
+        if ($specimenWaterFrequency < $daysWithoutWater)
+            $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100/$specimenWaterFrequency);
+
+        $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
+        $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
+        $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
+        $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
     }
 }
