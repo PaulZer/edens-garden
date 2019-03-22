@@ -8,6 +8,12 @@
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
+    <ul>
+        {% for garden in app.user.gardens %}
+            <li>{{ garden.name }}</li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
 
 {% block stylesheets %}

@@ -2,10 +2,9 @@
 
 {% block title %}Plants{% endblock %}
 {% block body %}
-    hello {{ app.user.firstName }}
-    <table border="1px">
-    <th>Name</th>
-    <th>Latin Name</th>
+    <table class="table table-striped">
+        <th scope="col">Name</th>
+        <th scope="col">Latin Name</th>
         {% for plant in plants %}
             <tr>
                 <td><a href='/plant/{{plant.id}}'>{{plant.name}}</a></td>

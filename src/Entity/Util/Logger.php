@@ -61,4 +61,17 @@ class Logger
         $this->logs->add(new LogEvent($eventAction, $eventMessage, $eventDate));
     }
 
+    public function removeLog(LogEvent $log): self
+    {
+        if ($this->logs->contains($log)) {
+            $this->logs->removeElement($log);
+            // set the owning side to null (unless already changed)
+            if ($log->getParent() === $this) {
+                $log->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

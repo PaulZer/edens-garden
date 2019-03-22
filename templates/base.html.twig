@@ -15,10 +15,14 @@
         {% include 'header/header.html.twig' %}
         <div class="container-fluid">
             {# read and display several types of flash messages #}
-            {% for label, messages in app.flashes(['notice', 'success', 'warning']) %}
+            {% for label, messages in app.flashes(['success', 'warning', 'danger']) %}
+
                 {% for message in messages %}
-                    <div class="flash-{{ label }}" style="margin-top: 1em;">
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert" style="margin-top: 1em;">
                         {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 {% endfor %}
             {% endfor %}

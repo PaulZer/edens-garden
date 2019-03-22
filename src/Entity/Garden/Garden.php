@@ -8,6 +8,7 @@
 
 namespace App\Entity\Garden;
 
+use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,6 +64,12 @@ class Garden
     private $plots;
 
     /**
+     * Many User may have Many Garden.
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="gardens")
+     */
+    private $user;
+
+    /**
      * Garden constructor.
      * @param $name
      * @param $latitude
@@ -72,8 +79,9 @@ class Garden
      * @param $length
      * @param $plots
      */
-    public function __construct(string $name,float $latitude,float $longitude,float $height,float $length)
+    public function __construct(User $user, string $name,float $latitude,float $longitude,float $height,float $length)
     {
+        $this->user = $user;
         $this->name = $name;
         $this->latitude = $latitude;
         $this->longitude = $longitude;

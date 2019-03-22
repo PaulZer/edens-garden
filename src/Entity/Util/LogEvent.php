@@ -40,8 +40,8 @@ class LogEvent
 
     /**
      * Many LogEvent have one Logger. This is the owning side.
-     * @ManyToOne(targetEntity="Logger", inversedBy="logs")
-     * @JoinColumn(name="logger_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Logger", inversedBy="logs")
+     * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
      */
     private $parent;
 
@@ -112,6 +112,18 @@ class LogEvent
     public function setEventDate(\DateTimeImmutable $eventDate): void
     {
         $this->eventDate = $eventDate;
+    }
+
+    public function getParent(): ?Logger
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?Logger $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 
 

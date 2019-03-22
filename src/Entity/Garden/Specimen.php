@@ -67,8 +67,8 @@ class Specimen
 
     /**
      * One Specimen has One Logger.
-     * @OneToOne(targetEntity="App\Entity\Util\Logger")
-     * @JoinColumn(name="logger_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="App\Entity\Util\Logger")
+     * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
      */
     private $logger;
 
@@ -212,6 +212,13 @@ class Specimen
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function setLogger(?Logger $logger): self
+    {
+        $this->logger = $logger;
+
+        return $this;
     }
 
 
