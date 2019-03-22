@@ -23,22 +23,22 @@ class SpecimenLifeResult
     private $id;
 
     /**
-     * @ORM\Column(type="int", name ="water_efficiency")
+     * @ORM\Column(type="integer", name ="water_efficiency")
      */
     private $waterEfficiency;
 
     /**
-     * @ORM\Column(type="int", name ="fertilizer_efficiency")
+     * @ORM\Column(type="integer", name ="fertilizer_efficiency")
      */
     private $fertilizerEfficiency;
 
     /**
-     * @ORM\Column(type="int", name ="soil_efficiency")
+     * @ORM\Column(type="integer", name ="soil_efficiency")
      */
     private $soilEfficiency;
 
     /**
-     * @ORM\Column(type="int", name ="sun_exposure_efficiency")
+     * @ORM\Column(type="integer", name ="sun_exposure_efficiency")
      */
     private $sunExposureEfficiency;
 
