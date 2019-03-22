@@ -2,14 +2,32 @@
 
 {% block title %}Plante : {{plant.name}}{% endblock %}
 {% block body %}
-    <table class="table table-striped">
-        <th scope="col">Name</th>
-        <th scope="col">Latin Name</th>
-        <th scope="col">Water Frequency</th>
-        <tr>
-            <td>{{plant.name}}</td>
-            <td>{{plant.latinName}}</td>
-            <td>{{plant.waterFrequency}}</td>
-        </tr>
-    </table>
+    <div>Nom de la plante : {{plant.name}} <br></div>
+    <div>Nom latin : {{plant.latinName}}<br></div>
+    <div>Chemin vers l'image : {{plant.picturePath}}<br></div>
+    <div>Fréquence arrosage : {{plant.waterFrequency}}<br></div>
+
+            {% for singleplantFamily in plant.plantFamily %}
+                <div>Nom de la famille : {{singleplantFamily.name}}<br></div>
+                <div>Code de la famille : {{singleplantFamily.code}}<br></div>
+                <div>Description de la famille : {{singleplantFamily.description}}<br></div>
+            {% endfor %}
+
+            {% for preferedSunExposureType in plant.preferedSunExposureTypes %}
+                <div>Efficacité de l'expo soleil : {{preferedSunExposureType.efficiency}}<br></div>
+            {% endfor %}
+
+            {% for preferedSoilType in plant.preferedSoilTypes %}
+                <div>Efficacité du type de terre : {{preferedSoilType.efficiency}}<br></div>
+            {% endfor %}
+            {% for preferedFertilizerType in plant.preferedFertilizerTypes %}
+                <div>Efficacité du type de compost : {{preferedFertilizerType.efficiency}}<br></div>
+                <div>Nb jours avant compost : {{preferedFertilizerType.nbDayBeforeFertilizing}}<br></div>
+            {% endfor %}
+
+            {% for lifeCycleStep in plant.lifeCycleSteps %}
+                <div>Nom étape cycle de vie : {{lifeCycleStep.lifeCycleStep.name}}<br></div>
+                <div>Code étape cycle de vie : {{lifeCycleStep.lifeCycleStep.code}}<br></div>
+                <div>Description étape cycle de vie : {{lifeCycleStep.lifeCycleStep.description}}<br></div>
+            {% endfor %}
 {% endblock %}
