@@ -52,11 +52,7 @@ class User implements UserInterface
 
     /**
      * Many User may have Many Garden.
-     * @ORM\ManyToMany(targetEntity="App\Entity\Garden\Garden")
-     * @ORM\JoinTable(name="user_garden",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="garden_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="App\Entity\Garden\Garden", mappedBy="user")
      */
     private $gardens;
 

@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-
 use App\Service\SpecimenService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class SpecimenController extends AbstractController
 {
@@ -18,7 +17,8 @@ class SpecimenController extends AbstractController
 
     public function waterize(Request $request, SpecimenService $specimenService): Response
     {
-        $specimenService->waterize($request->query->get("id"));
+        //TODO add weather
+        $specimenService->waterize($request->query->get("id"), 0);
     }
 
     public function goToNextLifeCycleStep(Request $request, SpecimenService $specimenService): Response

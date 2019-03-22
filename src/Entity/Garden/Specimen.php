@@ -259,9 +259,4 @@ class Specimen
 
         return $this;
     }
-
-
-
-
-
 }

@@ -8,6 +8,12 @@
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
+    <ul>
+        {% for garden in app.user.gardens %}
+            <li>{{ garden.name }}</li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -15,6 +21,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script>
         var modalShown = 0;
