@@ -62,7 +62,11 @@ index:
 
 garden_create:
     path: /garden
-    controller: App\Controller\GardenController::createGarden
+    controller: App\Controller\GardenController::editgarden
+
+garden_edit:
+    path: /garden/{id}/edit
+    controller: App\Controller\GardenController::editGarden
 
 plot:
     path: /plot/{id}

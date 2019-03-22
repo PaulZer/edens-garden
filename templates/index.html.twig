@@ -8,12 +8,23 @@
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
-    <ul>
+    <hr>
+    <h1>Vos jardins</h1>
+    <div class="container">
         {% for garden in app.user.gardens %}
-            <li>{{ garden.name }}</li>
+            <div class="row" style="margin-top:1em;">
+                <div class="card w-100" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ garden.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ garden.country.name }} : {{ garden.length * garden.height }} parcelles</h6>
+                        <p class="card-text">TODO afficher les dernières alertes du jardin (étapes de la vie des plantes, actions requises), infos (nombre de plantes, météo...) </p>
+                        <a id="editGarden" data-garden-id="{{ garden.id }}" class="card-link">Paramètres</a>
+                        <a href="{{ path('garden', {'id': garden.id }) }}" class="card-link">Aller au jardin</a>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
-
+    </div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -33,7 +44,7 @@
         });
 
 
-        $("#addGarden").on('click', (event) => {
+        $("#addGarden, #editGarden").on('click', (event) => {
             console.log(modalShown);
 
             if(modalShown) {
@@ -41,7 +52,15 @@
                 return;
             }
             modalShown = 1;
-            $.post('{{ path("garden_create") }}', {
+            let route = '';
+            if(event.target.getAttribute('id') == 'editGarden') {
+                route = "{{ path('garden_edit', {'id': 'XXX' }) }}";
+                route = route.replace('XXX', event.target.getAttribute('data-garden-id'));
+            } else {
+                route = '{{ path("garden_create") }}';
+            }
+
+            $.post(route, {
 
             }, (modal) => {
                 $('body').append(modal);
