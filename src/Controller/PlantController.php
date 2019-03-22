@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Plant\FertilizerType;
+use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\PlantFertilizerType;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantSoilType;
@@ -11,6 +12,7 @@ use App\Entity\Plant\PlantSunExposureType;
 use App\Entity\Plant\SoilType;
 use App\Entity\Plant\SunExposureType;
 use App\Form\PlantFertilizerTypeFormType;
+use App\Form\PlantFormType;
 use App\Form\PlantSoilTypeFormType;
 use App\Form\PlantSunExposureTypeFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,6 +57,29 @@ class PlantController extends AbstractController
 
     }
 
+    public function create(): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $plantFamily = $em->getRepository(PlantFamily::class)->findOneBy(['code' => 'fructable']);
+        $plant = new Plant('', '', '', $plantFamily, 0);
+
+        $form = $this->createForm(PlantFormType::class,
+            $plant,
+            ['action' => $this->generateUrl('plant_create')]);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->addFlash('success', "soda");
+            return $this->redirectToRoute('plants');
+        }
+
+        return $this->render('forms/plant/form_plant.html.twig', [
+            'form' => $form->createView()
+        ]);
+
+    }
+
     public function addFertilizer(Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
@@ -78,7 +103,7 @@ class PlantController extends AbstractController
             return $this->redirectToRoute('plants');
         }
 
-        return $this->render('forms/form_plant_fertilizer.html.twig', [
+        return $this->render('forms/plant/plant_attributes/form_plant_fertilizer.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -105,7 +130,7 @@ class PlantController extends AbstractController
             return $this->redirectToRoute('plants');
         }
 
-        return $this->render('forms/form_plant_soil.html.twig', [
+        return $this->render('forms/plant/plant_attributes/form_plant_soil.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -132,7 +157,7 @@ class PlantController extends AbstractController
             return $this->redirectToRoute('plants');
         }
 
-        return $this->render('forms/form_plant_sun_exposure.html.twig', [
+        return $this->render('forms/plant/plant_attributes/form_plant_sun_exposure.html.twig', [
             'form' => $form->createView()
         ]);
     }

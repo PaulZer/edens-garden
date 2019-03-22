@@ -46,6 +46,10 @@ plant:
     path: /plant/{id}
     controller: App\Controller\PlantController::viewPlant
 
+plant_create:
+    path: /createPlant
+    controller: App\Controller\PlantController::create
+
 add_fertilizer:
     path: /plant/{plantId}/addFertilizer
     controller: App\Controller\PlantController::addFertilizer
