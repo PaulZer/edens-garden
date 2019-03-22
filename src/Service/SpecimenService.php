@@ -98,5 +98,7 @@ class SpecimenService
         $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
         $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
         $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
+
+        $this->updateSpecimen($specimen);
     }
 }
