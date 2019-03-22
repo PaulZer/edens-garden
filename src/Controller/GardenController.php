@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Entity\Garden\Garden;
 use App\Form\GardenType;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,13 +52,17 @@ class GardenController extends AbstractController
   
     public function createGarden(Request $request):Response
     {
-        $garden = new Garden('', 0, 0, 0, 0);
+        $garden = new Garden($this->getUser(), '', 0, 0, 0, 0);
         $form = $this->createForm(GardenType::class, $garden, ['action' => $this->generateUrl('garden_create')]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->addFlash('notice', "Your garden is created ! You can add your plants now !");
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($garden);
+            $em->flush();
+
+            $this->addFlash('success', "Votre jardin a été créé avec succès ! Vous pouvez ajouter des plantes.");
             return $this->redirectToRoute('index');
         }
 

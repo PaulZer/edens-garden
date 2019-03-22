@@ -94,8 +94,4 @@ class SpecimenRepository extends ServiceEntityRepository
             return 100;
         }
     }
-
-    public function getSpecimenDefaultsSteps(Specimen $specimen){
-        return $specimen->getPlant()->getLifeCycleSteps();
-    }
 }

@@ -67,7 +67,7 @@ class SecurityController extends AbstractController
                 'main' // firewall name in security.yaml
             );
 
-            $this->addFlash('notice', "Your account is created ! Welcome to Eden's Garden !");
+            $this->addFlash('success', "Your account is created ! Welcome to Eden's Garden !");
             return $this->redirectToRoute('index');
         }
 

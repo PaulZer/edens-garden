@@ -2,8 +2,6 @@
 
 {% block title %}Plante : {{plant.name}}{% endblock %}
 {% block body %}
-    hello <b>{{ app.user.firstName }}</b><br>
-
     <div>Nom de la plante : {{plant.name}} <br></div>
     <div>Nom latin : {{plant.latinName}}<br></div>
     <div>Chemin vers l'image : {{plant.picturePath}}<br></div>
@@ -32,5 +30,4 @@
                 <div>Code étape cycle de vie : {{lifeCycleStep.lifeCycleStep.code}}<br></div>
                 <div>Description étape cycle de vie : {{lifeCycleStep.lifeCycleStep.description}}<br></div>
             {% endfor %}
-
 {% endblock %}

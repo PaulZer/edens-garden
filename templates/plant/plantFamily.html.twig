@@ -2,19 +2,18 @@
 
 {% block title %}Plant Family : {{ family.name }}{% endblock %}
 {% block body %}
-    hello <b>{{ app.user.firstName }}</b>
     <div id='title'>Here are plants for the family : <b>{{ family.name }}</b> </div>
     <div id='description'>Description : <b>{{ family.description }}</b> </div>
 
-    <table border="1px">
-        <th align='center'>Name</th>
-        <th align='center'>Latin Name</th>
-        <th align='center'>Water Frequency</th>
+    <table class="table table-striped">
+        <th scope="col">Name</th>
+        <th scope="col">Latin Name</th>
+        <th scope="col">Water Frequency</th>
     {% for plant in plants %}
         <tr>
-            <td align='center'><a href='/plant/{{plant.id}}'>{{plant.name}}</td>
-            <td align='center'>{{plant.latinName}}</td>
-            <td align='center'>{{plant.waterFrequency}}</td>
+            <td><a href='/plant/{{plant.id}}'>{{plant.name}}</td>
+            <td>{{plant.latinName}}</td>
+            <td>{{plant.waterFrequency}}</td>
         </tr>
     {% endfor %}
     </table>
