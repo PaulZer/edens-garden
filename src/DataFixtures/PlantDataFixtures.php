@@ -13,7 +13,7 @@ class PlantDataFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $ca1 = new ClimaticArea('Nord de la France', 'fra-n',51.165673, 47.997468);
+        /*$ca1 = new ClimaticArea('Nord de la France', 'fra-n',51.165673, 47.997468);
         $ca2 = new ClimaticArea('Centre de la France', 'fra-m',47.997468, 45.772231);
         $ca3 = new ClimaticArea('Sud de la France', 'fra-s', 45.772231, 42.342657);
 
@@ -55,6 +55,6 @@ class PlantDataFixtures extends Fixture
             }
         }
 
-        $manager->flush();
+        $manager->flush();*/
     }
 }

@@ -14,7 +14,7 @@ class AppDataFixtures extends Fixture
 {
     public  function load(ObjectManager $manager)
     {
-        $pf1 = new PlantFamily('Plantes à fruits', 'fructable', 'Plantes nécessitant une fructification optimale avant récolte des fruits.');
+        /*$pf1 = new PlantFamily('Plantes à fruits', 'fructable', 'Plantes nécessitant une fructification optimale avant récolte des fruits.');
         $pf2 = new PlantFamily('Plantes  comestibles','eatable', 'Plantes entièrement ou partiellement comestibles, atteignant une maturation avant d\'être entièrement récoltées.');
         $pf3 = new PlantFamily('Fleurs', 'flower','Les fleurs sont cultivées à but décoratif, elle doivent avoir une durée de vie après floraison longue.');
         $pf4 = new PlantFamily('Autre', 'other','Plantes n\'atteignant pas de floraison ou de fructification.');
@@ -44,7 +44,7 @@ class AppDataFixtures extends Fixture
 
         $lcs1 = new LifeCycleStep('Germination', 'germing', 'Une pousse sort de la graine ! Des racines commences à se former.');
         $lcs2 = new LifeCycleStep('Croissance', 'growth', 'La jeune plante grandit ! Elle atteindra bientôt une taille suffisante pour la suite de son cycle de vie.');
-        $lcs3 = new LifeCycleStep('Floraison', 'flowering', 'Des fleurs ont éclos ! La floraison est la période durant laquelle les fleurs de la plante se déployent.');
+        $lcs3 = new LifeCycleStep('Floraison', 'flowering', 'Des fleurs ont éclos ! La floraison est la période durant laquelle les fleurs de la plante se déploient.');
         $lcs4 = new LifeCycleStep('Pollinisation', 'pollinate', 'Il est temps de polliniser ! Cela permettra à votre plante de former de beaux fruits.');
         $lcs5 = new LifeCycleStep('Fructification', 'fruct', 'Les fruits commencent à se former. Attendez qu\'ils soient mûrs avant de les ramasser !');
         $lcs6 = new LifeCycleStep('Récolte','harvest', 'Il est temps. Attendez la maturation parfaite, et ramassez le fruit de votre travail.');
@@ -64,6 +64,6 @@ class AppDataFixtures extends Fixture
             $manager->persist($obj);
         }
 
-        $manager->flush();
+        $manager->flush();*/
     }
 }

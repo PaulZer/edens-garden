@@ -90,15 +90,14 @@ class Specimen
      * @param $currentLifeCycleStep
      * @param $plot
      */
-    public function __construct(string $id, Plant $plant, \DateTimeImmutable $plantationDate, \DateTimeImmutable $lastWateredDate, FertilizerType $fertilizer, \DateTimeImmutable $lastFertilizedDate, LifeCycleStep $currentLifeCycleStep, Plot $plot)
+    public function __construct(Plant $plant, \DateTimeImmutable $plantationDate,  FertilizerType $fertilizer, Plot $plot)
     {
-        $this->id = $id;
         $this->plant = $plant;
         $this->plantationDate = $plantationDate;
-        $this->lastWateredDate = $lastWateredDate;
+        $this->lastWateredDate = null;
         $this->fertilizer = $fertilizer;
-        $this->lastFertilizedDate = $lastFertilizedDate;
-        $this->currentLifeCycleStep = $currentLifeCycleStep;
+        $this->lastFertilizedDate = null;
+        $this->currentLifeCycleStep = $plant->getLifeCycleSteps()[0];
         $this->plot = $plot;
         $this->logger = new Logger();
         $this->specimenLifeResults = new ArrayCollection();

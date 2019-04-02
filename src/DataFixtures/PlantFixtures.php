@@ -55,11 +55,14 @@ class PlantFixtures extends Fixture
     {
         $monthBegin = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthBegin));
         $monthEnd = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthEnd));
-        return $this->manager->getRepository("App\Entity\Plant\PlantingDateInterval")->findOneBy(array(
+        $climaticArea = $this->getClimaticAreaByCode($climaticAreaCode);
+        /*return $this->manager->getRepository("App\Entity\Plant\PlantingDateInterval")->findOneBy(array(
             'climaticArea' => $this->getClimaticAreaByCode($climaticAreaCode),
             'monthBegin' => $monthBegin,
             'monthEnd' => $monthEnd
-        ));
+        ));*/
+
+        return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
     }
 
     public function load(ObjectManager $manager)
