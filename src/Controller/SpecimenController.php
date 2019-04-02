@@ -17,8 +17,14 @@ class SpecimenController extends AbstractController
 
     public function waterize(Request $request, SpecimenService $specimenService): Response
     {
-        //TODO add weather
-        $specimenService->waterize($request->query->get("id"), 0);
+        $specimenService->waterize($request->query->get("id"), false);
+    }
+
+    public function hourlyWeatherResult(Request $request, SpecimenService $specimenService): Response
+    {
+        if ($specimenService->hourlyWeatherResult($request->query->get("id"))) {
+            $specimenService->waterize($request->query->get("id"), true);
+        };
     }
 
     public function goToNextLifeCycleStep(Request $request, SpecimenService $specimenService): Response
@@ -28,6 +34,6 @@ class SpecimenController extends AbstractController
 
     public function goToLifeCycleStep(Request $request, SpecimenService $specimenService): Response
     {
-        $specimenService->goToLifeCycleStep($request->query->get("id"),$request->query->get("order"));
+        $specimenService->goToLifeCycleStep($request->query->get("id"), $request->query->get("order"));
     }
 }
