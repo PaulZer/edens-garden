@@ -1,13 +1,15 @@
 {% block body %}
-    {{ form_start(addGarden) }}
+    {{ form_start(formGarden) }}
         <div class="form-group">
-            {{ form_row(addGarden.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+            {{ form_row(formGarden.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
         </div>
         <div class="form-group">
-            {{ form_row(addGarden.country, {'attr': {'class': 'form-control is-valid'}}) }}
+            {{ form_row(formGarden.country, {'attr': {'class': 'form-control is-valid'}}) }}
         </div>
         <div class="form-group">
-            <button id="btnCollapseOSMap" class="btn btn-sm btn-warning" data-toggle="collapse" href="#collapseOSMap">Cacher la carte</button>
+            <div class="text-right">
+                <button id="btnCollapseOSMap" class="btn btn-sm btn-warning" data-toggle="collapse" href="#collapseOSMap">Cacher la carte</button>
+            </div>
 
             <div class="form-group" id="collapseOSMapFormGroup">
                 <div class="collapse show" id="collapseOSMap">
@@ -17,30 +19,35 @@
 
             <div class="form-row">
                 <div class="col-6">
-                    {{ form_row(addGarden.latitude, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(formGarden.latitude, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <div class="col-6">
-                    {{ form_row(addGarden.longitude, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(formGarden.longitude, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
         </div>
 
         <div class="form-group">
+            <h5 data-toggle="collapse" href="#parcelsHelpCollapse">Parcelles <small><i class="text-primary fas fa-question-circle"></i></small></h5>
+            <div class="p-2 mb-2 bg-info text-white text-justify collapse" id="parcelsHelpCollapse">
+                <small>Vos jardins sont découpés en parcelles de 1m x 1m. Chaque parcelle peut avoir un ensoleillement, un type de sol différent, correspondant mieux à certains types de plantes qu'à d'autres. Vous pouvez planter différents spécimens, de différentes espèces dans une parcelle. Nous vous conseillerons sur la préparation de vos parcelles pour une croissance optimale de vos plantes.</small>
+            </div>
+
             <div class="form-row">
                 <div class="col-6">
-                    {{ form_row(addGarden.height, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(formGarden.length, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <div class="col-6">
-                    {{ form_row(addGarden.length, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(formGarden.height, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
         </div>
 
         <div class="text-right">
-            {{ form_row(addGarden.save, {'attr': {'class': 'btn btn-success'}}) }}
+            {{ form_row(formGarden.save, {'attr': {'class': 'btn btn-success'}}) }}
         </div>
-        {{ form_rest(addGarden) }}
-    {{ form_end(addGarden) }}
+        {{ form_rest(formGarden) }}
+    {{ form_end(formGarden) }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -56,7 +63,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" role="modal-script">
+    <script type="text/javascript">
         var btnCollapseOSMap = document.getElementById('btnCollapseOSMap');
         var gardenNameInput = document.getElementById('garden_name');
         var gardenLengthInput = document.getElementById('garden_length');
@@ -73,12 +80,19 @@
             event.target.firstChild.data = event.target.firstChild.data == "Cacher la carte" ? "Montrer la carte" : "Cacher la carte";
             event.target.classList.toggle('btn-primary');
             event.target.classList.toggle('btn-warning');
+            event.preventDefault();
         });
 
-        bindTextInputValidation(gardenNameInput, ['keyup'], 0, 80);
+        bindTextInputValidation(gardenNameInput, ['keyup', 'change'], 1, 80);
 
-        [gardenLengthInput, gardenHeightInput].forEach((el) => {
-            bindInputIntegerValidation(el, ['keyup', 'change'], parseInt(el.getAttribute('min')), parseInt(el.getAttribute('max')));
+        [gardenLengthInput, gardenHeightInput].forEach((input) => {
+            bindInputIntegerValidation(input, ['keyup', 'change'], parseInt(input.getAttribute('min')), parseInt(input.getAttribute('max')));
         });
+
+        [gardenNameInput, gardenLengthInput, gardenHeightInput].forEach((input) => {
+            input.dispatchEvent(new Event('change'));
+        });
+
+        document.getElementById('parcelsHelp')
     </script>
 {% endblock %}
