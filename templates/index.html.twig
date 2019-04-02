@@ -5,25 +5,14 @@
 {% block body %}
     welcome {{ app.user.firstName }}
 
+
+    <hr>
+    <h1>Vos jardins</h1>
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
-    <hr>
-    <h1>Vos jardins</h1>
     <div class="container">
-        {% for garden in app.user.gardens %}
-            <div class="row" style="margin-top:1em;">
-                <div class="card w-100" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ garden.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ garden.country.name }} : {{ garden.length * garden.height }} parcelles</h6>
-                        <p class="card-text">TODO afficher les dernières alertes du jardin (étapes de la vie des plantes, actions requises), infos (nombre de plantes, météo...) </p>
-                        <a id="editGarden" data-garden-id="{{ garden.id }}" class="card-link">Paramètres</a>
-                        <a href="{{ path('garden', {'id': garden.id }) }}" class="card-link">Aller au jardin</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+        {% include 'garden/gardens.html.twig' with {'gardens': app.user.gardens} %}
     </div>
 {% endblock %}
 
@@ -33,6 +22,7 @@
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
+    <!-- OpenStreetMap JS library -->
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script>
         var modalShown = 0;
@@ -45,8 +35,6 @@
 
 
         $("#addGarden, #editGarden").on('click', (event) => {
-            console.log(modalShown);
-
             if(modalShown) {
                 event.stopPropagation();
                 return;

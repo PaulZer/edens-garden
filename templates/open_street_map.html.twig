@@ -10,9 +10,7 @@
 {% block javascripts %}
     <script type="text/javascript">
 
-        // On initialise la latitude et la longitude de Bourk (centre de la carte)
-        var lat = 46.215083;
-        var lng = 5.241825;
+        var isNewGarden = false;
         var osmap = null;
         var marker = null;
         var latInput = document.getElementById('garden_latitude');
@@ -27,10 +25,15 @@
 
         // Fonction d'initialisation de la carte
         function initMap() {
-
+            if(latInput.value === '0.000000' && lngInput.value === '0.000000'){
+                // On initialise la latitude et la longitude de Bourk (centre de la carte)
+                latInput.value = '46.215083';
+                lngInput.value = '5.241825';
+                isNewGarden = true;
+            }
             // Créer l'objet "osmap" et l'insèrer dans l'élément HTML qui a l'ID "map"
             osmap = L.map('map', {
-                center: [lat, lng],
+                center: [latInput.value, lngInput.value],
                 zoom: 12
             }).addEventListener('click', (event) => {
                 osmap.removeLayer(marker);
@@ -42,9 +45,6 @@
                     latInput.value = _lat;
                     lngInput.value = _lng;
                     latInput.dispatchEvent(new Event('change'));
-                    [latInput, lngInput].forEach((el) => {
-
-                    });
                 }
             }).addEventListener('move', () => {
                 osmap.invalidateSize();
@@ -62,8 +62,9 @@
             setTimeout(function() {
                 osmap.invalidateSize();
                 latInput.dispatchEvent(new Event('change'));
-                marker = L.marker([lat, lng]).addTo(osmap).bindPopup('Choisissez la position de votre jardin sur la carte !').openPopup();
-
+                if(isNewGarden){
+                    marker = L.marker([latInput.value, lngInput.value]).addTo(osmap).bindPopup('Choisissez la position de votre jardin sur la carte !').openPopup();
+                }
             }, 500);
         }
 
