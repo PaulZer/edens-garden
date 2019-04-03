@@ -303,7 +303,70 @@ class AppFixtures extends Fixture
     //TODO facto
     protected function loadPlants(): bool
     {
-        $tomato = new Plant(
+        $plants = [
+            'tomato' => [
+                'name' => 'Plant de tomate',
+                'latinName' => 'Solanum lycopersicum',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'fructable'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 5, 'numMonthEnd' => 6],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 4, 'numMonthEnd' => 5],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 3, 'numMonthEnd' => 4]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'humus', 'efficiency' => 100],
+                    ['code' => 'clay', 'efficiency' => 67]
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'N-K', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 9],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 9, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 120, 'order' => 2],
+                    ['code' => 'flowering', 'stepDaysDuration' => 7, 'order' => 3],
+                    ['code' => 'fruct', 'stepDaysDuration' => 45, 'order' => 4],
+                    ['code' => 'harvest', 'stepDaysDuration' => 7, 'order' => 5],
+                ]
+            ]
+        ];
+
+        foreach ($plants as $name => $p){
+            $plant = new Plant($p['name'], $p['latinName'], $p['picturePath'], $p['plantFamily'], $p['waterFrequency']);
+            foreach ($p['plantingDateIntervals'] as $pdi){
+                $plant->addPlantingDateInterval($this->getPlantingDateIntervalByCode( $pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']));
+            }
+            foreach ($p['preferedSoilTypes'] as $pst){
+                $plant->addPreferedSoilType(new PlantSoilType($plant, $this->getSoilTypeByCode($pst['code']), $pst['efficiency']));
+            }
+            foreach ($p['preferedSunExposureType'] as $pset){
+                $plant->addPreferedSunExposureType(new PlantSunExposureType($plant, $this->getSunExposureTypeByCode( $pset['code']), $pset['efficiency']));
+            }
+            foreach ($p['preferedFertilizerType'] as $pft){
+                $plant->addPreferedFertilizerType(new PlantFertilizerType($plant, $this->getFertilizerTypeByCode( $pft['code']), $pft['efficiency'], $pft['nbDaysBeforeFertilizing']));
+            }
+            foreach ($p['lifeCycleSteps'] as $pls){
+                $plant->addLifeCycleStep(new PlantLifeCycleStep($plant, $this->getLifeCycleStepByCode( $pls['code']), $pls['stepDaysDuration'], $pls['order']));
+            }
+
+            $this->manager->persist($plant);
+
+            if($name === 'tomato') $this->tomato = $plant;
+        }
+
+        $this->manager->flush();
+
+        $plants['tomato'];
+
+        return true;
+
+        /*$tomato = new Plant(
             'Plant de tomate',
             'Solanum lycopersicum',
             '',
@@ -323,6 +386,7 @@ class AppFixtures extends Fixture
         $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'fruct'), 45, 4));
         $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'harvest'), 7, 5));
         $this->tomato = $tomato;
+
 
         $appleTree = new Plant(
             'Pommier',
@@ -468,7 +532,7 @@ class AppFixtures extends Fixture
 
         $this->manager->flush();
 
-        return true;
+        return true;*/
     }
 
     protected function loadGardens(): bool
