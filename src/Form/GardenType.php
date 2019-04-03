@@ -23,9 +23,16 @@ class GardenType extends AbstractType
             ->setAction($options['action'])
             ->setMethod('')
             ->add('name', TextType::class, [
+                'label' => 'Choisissez un nom :',
                 'attr' => ['maxlength' => 80]
             ])
+            ->add('country', EntityType::class, [
+                'label' => 'Sélectionnez un pays :',
+                'class' => Country::class,
+                'choice_label' => 'name',
+            ])
             ->add('latitude', NumberType::class, [
+                'label' => 'Latitude :',
                 'scale' => 6,
                 'attr' => [
                     'min' => -90,
@@ -33,23 +40,22 @@ class GardenType extends AbstractType
                     ]
             ])
             ->add('longitude', NumberType::class, [
+                'label' => 'Longitude :',
                 'scale' => 6,
                 'attr' => [
                     'min' => -180,
                     'max' => 180
                 ]
             ])
-            ->add('height', IntegerType::class, [
-                'rounding_mode' => IntegerToLocalizedStringTransformer::ROUND_DOWN,
-                'attr' => ['min' => 1, 'max' => 20]
-            ])
             ->add('length', IntegerType::class, [
+                'label' => 'Parcelles en longueur :',
                 'rounding_mode' => IntegerToLocalizedStringTransformer::ROUND_DOWN,
                 'attr' => ['min' => 1, 'max' => 20]
             ])
-            ->add('country', EntityType::class, [
-                'class' => Country::class,
-                'choice_label' => 'name',
+            ->add('height', IntegerType::class, [
+                'label' => 'Parcelles en largeur :',
+                'rounding_mode' => IntegerToLocalizedStringTransformer::ROUND_DOWN,
+                'attr' => ['min' => 1, 'max' => 20]
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Valider',

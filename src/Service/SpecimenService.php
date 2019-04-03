@@ -9,6 +9,7 @@
 namespace App\Service;
 
 
+use App\Entity\API\CurrentWeather;
 use App\Entity\Garden\Specimen;
 use App\Entity\Garden\SpecimenLifeResult;
 use App\Repository\SpecimenRepository;
@@ -88,15 +89,31 @@ class SpecimenService
         $specimen = $this->specimenRepository->find($specimenId);
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
-        $specimenWaterFrequency =$specimen->getPlant()->getWaterFrequency();
+        $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
 
         $waterEfficiency = 100;
         if ($specimenWaterFrequency < $daysWithoutWater)
-            $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100/$specimenWaterFrequency);
+            $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
 
         $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
         $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
         $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
         $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
+
+        $this->updateSpecimen($specimen);
+    }
+
+    public function hourlyWeatherResult(int $specimenId)
+    {
+        $specimen = $this->specimenRepository->find($specimenId);
+        $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
+        $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
+        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn));
+        $currentWeather = $currentWeatherProvider->getCurrentWeatherData($currentWeatherProvider->getUrl());
+        if ($currentWeather['rain_1h'] > 2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

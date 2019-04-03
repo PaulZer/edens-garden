@@ -46,6 +46,22 @@ plant:
     path: /plant/{id}
     controller: App\Controller\PlantController::viewPlant
 
+plant_create:
+    path: /createPlant
+    controller: App\Controller\PlantController::create
+
+add_fertilizer:
+    path: /plant/{plantId}/addFertilizer
+    controller: App\Controller\PlantController::addFertilizer
+
+add_soil:
+    path: /plant/{plantId}/addSoil
+    controller: App\Controller\PlantController::addSoil
+
+add_sun_exposure:
+    path: /plant/{plantId}/addSunExposure
+    controller: App\Controller\PlantController::addSunExposure
+
 # GARDEN
 
 gardens:
@@ -62,7 +78,11 @@ index:
 
 garden_create:
     path: /garden
-    controller: App\Controller\GardenController::createGarden
+    controller: App\Controller\GardenController::editgarden
+
+garden_edit:
+    path: /garden/{id}/edit
+    controller: App\Controller\GardenController::editGarden
 
 plot:
     path: /plot/{id}

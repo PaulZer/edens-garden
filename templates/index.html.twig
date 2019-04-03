@@ -5,15 +5,15 @@
 {% block body %}
     welcome {{ app.user.firstName }}
 
+
+    <hr>
+    <h1>Vos jardins</h1>
     <button id="addGarden" class="btn btn-warning">
         Ajouter un jardin
     </button>
-    <ul>
-        {% for garden in app.user.gardens %}
-            <li>{{ garden.name }}</li>
-        {% endfor %}
-    </ul>
-
+    <div class="container">
+        {% include 'garden/gardens.html.twig' with {'gardens': app.user.gardens} %}
+    </div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -22,6 +22,7 @@
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
+    <!-- OpenStreetMap JS library -->
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script>
         var modalShown = 0;
@@ -33,15 +34,21 @@
         });
 
 
-        $("#addGarden").on('click', (event) => {
-            console.log(modalShown);
-
+        $("#addGarden, #editGarden").on('click', (event) => {
             if(modalShown) {
                 event.stopPropagation();
                 return;
             }
             modalShown = 1;
-            $.post('{{ path("garden_create") }}', {
+            let route = '';
+            if(event.target.getAttribute('id') == 'editGarden') {
+                route = "{{ path('garden_edit', {'id': 'XXX' }) }}";
+                route = route.replace('XXX', event.target.getAttribute('data-garden-id'));
+            } else {
+                route = '{{ path("garden_create") }}';
+            }
+
+            $.post(route, {
 
             }, (modal) => {
                 $('body').append(modal);
