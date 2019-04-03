@@ -67,7 +67,8 @@ class SpecimenService
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
             }
         }
-
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $specimen->getLogger()->addLog("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now);
         $this->updateSpecimen($specimen);
     }
 
@@ -80,7 +81,8 @@ class SpecimenService
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
             }
         }
-
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $specimen->getLogger()->addLog("Set Specific Life Cycle Step", "The Plant has been set to " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $now);
         $this->updateSpecimen($specimen);
     }
 
