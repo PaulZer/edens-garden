@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Garden\Garden;
+use App\Entity\Garden\Plot;
+use App\Entity\Garden\Specimen;
 use App\Entity\Plant\ClimaticArea;
 use App\Entity\Plant\FertilizerType;
 use App\Entity\Plant\LifeCycleStep;
@@ -27,6 +29,8 @@ class AppFixtures extends Fixture
 {
     private $manager = null;
     private $userTest = null;
+
+    private $tomato = null;
 
     protected function getPlantFamilyByCode($code): PlantFamily
     {
@@ -318,6 +322,7 @@ class AppFixtures extends Fixture
         $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'flowering'), 7, 3));
         $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'fruct'), 45, 4));
         $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'harvest'), 7, 5));
+        $this->tomato = $tomato;
 
         $appleTree = new Plant(
             'Pommier',
@@ -475,6 +480,28 @@ class AppFixtures extends Fixture
         foreach ($gardens as $g){
             $garden = new Garden($g['user'], $g['name'], $g['latitude'], $g['longitude'], $g['height'], $g['length']);
             $garden->setCountry($this->manager->getRepository("App\Entity\Util\Country")->findOneBy(['code' => 'fra']));
+            $this->manager->persist($garden);
+
+            for ($i = 0 ; $i <= $g['height'] ; $i++) {
+                for ($j = 0 ; $j <= $g['height'] ; $j++){
+                    $plot = new Plot(
+                        strval($i + $j + 1),
+                        $this->getSunExposureTypeByCode('sun'),
+                        $this->getSoilTypeByCode('humus')
+                    );
+
+                    if($i == 0 && $j == 0){
+                        $specimen = new Specimen(
+                            $this->tomato,
+                            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+                        );
+                        $plot->addSpecimen($specimen);
+                    }
+                    $garden->addPlot($plot);
+                }
+
+            }
+
             $this->manager->persist($garden);
         }
 

@@ -43,10 +43,9 @@ class Plot
      */
     private $soilType;
 
-
     /**
      * One Plot has many specimens. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="plot")
+     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="plot", cascade={"persist"})
      */
     private $specimens;
 
@@ -68,13 +67,12 @@ class Plot
      * @param $specimens
      * @param $garden
      */
-    public function __construct(string $name, SunExposureType $sunExposureType, SoilType $soilType, Garden $garden)
+    public function __construct(string $name, SunExposureType $sunExposureType, SoilType $soilType)
     {
         $this->name = $name;
         $this->sunExposureType = $sunExposureType;
         $this->soilType = $soilType;
         $this->specimens = new ArrayCollection();
-        $this->garden = $garden;
     }
 
     /**

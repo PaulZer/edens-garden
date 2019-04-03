@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\FertilizerType;
 use App\Entity\Util\Logger;
+use mysql_xdevapi\Exception;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SpecimenRepository")
@@ -40,7 +41,7 @@ class Specimen
     private $plantationDate;
 
     /**
-     * @ORM\Column(type="datetime", name ="last_watered_date")
+     * @ORM\Column(type="datetime", name ="last_watered_date", nullable=true)
      */
     private $lastWateredDate;
 
@@ -50,7 +51,7 @@ class Specimen
      */
     private $fertilizer;
     /**
-     * @ORM\Column(type="datetime", name ="last_fertilized_date")
+     * @ORM\Column(type="datetime", name ="last_fertilized_date", nullable=true)
      */
     private $lastFertilizedDate;
 
@@ -69,7 +70,7 @@ class Specimen
 
     /**
      * One Specimen has One Logger.
-     * @ORM\OneToOne(targetEntity="App\Entity\Util\Logger")
+     * @ORM\OneToOne(targetEntity="App\Entity\Util\Logger", cascade={"persist"})
      * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
      */
     private $logger;
@@ -90,17 +91,32 @@ class Specimen
      * @param $currentLifeCycleStep
      * @param $plot
      */
-    public function __construct(Plant $plant, \DateTimeImmutable $plantationDate,  FertilizerType $fertilizer, Plot $plot)
+    public function __construct(Plant $plant, \DateTimeImmutable $plantationDate)
     {
         $this->plant = $plant;
         $this->plantationDate = $plantationDate;
         $this->lastWateredDate = null;
-        $this->fertilizer = $fertilizer;
+        $this->fertilizer = $this->getOptimalPlantFertilizer($plant);
         $this->lastFertilizedDate = null;
-        $this->currentLifeCycleStep = $plant->getLifeCycleSteps()[0];
-        $this->plot = $plot;
+        $this->currentLifeCycleStep = $this->getPlantFirstLifeCycleStep($plant);
         $this->logger = new Logger();
         $this->specimenLifeResults = new ArrayCollection();
+    }
+
+    protected function getOptimalPlantFertilizer(Plant $plant)
+    {
+        foreach($plant->getPreferedFertilizerTypes() as $ppft) {
+            if($ppft->getEfficiency() === 100) return $ppft->getFertilizer();
+        }
+        throw new Exception('Plant does not have an optimal (efficiency==100) fertilizer.');
+    }
+
+    protected function getPlantFirstLifeCycleStep(Plant $plant)
+    {
+        foreach($plant->getLifeCycleSteps() as $plantLifeCycleStep) {
+            return $plantLifeCycleStep->getLifeCycleStep();
+        }
+        throw new Exception('Plant does not have any lifecycle step.');
     }
 
     /**
