@@ -3,42 +3,50 @@
 {% block title %}Plante : {{plant.name}}{% endblock %}
 {% block body %}
     <table class="table table-striped">
-        <tr scope="col">
-            <td>Nom de la plante : </td>
-            <td>{{plant.name}}</td>
+        <tr scope="col" class="p-3 mb-2 bg-success text-white">
+                <td>Nom de la plante : </td>
+                <td>{{plant.name}}</td>
+                <td></td>
         </tr>
+
         <tr scope="col">
             <td>Nom latin : </td>
             <td>{{plant.latinName}}</td>
+            <td></td>
         </tr>
         <tr scope="col">
             <td>Chemin vers l'image : </td>
             <td>{{plant.picturePath}}</td>
+            <td></td>
         </tr>
         <tr scope="col">
             <td>Fréquence arrosage : </td>
             <td>{{plant.waterFrequency}}</td>
+            <td></td>
         </tr>
 
         {% for singleplantFamily in plant.plantFamily %}
             <tr scope="col">
                 <td>Nom de la famille : </td>
                 <td>{{singleplantFamily.name}}</td>
+                <td></td>
             </tr>
             <tr scope="col">
                 <td>Code de la famille : </td>
                 <td>{{singleplantFamily.code}}</td>
+                <td></td>
             </tr>
             <tr scope="col">
                 <td>Description de la famille : </td>
                 <td>{{singleplantFamily.description}}</td>
+                <td></td>
             </tr>
         {% endfor %}
 
         {% for preferedSunExposureType in plant.preferedSunExposureTypes %}
             <tr scope="col">
                 <td width="25%">Efficacité de l'expo soleil : </td>
-                <td width="25%">{{preferedSunExposureType.efficiency}}</td>
+                <td width="25%" align="right">{{preferedSunExposureType.efficiency}}%</td>
                 <td width="50%">
                     <div class="progress">
                         <div class="progress-bar bg-info" role="progressbar" style="width: {{preferedSunExposureType.efficiency}}%" aria-valuenow="{{preferedSunExposureType.efficiency}}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -50,7 +58,7 @@
         {% for preferedSoilType in plant.preferedSoilTypes %}
             <tr scope="col">
                 <td width="25%">Efficacité du type de terre : </td>
-                <td width="25%">{{preferedSoilType.efficiency}}</td>
+                <td width="25%" align="right">{{preferedSoilType.efficiency}}%</td>
                 <td width="50%">
                     <div class="progress">
                         <div class="progress-bar bg-info" role="progressbar" style="width: {{preferedSoilType.efficiency}}%" aria-valuenow="{{preferedSoilType.efficiency}}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -62,7 +70,7 @@
         {% for preferedFertilizerType in plant.preferedFertilizerTypes %}
             <tr scope="col">
                 <td width="25%">Efficacité du type de compost : </td>
-                <td width="25%">{{preferedFertilizerType.efficiency}}</td>
+                <td width="25%" align="right">{{preferedFertilizerType.efficiency}}%</td>
                 <td width="50%">
                     <div class="progress">
                         <div class="progress-bar bg-info" role="progressbar" style="width: {{preferedFertilizerType.efficiency}}%" aria-valuenow="{{preferedFertilizerType.efficiency}}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -72,6 +80,7 @@
             <tr scope="col">
                 <td>Nb jours avant compost : </td>
                 <td>{{preferedFertilizerType.nbDayBeforeFertilizing}}</td>
+                <td></td>
             </tr>
         {% endfor %}
 
@@ -79,15 +88,18 @@
             <tr scope="col">
                 <td>Nom étape cycle de vie : </td>
                 <td>{{lifeCycleStep.lifeCycleStep.name}}</td>
+                <td></td>
             </tr>
 
             <tr scope="col">
                 <td>Code étape cycle de vie : </td>
                 <td>{{lifeCycleStep.lifeCycleStep.code}}</td>
+                <td></td>
             </tr>
             <tr scope="col">
                 <td>Description étape cycle de vie : </td>
                 <td>{{lifeCycleStep.lifeCycleStep.description}}</td>
+                <td></td>
             </tr>
         {% endfor %}
     </table>
