@@ -40,8 +40,7 @@ class SpecimenService
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
-        $specimen->getLogger()->addLog("Fertilize", "The Plant has been Fertilized", $specimen->getLastFertilizedDate());
-
+        $specimen->getLogger()->addLog("Fertilize", "The Plant has been Fertilized with " .  $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate());
         $this->updateSpecimen($specimen);
     }
 
@@ -67,7 +66,8 @@ class SpecimenService
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
             }
         }
-
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $specimen->getLogger()->addLog("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now);
         $this->updateSpecimen($specimen);
     }
 
@@ -80,7 +80,8 @@ class SpecimenService
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
             }
         }
-
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $specimen->getLogger()->addLog("Set Specific Life Cycle Step", "The Plant has been set to " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $now);
         $this->updateSpecimen($specimen);
     }
 
