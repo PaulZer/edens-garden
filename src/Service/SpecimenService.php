@@ -40,8 +40,7 @@ class SpecimenService
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
-        $specimen->getLogger()->addLog("Fertilize", "The Plant has been Fertilized", $specimen->getLastFertilizedDate());
-
+        $specimen->getLogger()->addLog("Fertilize", "The Plant has been Fertilized with " .  $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate());
         $this->updateSpecimen($specimen);
     }
 
