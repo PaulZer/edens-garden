@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Garden\Garden;
 use App\Form\GardenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,7 @@ class GardenController extends AbstractController
     {
         $gardenRepository = $this->getDoctrine()
             ->getRepository(Garden::class);
-            
+
 
         if (!$gardenRepository) {
             throw $this->createNotFoundException(
@@ -26,7 +27,7 @@ class GardenController extends AbstractController
             );
         }
         $gardens = $gardenRepository->findAll();
-        
+
         return $this->render('garden/gardens.html.twig', [
             'gardens' => $gardens
         ]);
@@ -39,7 +40,7 @@ class GardenController extends AbstractController
             ->findOneBy(
                 ['id' => $id]
             );
-        if (!$garden) throw $this->createNotFoundException('Garden with id '.$id.' does not exist');
+        if (!$garden) throw $this->createNotFoundException('Garden with id ' . $id . ' does not exist');
 
         return $this->render('garden/garden.html.twig', ['garden' => $garden]);
     }
@@ -48,13 +49,12 @@ class GardenController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        if($id > 0) {
+        if ($id > 0) {
             $garden = $em->getRepository(Garden::class)->find($id);
-            if (!$garden) throw $this->createNotFoundException('Garden with id '.$id.' does not exist');
-        }
-        else $garden = new Garden($this->getUser(), '', 0, 0, 0, 0);
+            if (!$garden) throw $this->createNotFoundException('Garden with id ' . $id . ' does not exist');
+        } else $garden = new Garden($this->getUser(), '', 0, 0, 0, 0);
 
-        $formAction = $request->attributes->get('_route') == 'garden_create' ? $this->generateUrl('garden_create'): $this->generateUrl('garden_edit', ['id' => $garden->getId()]);
+        $formAction = $request->attributes->get('_route') == 'garden_create' ? $this->generateUrl('garden_create') : $this->generateUrl('garden_edit', ['id' => $garden->getId()]);
 
         $form = $this->createForm(GardenType::class, $garden, [
             'action' => $formAction]);
@@ -65,16 +65,16 @@ class GardenController extends AbstractController
             $em->persist($garden);
             $em->flush();
 
-            if($request->attributes->get('_route') == 'garden_edit'){
+            if ($request->attributes->get('_route') == 'garden_edit') {
                 $word = 'modifié';
             } else $word = 'créé';
 
-            $this->addFlash('success', 'Votre jardin "'.$garden->getName().'" a été '.$word.' avec succès ! Vous pouvez ajouter des plantes.');
+            $this->addFlash('success', 'Votre jardin "' . $garden->getName() . '" a été ' . $word . ' avec succès ! Vous pouvez ajouter des plantes.');
             return $this->redirectToRoute('index');
         }
 
         return $this->render('modals.html.twig', [
-            'modalTitle' => $request->attributes->get('_route') == 'garden_create' ? 'Créer un jardin': $garden->getName().' - Édition',
+            'modalTitle' => $request->attributes->get('_route') == 'garden_create' ? 'Créer un jardin' : $garden->getName() . ' - Édition',
             'template' => 'garden/form_garden',
             'view' => $form->createView()
         ]);
