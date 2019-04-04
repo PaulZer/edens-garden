@@ -2,33 +2,50 @@
 
 {% block title %}Jardins : {{garden.name}}{% endblock %}
 {% block body %}
-    <h3>Jardin {{garden.name}}</h3>
-    <table border="1px">
-        <th>Name</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Length</th>
-        <th>Height</th>
-        <tr>
-            <td>{{garden.name}}</td>
-            <td>{{garden.latitude}}</td>
-            <td>{{garden.longitude}}</td>
-            <td>{{garden.length}}</td>
-            <td>{{garden.height}}</td>
-        </tr>
-    </table>
+    <div class="row">
+        <div class="col-6">
+            <h3>Jardin {{garden.name}} - Infos</h3>
+            <table border="1px">
+                <th>Name</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Length</th>
+                <th>Height</th>
+                <tr>
+                    <td>{{garden.name}}</td>
+                    <td>{{garden.latitude}}</td>
+                    <td>{{garden.longitude}}</td>
+                    <td>{{garden.length}}</td>
+                    <td>{{garden.height}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            TODO infos météo localisation déclencher waterize
+        </div>
+    </div>
+
     <div class="container-fluid">
+        <h3>Vos parcelles</h3>
         <div id="gardenPlotContainer">
-            {% for i, plot in garden.plots %}
-                <div class="card gardenPlot" style="min-height:150px;min-width:150px;">
-                    <div class="card-body">
-                        <div>{{ plot.name }}</div>
-                        <div>{{ plot.specimens|length }} plantes</div>
-                        <div>{{ plot.sunExposureType.name }}</div>
-                        <div>{{ plot.soilType.name }}</div>
+            <div class="row">
+                {% for i, plot in garden.plots %}
+                    <div class="col">
+                        <div class="card gardenPlot" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
+                            <div class="card-body">
+                                <small class="plotName">{{ plot.name }}</small>
+                                <div class="plantCount">{{ plot.specimens|length }} <i class="fas fa-spa text-success"></i></div>
+                                <small class="plotSunExpType">Exposition {{ plot.sunExposureType.name }}</small>
+                                <small class="plantSoilType">{{ plot.soilType.name }}</small>
+                                <div class="plotInfos">
+                                    {#
+                                    eruherogrgrgkrkrigketugrtfgherhvlefvnejfvnekuvnitrnverljflerglerilrvnuenvrnernovenoernvejlrfhglerjgkjrgkhjefhgkjefgjehvrnvjdnflenlvenvlnrveorvnldncljnefkjvncncdnldcnklcednklcenjfvenjfvlfvenlfvnlfvnnenevklnenenneennvklnneenklenklvnevenenklenklennevnklenlennvklfvnkfvnkenenvklvknlenlenklenvklvneklenlenlenlfvnkl
+                                #}</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -36,10 +53,47 @@
 {% block stylesheets %}
     <style>
         #gardenPlotContainer {
-            display: grid;
-            grid-template-columns: repeat({{ garden.height }}, 1fr);
-            grid-template-rows: repeat({{ garden.length }}, auto);
-            grid-gap: 10px;
+
+        }
+
+        .gardenPlot {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            min-height:250px;
+            min-width:250px;
+            max-height:30vh;
+            background-repeat: repeat;
+            color: #f1f1f1;
+        }
+
+        .plantCount {
+            position:absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .plotName {
+            position:absolute;
+            top: 3px;
+            left: 5px;
+        }
+
+        .plotSunExpType {
+            position:absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .plantSoilType {
+            position:absolute;
+            bottom: 5px;
+            left: 5px;
+        }
+
+        .plotInfos {
+            max-height:100%;
+            padding-top:10px;
+            padding-bottom:12px;
         }
     </style>
 {% endblock %}
