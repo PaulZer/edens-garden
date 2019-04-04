@@ -12,8 +12,12 @@
       {{ form_row(formPlant.picturePath, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
    </div>
    <div class="form-group">
-      {{ form_row(formPlant.plantFamily, {'attr': {'class': 'form-control'}}) }}
+      {{ form_row(formPlant.plantFamily, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
    </div>
+   <div class="form-group">
+      {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+   </div>
+   
 
 
    {{ form_rest(formPlant) }}

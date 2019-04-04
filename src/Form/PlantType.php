@@ -2,11 +2,16 @@
 
 namespace App\Form;
 
+use App\Entity\Plant\FertilizerType;
+use App\Entity\Plant\LifeCycleStep;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantFamily;
+use App\Entity\Plant\PlantSunExposureType;
+use App\Entity\Plant\SoilType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,6 +40,13 @@ class PlantType extends AbstractType
                 'label' => 'Sélectionnez une famille :',
                 'class' => PlantFamily::class,
                 'choice_label' => 'name',
+            ])
+            ->add('waterFrequency', NumberType::class, [
+                'label' => 'Fréquence d\'arrosage : ',
+                'attr' => [
+                    'min' => 0,
+                    'max' => 365
+                ]
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Valider',

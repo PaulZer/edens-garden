@@ -65,8 +65,7 @@ class PlantController extends AbstractController
             $plant = $em->getRepository(Plant::class)->find($id);
             if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
         }
-        else $plant = new Plant("", '', "",
-                                new PlantFamily("", "", ""), 0);
+        else $plant = new Plant("", '', "",0);
 
         $formAction = $request->attributes->get('_route') == 'plant_create' ? $this->generateUrl('plant_create'): $this->generateUrl('plant_edit', ['id' => $plant->getId()]);
 
