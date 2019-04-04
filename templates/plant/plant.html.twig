@@ -2,32 +2,197 @@
 
 {% block title %}Plante : {{plant.name}}{% endblock %}
 {% block body %}
-    <div>Nom de la plante : {{plant.name}} <br></div>
-    <div>Nom latin : {{plant.latinName}}<br></div>
-    <div>Chemin vers l'image : {{plant.picturePath}}<br></div>
-    <div>Fréquence arrosage : {{plant.waterFrequency}}<br></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <label>Nom de la plante :</label>
+                <p id="plantName">{{plant.name}}</p>
+            </div>
+            <div class="col-3">
+                <label>Nom latin :</label>
+                <p id="latinPlantName" >{{plant.latinName}}</p>
+            </div>
+            <div class="col-3">
+                <label>Chemin vers l'image :</label>
+                <p id="img">{{plant.picturePath}}</p>
+            </div>
+            <div class="col-3">
+                <label>Fréquence arrosage : </label>
+                <p id="wateringFrequency">{{plant.waterFrequency}}</p>
+            </div>
+            <div class="col-6">
+                <label>Famille : </label>
+                <p id="plantFamily">{{plant.plantFamily.name}}</p>
+            </div>
+            <div class="col-6">
+                <label>Description : </label>
+                <p id="plantFamilyDescription">{{plant.plantFamily.description}}</p>
+            </div>
+        </div>
+        <br>
 
-            {% for singleplantFamily in plant.plantFamily %}
-                <div>Nom de la famille : {{singleplantFamily.name}}<br></div>
-                <div>Code de la famille : {{singleplantFamily.code}}<br></div>
-                <div>Description de la famille : {{singleplantFamily.description}}<br></div>
-            {% endfor %}
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-sun-exposure-tab" data-toggle="tab" href="#nav-sun-exposure" role="tab" aria-controls="nav-sun-exposure" aria-selected="true">Exposition Solaire</a>
+                <a class="nav-item nav-link" id="nav-soil-tab" data-toggle="tab" href="#nav-soil" role="tab" aria-controls="nav-soil" aria-selected="false">Types de Terre</a>
+                <a class="nav-item nav-link" id="nav-fertilizer-tab" data-toggle="tab" href="#nav-fertilizer" role="tab" aria-controls="nav-fertilizer" aria-selected="false">Types d'Engrais</a>
+                <a class="nav-item nav-link" id="nav-life-cycle-tab" data-toggle="tab" href="#nav-life-cycle" role="tab" aria-controls="nav-life-cycle" aria-selected="false">Cycle de vie</a>
+            </div>
+        </nav>
 
-            {% for preferedSunExposureType in plant.preferedSunExposureTypes %}
-                <div>Efficacité de l'expo soleil : {{preferedSunExposureType.efficiency}}<br></div>
-            {% endfor %}
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-sun-exposure" role="tabpanel" aria-labelledby="nav-sun-exposure-tab">
+                {% for preferedSunExposureType in plant.preferedSunExposureTypes %}
+                    <h5>{{ preferedSunExposureType.sunExposureType.name }}</h5>
+                    <div>Efficacité: </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ preferedSunExposureType.efficiency }}%"
+                             aria-valuenow="{{ preferedSunExposureType.efficiency }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <strong>{{ preferedSunExposureType.efficiency }}%</strong>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="nav-soil" role="tabpanel" aria-labelledby="nav-soil-tab">
+                {% for preferedSoilType in plant.preferedSoilTypes %}
+                    <h5>{{ preferedSoilType.soilType.name }}</h5>
+                    <div>Efficacité: </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ preferedSoilType.efficiency }}%"
+                             aria-valuenow="{{ preferedSoilType.efficiency }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <strong>{{ preferedSoilType.efficiency }}%</strong>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="nav-fertilizer" role="tabpanel" aria-labelledby="nav-fertilizer-tab">
+                {% for preferedFertilizerType in plant.preferedFertilizerTypes %}
+                    <h5>Engrais {{ preferedFertilizerType.fertilizer.name |lower }}</h5>
+                    <div>Efficacité: </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ preferedFertilizerType.efficiency }}%"
+                             aria-valuenow="{{ preferedFertilizerType.efficiency }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <strong>{{ preferedFertilizerType.efficiency }}%</strong>
+                        </div>
+                    </div>
+                    <div>Nb jours avant compost : {{preferedFertilizerType.nbDayBeforeFertilizing}}</div>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="nav-life-cycle" role="tabpanel" aria-labelledby="nav-life-cycle-tab">
 
-            {% for preferedSoilType in plant.preferedSoilTypes %}
-                <div>Efficacité du type de terre : {{preferedSoilType.efficiency}}<br></div>
-            {% endfor %}
-            {% for preferedFertilizerType in plant.preferedFertilizerTypes %}
-                <div>Efficacité du type de compost : {{preferedFertilizerType.efficiency}}<br></div>
-                <div>Nb jours avant compost : {{preferedFertilizerType.nbDayBeforeFertilizing}}<br></div>
-            {% endfor %}
+                <div class="progress" style="height: 30px;">
+                    {% set lastDuration = 0 %}
+                    {% for lifeCycleStep in plant.lifeCycleSteps %}
+                        <div class="progress-bar {{ lifeCycleStep.lifeCycleStep.code }}"
+                             role="progressbar"
+                             style="width: {{ (lifeCycleStep.stepDaysDuration / totalDaysDuration) * 100 }}%"
+                             tooltip=""
+                             aria-valuenow="{{ lastDuration }}"
+                             aria-valuemin="0"
+                             aria-valuemax="{{ totalDaysDuration }}"
+                             data-toggle="tooltip"
+                             data-placement="bottom"
+                             title="{{ lifeCycleStep.stepDaysDuration }} jours">
+                        </div>
+                        {% set lastDuration = lifeCycleStep.stepDaysDuration %}
+                    {% endfor %}
+                </div>
+                <hr>
 
-            {% for lifeCycleStep in plant.lifeCycleSteps %}
-                <div>Nom étape cycle de vie : {{lifeCycleStep.lifeCycleStep.name}}<br></div>
-                <div>Code étape cycle de vie : {{lifeCycleStep.lifeCycleStep.code}}<br></div>
-                <div>Description étape cycle de vie : {{lifeCycleStep.lifeCycleStep.description}}<br></div>
-            {% endfor %}
+                <div class="container-fluid" id="life-cycles">
+                    {% for lifeCycleStep in plant.lifeCycleSteps %}
+                        <div class="card life-cycle {{lifeCycleStep.lifeCycleStep.code}}-text">
+                            <div class="card-body">
+                                <h4>{{lifeCycleStep.lifeCycleStep.name}}</h4>
+                                <p><i>{{ lifeCycleStep.stepDaysDuration  }} jours</i></p>
+                                <p>{{lifeCycleStep.lifeCycleStep.description}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+{% endblock %}
+
+
+
+{% block stylesheets %}
+<style>
+    #life-cycles {
+        display: grid;
+        grid-template-columns: repeat({{ plant.lifeCycleSteps |length }}, 1fr);
+        grid-template-rows: repeat(1, auto);
+        grid-gap: 5px;
+    }
+
+    .life-cycle {
+        border: 2px solid;
+    }
+
+    .germing-text {
+         border-color: red;
+     }
+
+    .growth-text {
+        border-color: orangered;
+    }
+
+    .flowering-text {
+        border-color: orange;
+    }
+
+    .pollinate-text {
+        border-color: yellow;
+    }
+
+    .fruct-text {
+        border-color: yellowgreen;
+    }
+
+    .harvest-text {
+        border-color: green;
+    }
+
+    .germing {
+        background-color: red;
+    }
+
+    .growth {
+        background-color: orangered;
+    }
+
+    .flowering {
+        background-color: orange;
+    }
+
+    .pollinate {
+        background-color: yellow;
+    }
+
+    .fruct {
+        background-color: yellowgreen;
+    }
+
+    .harvest {
+        background-color: green;
+    }
+</style>
 {% endblock %}
