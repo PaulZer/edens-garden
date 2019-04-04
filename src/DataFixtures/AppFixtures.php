@@ -29,53 +29,19 @@ class AppFixtures extends Fixture
 {
     private $manager = null;
     private $userTest = null;
+    private $soilTypes = ['clay', 'limestone', 'sand', 'humus', 'silica', 'peaty'];
+    private $sunExposureTypes = ['sun', 'half-sun', 'shadow'];
+    private $fertilizerTypes = ['N', 'K', 'P', 'N-K', 'N-P', 'K-P'];
+    private $plants = ['tomato', 'appleTree', 'carrot', 'radish', 'geranium', 'daffodil', 'fir', 'fern'];
 
     private $tomato = null;
-
-    protected function getPlantFamilyByCode($code): PlantFamily
-    {
-        return $this->manager->getRepository("App\Entity\Plant\PlantFamily")->findOneBy(array('code' => $code));
-    }
-
-    protected function getClimaticAreaByCode(string $code): ClimaticArea
-    {
-        return $this->manager->getRepository("App\Entity\Plant\ClimaticArea")->findOneBy(array('code' => $code));
-    }
-
-    protected function getSoilTypeByCode(string $code): SoilType
-    {
-        return $this->manager->getRepository("App\Entity\Plant\SoilType")->findOneBy(array('code' => $code));
-    }
-
-    protected function getSunExposureTypeByCode(string $code): SunExposureType
-    {
-        return $this->manager->getRepository("App\Entity\Plant\SunExposureType")->findOneBy(array('code' => $code));
-    }
-
-    protected function getFertilizerTypeByCode(string $code): FertilizerType
-    {
-        return $this->manager->getRepository("App\Entity\Plant\FertilizerType")->findOneBy(array('code' => $code));
-    }
-
-    protected function getLifeCycleStepByCode(string $code): LifeCycleStep
-    {
-        return $this->manager->getRepository("App\Entity\Plant\LifeCycleStep")->findOneBy(array('code' => $code));
-    }
-
-    protected function getPlantingDateIntervalByCode(string $climaticAreaCode, int $numMonthBegin, int $numMonthEnd): PlantingDateInterval
-    {
-        $monthBegin = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthBegin));
-        $monthEnd = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthEnd));
-        $climaticArea = $this->getClimaticAreaByCode($climaticAreaCode);
-
-        $plantingDateInterval = $this->manager->getRepository("App\Entity\Plant\PlantingDateInterval")->findOneBy([
-           'monthBegin' => $monthBegin,
-           'monthEnd' => $monthEnd,
-           'climaticArea' => $climaticArea
-        ]);
-        if(!$plantingDateInterval) return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
-        else return $plantingDateInterval;
-    }
+    private $appleTree = null;
+    private $carrot = null;
+    private $radish = null;
+    private $geranium = null;
+    private $daffodil = null;
+    private $fir = null;
+    private $fern = null;
 
     public function load(ObjectManager $manager)
     {
@@ -300,7 +266,6 @@ class AppFixtures extends Fixture
         return true;
     }
 
-    //TODO facto
     protected function loadPlants(): bool
     {
         $plants = [
@@ -334,7 +299,223 @@ class AppFixtures extends Fixture
                     ['code' => 'fruct', 'stepDaysDuration' => 45, 'order' => 4],
                     ['code' => 'harvest', 'stepDaysDuration' => 7, 'order' => 5],
                 ]
-            ]
+            ],
+            'appleTree' => [
+                'name' => 'Pommier',
+                'latinName' => 'Malus',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'fructable'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 11, 'numMonthEnd' => 2],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 11, 'numMonthEnd' => 2],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 11, 'numMonthEnd' => 2]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'limestone', 'efficiency' => 100],
+                    ['code' => 'silica', 'efficiency' => 75],
+                    ['code' => 'clay', 'efficiency' => 32]
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'N-K', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+                    ['code' => 'N', 'efficiency' => 64, 'nbDaysBeforeFertilizing' => 9],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 9, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 1095, 'order' => 2],
+                    ['code' => 'flowering', 'stepDaysDuration' => 15, 'order' => 3],
+                    ['code' => 'fruct', 'stepDaysDuration' => 7, 'order' => 4],
+                    ['code' => 'harvest', 'stepDaysDuration' => 90, 'order' => 5],
+                ]
+            ],
+            'carrot' => [
+                'name' => 'Carotte',
+                'latinName' => 'Daucus carota',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'eatable'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 3, 'numMonthEnd' => 4],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 3, 'numMonthEnd' => 4],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 2, 'numMonthEnd' => 3]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'humus', 'efficiency' => 100],
+                    ['code' => 'clay', 'efficiency' => 49]
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'K-P', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 30, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 150, 'order' => 2],
+                    ['code' => 'harvest', 'stepDaysDuration' => 7, 'order' => 3],
+                ]
+            ],
+            'radish' => [
+                'name' => 'Radis',
+                'latinName' => 'Raphanus sativus',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'eatable'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 3, 'numMonthEnd' => 5],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 3, 'numMonthEnd' => 5],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 2, 'numMonthEnd' => 4]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'humus', 'efficiency' => 100],
+                    ['code' => 'sand', 'efficiency' => 66],
+                    ['code' => 'clay', 'efficiency' => 37]
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+                    ['code' => 'half-sun', 'efficiency' => 71],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'K-P', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 8, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 120, 'order' => 2],
+                    ['code' => 'harvest', 'stepDaysDuration' => 7, 'order' => 3],
+                ]
+            ],
+            'geranium' => [
+                'name' => 'Géranium',
+                'latinName' => 'Geranium',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'flower'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 4, 'numMonthEnd' => 5],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 4, 'numMonthEnd' => 5],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 3, 'numMonthEnd' => 4]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'clay', 'efficiency' => 100],
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+                    ['code' => 'half-sun', 'efficiency' => 59],
+                    ['code' => 'shadow', 'efficiency' => 55],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'K', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 8, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 90, 'order' => 2],
+                    ['code' => 'flowering', 'stepDaysDuration' => 180, 'order' => 3],
+                ]
+            ],
+            'daffodil' => [
+                'name' => 'Jonquille véritable',
+                'latinName' => 'Narcissus jonquilla',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'flower'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 10, 'numMonthEnd' => 11],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 9, 'numMonthEnd' => 10],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 9, 'numMonthEnd' => 10]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'humus', 'efficiency' => 100],
+                    ['code' => 'clay', 'efficiency' => 68],
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'N', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 90, 'order' => 1],
+                    ['code' => 'flowering', 'stepDaysDuration' => 21, 'order' => 3],
+                ]
+            ],
+            'fir' => [
+                'name' => 'Sapin',
+                'latinName' => 'Abies',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'other'),
+                'waterFrequency' => 1,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 5, 'numMonthEnd' => 11],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 4, 'numMonthEnd' => 10],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 4, 'numMonthEnd' => 10]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'clay', 'efficiency' => 100],
+                    ['code' => 'humus', 'efficiency' => 88],
+                    ['code' => 'sand', 'efficiency' => 68],
+                    ['code' => 'limestone', 'efficiency' => 55],
+
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'sun', 'efficiency' => 100],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'K', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+                    ['code' => 'N-K', 'efficiency' => 65, 'nbDaysBeforeFertilizing' => 15],
+                    ['code' => 'K-P', 'efficiency' => 38, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 180, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 730, 'order' => 2],
+                    ['code' => 'pollinate', 'stepDaysDuration' => 30, 'order' => 3],
+                    ['code' => 'flowering', 'stepDaysDuration' => 90, 'order' => 4],
+                    ['code' => 'fruct', 'stepDaysDuration' => 180, 'order' => 5],
+                ]
+            ],
+            'fern' => [
+                'name' => 'Fougère',
+                'latinName' => 'Filicophyta',
+                'picturePath' => '',
+                'plantFamily' => $this->getPlantFamilyByCode( 'other'),
+                'waterFrequency' => 12,
+                'plantingDateIntervals' => [
+                    ['climaticAreaCode' => 'fra-n', 'numMonthBegin' => 5, 'numMonthEnd' => 11],
+                    ['climaticAreaCode' => 'fra-m', 'numMonthBegin' => 4, 'numMonthEnd' => 10],
+                    ['climaticAreaCode' => 'fra-s', 'numMonthBegin' => 4, 'numMonthEnd' => 10]
+                ],
+                'preferedSoilTypes' => [
+                    ['code' => 'peaty', 'efficiency' => 100],
+
+                ],
+                'preferedSunExposureType' => [
+                    ['code' => 'shadow', 'efficiency' => 100],
+                    ['code' => 'half-sun', 'efficiency' => 66],
+
+                ],
+                'preferedFertilizerType' => [
+                    ['code' => 'N', 'efficiency' => 100, 'nbDaysBeforeFertilizing' => 15],
+
+                ],
+                'lifeCycleSteps' => [
+                    ['code' => 'germing', 'stepDaysDuration' => 180, 'order' => 1],
+                    ['code' => 'growth', 'stepDaysDuration' => 3650, 'order' => 2],
+                ]
+            ],
         ];
 
         foreach ($plants as $name => $p){
@@ -357,182 +538,12 @@ class AppFixtures extends Fixture
 
             $this->manager->persist($plant);
 
-            if($name === 'tomato') $this->tomato = $plant;
+            $this->$name = $plant;
         }
 
         $this->manager->flush();
-
-        $plants['tomato'];
 
         return true;
-
-        /*$tomato = new Plant(
-            'Plant de tomate',
-            'Solanum lycopersicum',
-            '',
-            $this->getPlantFamilyByCode( 'fructable'),
-            12
-        );
-        $tomato->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 5, 6));
-        $tomato->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 4, 5));
-        $tomato->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 3, 4));
-        $tomato->addPreferedSoilType(new PlantSoilType($tomato, $this->getSoilTypeByCode( 'humus'), 100));
-        $tomato->addPreferedSoilType(new PlantSoilType($tomato, $this->getSoilTypeByCode( 'clay'), 67));
-        $tomato->addPreferedSunExposureType(new PlantSunExposureType($tomato, $this->getSunExposureTypeByCode( 'sun'), 100));
-        $tomato->addPreferedFertilizerType(new PlantFertilizerType($tomato, $this->getFertilizerTypeByCode( 'N-K'), 100, 9));
-        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'germing'), 9, 1));
-        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'growth'), 120, 2));
-        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'flowering'), 7, 3));
-        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'fruct'), 45, 4));
-        $tomato->addLifeCycleStep(new PlantLifeCycleStep($tomato, $this->getLifeCycleStepByCode( 'harvest'), 7, 5));
-        $this->tomato = $tomato;
-
-
-        $appleTree = new Plant(
-            'Pommier',
-            'Malus',
-            '',
-            $this->getPlantFamilyByCode( 'fructable'),
-            12
-        );
-        $appleTree->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 11, 2));
-        $appleTree->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 11, 2));
-        $appleTree->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 11, 2));
-        $appleTree->addPreferedSoilType(new PlantSoilType($appleTree, $this->getSoilTypeByCode( 'limestone'), 100));
-        $appleTree->addPreferedSoilType(new PlantSoilType($appleTree, $this->getSoilTypeByCode( 'silica'), 75));
-        $appleTree->addPreferedSoilType(new PlantSoilType($appleTree, $this->getSoilTypeByCode( 'clay'), 32));
-        $appleTree->addPreferedSunExposureType(new PlantSunExposureType($appleTree, $this->getSunExposureTypeByCode( 'sun'), 100));
-        $appleTree->addPreferedFertilizerType(new PlantFertilizerType($appleTree, $this->getFertilizerTypeByCode( 'N-K'), 97, 15));
-        $appleTree->addPreferedFertilizerType(new PlantFertilizerType($appleTree, $this->getFertilizerTypeByCode( 'N'), 64, 9));
-        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStepByCode( 'germing'), 9, 1));
-        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStepByCode( 'growth'), 1095, 2));
-        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStepByCode( 'pollinate'), 15, 3));
-        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStepByCode( 'flowering'), 7, 4));
-        $appleTree->addLifeCycleStep(new PlantLifeCycleStep($appleTree, $this->getLifeCycleStepByCode( 'fruct'), 90, 5));
-
-        $carrot = new Plant(
-            'Carotte',
-            'Daucus carota',
-            '',
-            $this->getPlantFamilyByCode( 'eatable'),
-            12
-        );
-        $carrot->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 3, 4));
-        $carrot->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 3, 4));
-        $carrot->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 2, 3));
-        $carrot->addPreferedSoilType(new PlantSoilType($carrot, $this->getSoilTypeByCode( 'humus'), 95));
-        $carrot->addPreferedSoilType(new PlantSoilType($carrot, $this->getSoilTypeByCode( 'clay'), 49));
-        $carrot->addPreferedSunExposureType(new PlantSunExposureType($carrot, $this->getSunExposureTypeByCode( 'sun'), 94));
-        $carrot->addPreferedFertilizerType(new PlantFertilizerType($carrot, $this->getFertilizerTypeByCode( 'K-P'), 100, 15));
-        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStepByCode( 'germing'), 30, 1));
-        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStepByCode( 'growth'), 150, 2));
-        $carrot->addLifeCycleStep(new PlantLifeCycleStep($carrot, $this->getLifeCycleStepByCode( 'harvest'), 7, 3));
-
-        $radish = new Plant(
-            'Radis',
-            'Raphanus sativus',
-            '',
-            $this->getPlantFamilyByCode( 'eatable'),
-            12
-        );
-        $radish->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 3, 5));
-        $radish->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 3, 5));
-        $radish->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 2, 4));
-        $radish->addPreferedSoilType(new PlantSoilType($radish, $this->getSoilTypeByCode( 'humus'), 100));
-        $radish->addPreferedSoilType(new PlantSoilType($radish, $this->getSoilTypeByCode( 'sand'), 66));
-        $radish->addPreferedSoilType(new PlantSoilType($radish, $this->getSoilTypeByCode( 'clay'), 37));
-        $radish->addPreferedSunExposureType(new PlantSunExposureType($radish, $this->getSunExposureTypeByCode( 'sun'), 97));
-        $radish->addPreferedSunExposureType(new PlantSunExposureType($radish, $this->getSunExposureTypeByCode( 'half-sun'), 71));
-        $radish->addPreferedFertilizerType(new PlantFertilizerType($radish, $this->getFertilizerTypeByCode( 'K-P'), 87, 15));
-        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStepByCode( 'germing'), 8, 1));
-        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStepByCode( 'growth'), 120, 2));
-        $radish->addLifeCycleStep(new PlantLifeCycleStep($radish, $this->getLifeCycleStepByCode( 'harvest'), 7, 3));
-
-        $geranium = new Plant(
-            'Géranium',
-            'Geranium',
-            '',
-            $this->getPlantFamilyByCode( 'flower'),
-            12
-        );
-        $geranium->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 4, 5));
-        $geranium->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 4, 5));
-        $geranium->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 3, 4));
-        $geranium->addPreferedSoilType(new PlantSoilType($geranium, $this->getSoilTypeByCode( 'clay'), 99));
-        $geranium->addPreferedSunExposureType(new PlantSunExposureType($geranium, $this->getSunExposureTypeByCode( 'sun'), 99));
-        $geranium->addPreferedSunExposureType(new PlantSunExposureType($geranium, $this->getSunExposureTypeByCode( 'half-sun'), 59));
-        $geranium->addPreferedSunExposureType(new PlantSunExposureType($geranium, $this->getSunExposureTypeByCode( 'shadow'), 55));
-        $geranium->addPreferedFertilizerType(new PlantFertilizerType($geranium, $this->getFertilizerTypeByCode( 'K'), 80, 15));
-        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStepByCode( 'germing'), 8, 1));
-        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStepByCode( 'growth'), 90, 2));
-        $geranium->addLifeCycleStep(new PlantLifeCycleStep($geranium, $this->getLifeCycleStepByCode( 'flowering'), 180, 3));
-
-        $daffodil = new Plant(
-            'Jonquille véritable',
-            'Narcissus jonquilla',
-            '',
-            $this->getPlantFamilyByCode( 'flower'),
-            12
-        );
-        $daffodil->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 10, 11));
-        $daffodil->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 9, 10));
-        $daffodil->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 9, 10));
-        $daffodil->addPreferedSoilType(new PlantSoilType($daffodil, $this->getSoilTypeByCode( 'humus'), 93));
-        $daffodil->addPreferedSoilType(new PlantSoilType($daffodil, $this->getSoilTypeByCode( 'clay'), 68));
-        $daffodil->addPreferedSunExposureType(new PlantSunExposureType($daffodil, $this->getSunExposureTypeByCode( 'sun'), 88));
-        $daffodil->addPreferedFertilizerType(new PlantFertilizerType($daffodil, $this->getFertilizerTypeByCode( 'N'), 92,15));
-        $daffodil->addLifeCycleStep(new PlantLifeCycleStep($daffodil, $this->getLifeCycleStepByCode( 'germing'), 90, 1));
-        $daffodil->addLifeCycleStep(new PlantLifeCycleStep($daffodil, $this->getLifeCycleStepByCode( 'growth'), 90, 2));
-        $daffodil->addLifeCycleStep(new PlantLifeCycleStep($daffodil, $this->getLifeCycleStepByCode( 'flowering'), 21, 3));
-
-        $fir = new Plant(
-            'Sapin',
-            'Abies',
-            '',
-            $this->getPlantFamilyByCode( 'other'),
-            1
-        );
-        $fir->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 5, 11));
-        $fir->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 4, 10));
-        $fir->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 4, 10));
-        $fir->addPreferedSoilType(new PlantSoilType($fir, $this->getSoilTypeByCode( 'clay'), 95));
-        $fir->addPreferedSoilType(new PlantSoilType($fir, $this->getSoilTypeByCode( 'humus'), 88));
-        $fir->addPreferedSoilType(new PlantSoilType($fir, $this->getSoilTypeByCode( 'sand'), 68));
-        $fir->addPreferedSoilType(new PlantSoilType($fir, $this->getSoilTypeByCode( 'limestone'), 55));
-        $fir->addPreferedSunExposureType(new PlantSunExposureType($fir, $this->getSunExposureTypeByCode( 'sun'), 100));
-        $fir->addPreferedFertilizerType(new PlantFertilizerType($fir, $this->getFertilizerTypeByCode( 'K'), 98,15));
-        $fir->addPreferedFertilizerType(new PlantFertilizerType($fir, $this->getFertilizerTypeByCode( 'N-K'), 65,15));
-        $fir->addPreferedFertilizerType(new PlantFertilizerType($fir, $this->getFertilizerTypeByCode( 'K-P'), 38,15));
-        $fir->addLifeCycleStep(new PlantLifeCycleStep($fir, $this->getLifeCycleStepByCode( 'germing'), 180, 1));
-        $fir->addLifeCycleStep(new PlantLifeCycleStep($fir, $this->getLifeCycleStepByCode( 'growth'), 730, 2));
-        $fir->addLifeCycleStep(new PlantLifeCycleStep($fir, $this->getLifeCycleStepByCode( 'pollinate'), 30, 3));
-        $fir->addLifeCycleStep(new PlantLifeCycleStep($fir, $this->getLifeCycleStepByCode( 'flowering'), 90, 4));
-        $fir->addLifeCycleStep(new PlantLifeCycleStep($fir, $this->getLifeCycleStepByCode( 'fruct'), 180, 5));
-
-        $fern = new Plant(
-            'Fougère',
-            'Filicophyta',
-            '',
-            $this->getPlantFamilyByCode( 'other'),
-            12
-        );
-        $fern->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-n', 5, 11));
-        $fern->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-m', 4, 10));
-        $fern->addPlantingDateInterval($this->getPlantingDateIntervalByCode( 'fra-s', 4, 10));
-        $fern->addPreferedSoilType(new PlantSoilType($fern, $this->getSoilTypeByCode( 'peaty'), 98));
-        $fern->addPreferedSunExposureType(new PlantSunExposureType($fern, $this->getSunExposureTypeByCode( 'shadow'), 96));
-        $fern->addPreferedSunExposureType(new PlantSunExposureType($fern, $this->getSunExposureTypeByCode( 'half-sun'), 66));
-        $fern->addPreferedFertilizerType(new PlantFertilizerType($fern, $this->getFertilizerTypeByCode( 'N'), 77,15));
-        $fern->addLifeCycleStep(new PlantLifeCycleStep($fern, $this->getLifeCycleStepByCode( 'germing'), 180, 1));
-        $fern->addLifeCycleStep(new PlantLifeCycleStep($fern, $this->getLifeCycleStepByCode( 'growth'), 3650, 2));
-
-        foreach ([$tomato, $appleTree, $carrot, $radish, $geranium, $daffodil, $fir, $fern] as $obj) {
-            $this->manager->persist($obj);
-        }
-
-        $this->manager->flush();
-
-        return true;*/
     }
 
     protected function loadGardens(): bool
@@ -541,29 +552,39 @@ class AppFixtures extends Fixture
             ['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],
         ];
 
+        for($i = 0 ; $i < random_int(1, 5); $i++){
+            array_push($gardens, [
+                'user' => $this->userTest,
+                'name' => 'Random garden '.strval($i+1),
+                'latitude' => random_int(42000000, 48000000)/1000000,
+                'longitude' => random_int(-500000, 8000000)/1000000,
+                'height' => random_int(1, 5),
+                'length' => random_int(1, 5)
+            ]);
+        }
+
         foreach ($gardens as $g){
             $garden = new Garden($g['user'], $g['name'], $g['latitude'], $g['longitude'], $g['height'], $g['length']);
             $garden->setCountry($this->manager->getRepository("App\Entity\Util\Country")->findOneBy(['code' => 'fra']));
-            $this->manager->persist($garden);
 
-            for ($i = 0 ; $i <= $g['height'] ; $i++) {
-                for ($j = 0 ; $j <= $g['height'] ; $j++){
-                    $plot = new Plot(
-                        strval($i + $j + 1),
-                        $this->getSunExposureTypeByCode('sun'),
-                        $this->getSoilTypeByCode('humus')
+            $this->manager->persist($garden);
+            for ($i = 0 ; $i < $g['height'] * $g['length'] ; $i++) {
+                $plot = new Plot(
+                    strval($i + 1),
+                    $this->getSunExposureTypeByCode($this->sunExposureTypes[array_rand($this->sunExposureTypes)]),
+                    $this->getSoilTypeByCode($this->soilTypes[array_rand($this->soilTypes)])
+                );
+
+                for ($j = 0 ; $j < random_int(1, 5) ; $j++){
+                    $plantName = $this->plants[array_rand($this->plants)];
+                    $specimen = new Specimen(
+                        $this->$plantName,
+                        new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
                     );
 
-                    if($i == 0 && $j == 0){
-                        $specimen = new Specimen(
-                            $this->tomato,
-                            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
-                        );
-                        $plot->addSpecimen($specimen);
-                    }
+                    $plot->addSpecimen($specimen);
                     $garden->addPlot($plot);
                 }
-
             }
 
             $this->manager->persist($garden);
@@ -572,5 +593,50 @@ class AppFixtures extends Fixture
         $this->manager->flush();
 
         return true;
+    }
+
+    protected function getPlantFamilyByCode($code): PlantFamily
+    {
+        return $this->manager->getRepository("App\Entity\Plant\PlantFamily")->findOneBy(array('code' => $code));
+    }
+
+    protected function getClimaticAreaByCode(string $code): ClimaticArea
+    {
+        return $this->manager->getRepository("App\Entity\Plant\ClimaticArea")->findOneBy(array('code' => $code));
+    }
+
+    protected function getSoilTypeByCode(string $code): SoilType
+    {
+        return $this->manager->getRepository("App\Entity\Plant\SoilType")->findOneBy(array('code' => $code));
+    }
+
+    protected function getSunExposureTypeByCode(string $code): SunExposureType
+    {
+        return $this->manager->getRepository("App\Entity\Plant\SunExposureType")->findOneBy(array('code' => $code));
+    }
+
+    protected function getFertilizerTypeByCode(string $code): FertilizerType
+    {
+        return $this->manager->getRepository("App\Entity\Plant\FertilizerType")->findOneBy(array('code' => $code));
+    }
+
+    protected function getLifeCycleStepByCode(string $code): LifeCycleStep
+    {
+        return $this->manager->getRepository("App\Entity\Plant\LifeCycleStep")->findOneBy(array('code' => $code));
+    }
+
+    protected function getPlantingDateIntervalByCode(string $climaticAreaCode, int $numMonthBegin, int $numMonthEnd): PlantingDateInterval
+    {
+        $monthBegin = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthBegin));
+        $monthEnd = $this->manager->getRepository("App\Entity\Util\Month")->findOneBy(array('num' => $numMonthEnd));
+        $climaticArea = $this->getClimaticAreaByCode($climaticAreaCode);
+
+        $plantingDateInterval = $this->manager->getRepository("App\Entity\Plant\PlantingDateInterval")->findOneBy([
+            'monthBegin' => $monthBegin,
+            'monthEnd' => $monthEnd,
+            'climaticArea' => $climaticArea
+        ]);
+        if(!$plantingDateInterval) return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
+        else return $plantingDateInterval;
     }
 }
