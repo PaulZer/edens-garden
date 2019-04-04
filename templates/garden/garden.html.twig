@@ -18,13 +18,15 @@
         </tr>
     </table>
     <div class="container-fluid">
-        <div class="gardenPlotContainer">
+        <div id="gardenPlotContainer">
             {% for i, plot in garden.plots %}
                 <div class="card gardenPlot" style="min-height:150px;min-width:150px;">
-                    <div>{{ plot.name }}</div>
-                    <div>{{ plot.specimens|length }} plantes</div>
-                    <div>{{ plot.sunExposureType.name }}</div>
-                    <div>{{ plot.soilType.name }}</div>
+                    <div class="card-body">
+                        <div>{{ plot.name }}</div>
+                        <div>{{ plot.specimens|length }} plantes</div>
+                        <div>{{ plot.sunExposureType.name }}</div>
+                        <div>{{ plot.soilType.name }}</div>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -33,7 +35,7 @@
 
 {% block stylesheets %}
     <style>
-        .gardenPlotContainer {
+        #gardenPlotContainer {
             display: grid;
             grid-template-columns: repeat({{ garden.height }}, 1fr);
             grid-template-rows: repeat({{ garden.length }}, auto);
