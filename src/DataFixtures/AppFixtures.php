@@ -519,7 +519,8 @@ class AppFixtures extends Fixture
         ];
 
         foreach ($plants as $name => $p){
-            $plant = new Plant($p['name'], $p['latinName'], $p['picturePath'], $p['plantFamily'], $p['waterFrequency']);
+            $plant = new Plant($p['name'], $p['latinName'], $p['picturePath'], $p['waterFrequency']);
+            $plant->setPlantFamily($p['plantFamily']);
             foreach ($p['plantingDateIntervals'] as $pdi){
                 $plant->addPlantingDateInterval($this->getPlantingDateIntervalByCode( $pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']));
             }

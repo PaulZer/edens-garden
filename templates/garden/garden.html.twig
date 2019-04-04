@@ -2,19 +2,42 @@
 
 {% block title %}Jardins : {{garden.name}}{% endblock %}
 {% block body %}
-    hello <b>{{ app.user.firstName }}</b>
+    <h3>Jardin {{garden.name}}</h3>
     <table border="1px">
         <th>Name</th>
         <th>Latitude</th>
         <th>Longitude</th>
-        <th>Height</th>
         <th>Length</th>
+        <th>Height</th>
         <tr>
             <td>{{garden.name}}</td>
             <td>{{garden.latitude}}</td>
             <td>{{garden.longitude}}</td>
-            <td>{{garden.height}}</td>
             <td>{{garden.length}}</td>
+            <td>{{garden.height}}</td>
         </tr>
     </table>
+    <div class="container-fluid">
+        <div class="gardenPlotContainer">
+            {% for i, plot in garden.plots %}
+                <div class="card gardenPlot" style="min-height:150px;min-width:150px;">
+                    <div>{{ plot.name }}</div>
+                    <div>{{ plot.specimens|length }} plantes</div>
+                    <div>{{ plot.sunExposureType.name }}</div>
+                    <div>{{ plot.soilType.name }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .gardenPlotContainer {
+            display: grid;
+            grid-template-columns: repeat({{ garden.height }}, 1fr);
+            grid-template-rows: repeat({{ garden.length }}, auto);
+            grid-gap: 10px;
+        }
+    </style>
 {% endblock %}

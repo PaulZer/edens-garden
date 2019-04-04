@@ -84,18 +84,16 @@ class Plant
      * @param $name
      * @param $latinName
      * @param $picturePath
-     * @param $plantFamily
      * @param $waterFrequency
      * @param $preferedSunExposureTypes
      * @param $preferedSoilTypes
      * @param $plantingDateIntervals
      */
-    public function __construct(string $name, string $latinName, string $picturePath, PlantFamily $plantFamily, int $waterFrequency)
+    public function __construct(string $name, string $latinName, string $picturePath, int $waterFrequency)
     {
         $this->name = $name;
         $this->latinName = $latinName;
         $this->picturePath = $picturePath;
-        $this->plantFamily = $plantFamily;
         $this->waterFrequency = $waterFrequency;
         $this->preferedSunExposureTypes = new ArrayCollection();
         $this->preferedSoilTypes = new ArrayCollection();
