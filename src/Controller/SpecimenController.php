@@ -137,7 +137,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->dailyLifeResult($request->get("id"));
+            $specimenService->dailyLifeResultForAllSpecimen();
             $response->setContent(json_encode([
                 'Message' => 'Specimen daily life result done',
                 'Code' => 200

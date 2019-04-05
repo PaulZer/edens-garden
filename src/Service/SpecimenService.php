@@ -97,25 +97,6 @@ class SpecimenService
         $this->updateSpecimen($specimen);
     }
 
-    public function dailyLifeResult(int $specimenId)
-    {
-        $specimen = $this->specimenRepository->find($specimenId);
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
-        $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
-
-        $waterEfficiency = 100;
-        if ($specimenWaterFrequency < $daysWithoutWater)
-            $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
-
-        $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
-        $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
-        $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
-        $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
-
-        $this->updateSpecimen($specimen);
-    }
-
     public function hourlyWeatherResult(int $specimenId)
     {
         $specimen = $this->specimenRepository->find($specimenId);
@@ -127,6 +108,27 @@ class SpecimenService
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function dailyLifeResultForAllSpecimen()
+    {
+        $specimens = $this->specimenRepository->findAll();
+
+        foreach ($specimens as $specimen) {
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+            $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
+            $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
+            $waterEfficiency = 100;
+            if ($specimenWaterFrequency < $daysWithoutWater)
+                $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
+
+            $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
+            $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
+            $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
+            $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
+
+            $this->updateSpecimen($specimen);
         }
     }
 }
