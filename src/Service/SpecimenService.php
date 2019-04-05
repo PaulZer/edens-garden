@@ -12,35 +12,36 @@ namespace App\Service;
 use App\Entity\API\CurrentWeather;
 use App\Entity\Garden\Specimen;
 use App\Entity\Garden\SpecimenLifeResult;
+use App\Entity\Util\LogEvent;
 use App\Repository\SpecimenRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class SpecimenService
 {
     private $specimenRepository;
-    private $em;
+    private $om;
 
     /**
      * SpecimenService constructor.
      * @param $specimenRepository
      */
-    public function __construct(SpecimenRepository $specimenRepository, EntityManager $entityManager)
+    public function __construct(SpecimenRepository $specimenRepository, ObjectManager $objectManager)
     {
         $this->specimenRepository = $specimenRepository;
-        $this->em = $entityManager;
+        $this->om = $objectManager;
     }
 
     private function updateSpecimen(Specimen $specimen)
     {
-        $this->em->persist($specimen);
-        $this->em->flush();
+        $this->om->persist($specimen);
+        $this->om->flush();
     }
 
     public function fertilize(int $specimenId)
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
-        $specimen->getLogger()->addLog("Fertilize", "The Plant has been Fertilized with " .  $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate());
+        $specimen->addLog(new LogEvent("Fertilize", "The Plant has been Fertilized with " .  $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
         $this->updateSpecimen($specimen);
     }
 
@@ -49,9 +50,9 @@ class SpecimenService
         $specimen = $this->specimenRepository->find($specimenId);
         $specimen->setLastWateredDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
         if ($weather == false)
-            $specimen->getLogger()->addLog("Waterize", "The Plant has been Waterized", $specimen->getLastWateredDate());
+            $specimen->addLog(new LogEvent("Waterize", "The Plant has been Waterized", $specimen->getLastWateredDate()));
         else
-            $specimen->getLogger()->addLog("Waterize", "The Plant has been Waterized by the rain", $specimen->getLastWateredDate());
+            $specimen->addLog(new LogEvent("Waterize", "The Plant has been Waterized by the rain", $specimen->getLastWateredDate()));
 
         $this->updateSpecimen($specimen);
     }
@@ -67,7 +68,7 @@ class SpecimenService
             }
         }
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $specimen->getLogger()->addLog("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now);
+        $specimen->addLog(new LogEvent("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now));
         $this->updateSpecimen($specimen);
     }
 
@@ -81,7 +82,7 @@ class SpecimenService
             }
         }
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $specimen->getLogger()->addLog("Set Specific Life Cycle Step", "The Plant has been set to " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $now);
+        $specimen->addLog(new LogEvent("Set Specific Life Cycle Step", "The Plant has been set to " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $now));
         $this->updateSpecimen($specimen);
     }
 

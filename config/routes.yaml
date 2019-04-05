@@ -1,89 +1,115 @@
 # ADMIN
 
 admin:
-    path: /admin
-    controller: App\Controller\SecurityController::admin
+  path: /admin
+  controller: App\Controller\SecurityController::admin
 
 plots:
-    path: /plots
-    controller: App\Controller\PlotController::viewAll
+  path: /plots
+  controller: App\Controller\PlotController::viewAll
 
 # AUTH
 
 login:
-    path: /login
-    controller: App\Controller\SecurityController::login
+  path: /login
+  controller: App\Controller\SecurityController::login
 
 logout:
-    path: /logout
-    methods: GET
+  path: /logout
+  methods: GET
 
 register:
-    path: /register
-    controller: App\Controller\SecurityController::register
+  path: /register
+  controller: App\Controller\SecurityController::register
 
 # ACCOUNT
 
 account:
-    path: /account
-    controller: App\Controller\SecurityController::account
+  path: /account
+  controller: App\Controller\SecurityController::account
 
 # PLANTS
 
 plantFamilies:
-    path: /plant_families
-    controller: App\Controller\PlantFamilyController::viewAll
+  path: /plant_families
+  controller: App\Controller\PlantFamilyController::viewAll
 
 plantFamily:
-    path: /plant_family/{id}
-    controller: App\Controller\PlantFamilyController::viewFamily
+  path: /plant_family/{id}
+  controller: App\Controller\PlantFamilyController::viewFamily
 
 plants:
-    path: /plants
-    controller: App\Controller\PlantController::viewAll
+  path: /plants
+  controller: App\Controller\PlantController::viewAll
 
 plant:
-    path: /plant/{id}
-    controller: App\Controller\PlantController::viewPlant
+  path: /plant/{id}
+  controller: App\Controller\PlantController::viewPlant
 
 plant_create:
-    path: /createPlant
-    controller: App\Controller\PlantController::create
+  path: /createPlant
+  controller: App\Controller\PlantController::create
 
 add_fertilizer:
-    path: /plant/{plantId}/addFertilizer
-    controller: App\Controller\PlantController::addFertilizer
+  path: /plant/{plantId}/addFertilizer
+  controller: App\Controller\PlantController::addFertilizer
 
 add_soil:
-    path: /plant/{plantId}/addSoil
-    controller: App\Controller\PlantController::addSoil
+  path: /plant/{plantId}/addSoil
+  controller: App\Controller\PlantController::addSoil
 
 add_sun_exposure:
-    path: /plant/{plantId}/addSunExposure
-    controller: App\Controller\PlantController::addSunExposure
+  path: /plant/{plantId}/addSunExposure
+  controller: App\Controller\PlantController::addSunExposure
 
 # GARDEN
 
 gardens:
-    path: /gardens
-    controller: App\Controller\GardenController::viewAll
+  path: /gardens
+  controller: App\Controller\GardenController::viewAll
 
 garden:
-    path: /garden/{id}
-    controller: App\Controller\GardenController::viewGarden
+  path: /garden/{id}
+  controller: App\Controller\GardenController::viewGarden
 
 index:
-    path: /
-    controller: App\Controller\GardenController::index
+  path: /
+  controller: App\Controller\GardenController::index
 
 garden_create:
-    path: /garden
-    controller: App\Controller\GardenController::editgarden
+  path: /garden
+  controller: App\Controller\GardenController::editgarden
 
 garden_edit:
-    path: /garden/{id}/edit
-    controller: App\Controller\GardenController::editGarden
+  path: /garden/{id}/edit
+  controller: App\Controller\GardenController::editGarden
 
 plot:
-    path: /plot/{id}
-    controller: App\Controller\PlotController::viewPlot
+  path: /plot/{id}
+  controller: App\Controller\PlotController::viewPlot
+
+# SPECIMEN
+
+specimen_fertilize:
+  path: /specimen/{id}/fertilize
+  controller: App\Controller\SpecimenController::fertilize
+
+specimen_waterize:
+  path: /specimen/{id}/waterize
+  controller: App\Controller\SpecimenController::waterize
+
+specimen_hourly_weather_result:
+  path: /specimen/{id}/hourlyWeatherResult
+  controller: App\Controller\SpecimenController::hourlyWeatherResult
+
+specimen_go_to_next_life_cycle_step:
+  path: /specimen/{id}/goToNextLifeCycleStep
+  controller: App\Controller\SpecimenController::goToNextLifeCycleStep
+
+specimen_go_to_life_cycle_step:
+  path: /specimen/{id}/goToLifeCycleStep/{order}
+  controller: App\Controller\SpecimenController::goToLifeCycleStep
+
+specimen_daily_life_result:
+  path: /specimen/{id}/dailyLifeResult
+  controller: App\Controller\SpecimenController::dailyLifeResult
