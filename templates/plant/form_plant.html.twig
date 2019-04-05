@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+{% block body %}
+   {{ form_start(formPlant) }}
+
+   <div class="form-group">
+      {{ form_row(formPlant.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+   </div>
+   <div class="form-group">
+      {{ form_row(formPlant.latinName, {'attr': {'class': 'form-control', 'autofocus': false}}) }}
+   </div>
+   <div class="form-group">
+      {{ form_row(formPlant.picturePath, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+   </div>
+   <div class="form-group">
+      {{ form_row(formPlant.plantFamily, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+   </div>
+   <div class="form-group">
+      {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+   </div>
+   
+
+
+   {{ form_rest(formPlant) }}
+   {{ form_end(formPlant) }}
+{% endblock %}
+

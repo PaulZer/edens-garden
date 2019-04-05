@@ -80,14 +80,11 @@ class Plant
 
     /**
      * Plant constructor.
-     * @param $id
      * @param $name
      * @param $latinName
      * @param $picturePath
+     * @param $picturePath
      * @param $waterFrequency
-     * @param $preferedSunExposureTypes
-     * @param $preferedSoilTypes
-     * @param $plantingDateIntervals
      */
     public function __construct(string $name, string $latinName, string $picturePath, int $waterFrequency)
     {

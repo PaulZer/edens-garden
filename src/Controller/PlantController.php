@@ -13,7 +13,7 @@ use App\Entity\Plant\PlantSunExposureType;
 use App\Entity\Plant\SoilType;
 use App\Entity\Plant\SunExposureType;
 use App\Form\PlantFertilizerTypeFormType;
-use App\Form\PlantFormType;
+use App\Form\PlantType;
 use App\Form\PlantSoilTypeFormType;
 use App\Form\PlantSunExposureTypeFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -64,25 +64,37 @@ class PlantController extends AbstractController
 
     }
 
-    public function create(): Response
+    public function editPlant(Request $request, int $id = null): Response
     {
         $em = $this->getDoctrine()->getManager();
 
-        $plantFamily = $em->getRepository(PlantFamily::class)->findOneBy(['code' => 'fructable']);
-        $plant = new Plant('', '', '', $plantFamily, 0);
+        if($id > 0) {
+            $plant = $em->getRepository(Plant::class)->find($id);
+            if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
+        }
+        else $plant = new Plant("", '', "",0);
 
-        $form = $this->createForm(PlantFormType::class,
-            $plant,
-            ['action' => $this->generateUrl('plant_create')]);
+        $formAction = $request->attributes->get('_route') == 'plant_create' ? $this->generateUrl('plant_create'): $this->generateUrl('plant_edit', ['id' => $plant->getId()]);
+
+        $form = $this->createForm(PlantType::class, $plant, [
+            'action' => $formAction]);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->addFlash('success', "soda");
+            $em->persist($plant);
+            $em->flush();
+
+            if($request->attributes->get('_route') == 'plant_edit'){
+                $word = 'modifié';
+            } else $word = 'créé';
+
+            $this->addFlash('success', 'Votre jardin "'.$plant->getName().'" a été '.$word.' avec succès ! Vous pouvez ajouter des plantes.');
             return $this->redirectToRoute('plants');
         }
 
-        return $this->render('forms/plant/form_plant.html.twig', [
-            'form' => $form->createView()
+        return $this->render('plant/form_plant.html.twig', [
+            'formPlant' => $form->createView()
         ]);
 
     }
