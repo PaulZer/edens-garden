@@ -2,14 +2,30 @@
 
 {% block title %}Plants{% endblock %}
 {% block body %}
+
     <table class="table table-striped">
         <th scope="col">Name</th>
         <th scope="col">Latin Name</th>
+        <th scope="col">Modifier</th>
+        <th scope="col">Supprimer</th>
         {% for plant in plants %}
             <tr>
                 <td><a href='/plant/{{plant.id}}'>{{plant.name}}</a></td>
                 <td>{{plant.latinName}}</td>
+                <td>
+                    <a id="editPlant" href="{{ path('plant_create') }}" class="btn btn-warning">
+                        Modifier
+                    </a>
+                </td>
+                <td>
+                    <a id="deletePlant" href="{{ path('plant_create') }}" class="btn btn-warning">
+                        Supprimer
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>
+    <a id="addPlant" href="{{ path('plant_create') }}" class="btn btn-warning">
+        Ajouter une plante
+    </a>
 {% endblock %}
