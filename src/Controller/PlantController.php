@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Plant\FertilizerType;
+use App\Entity\Plant\LifeCycleStep;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\PlantFertilizerType;
 use App\Entity\Plant\Plant;
@@ -52,8 +53,14 @@ class PlantController extends AbstractController
                 'Please add a plant to this plant family to continue'
             );
         }
+
+        $stepsTotalDaysDuration = 0;
+
+        foreach($plant->getLifeCycleSteps() as $step){
+            $stepsTotalDaysDuration += $step->getNbDayFromPreviousStep();
+        }
        
-        return $this->render('plant/plant.html.twig', ['plant' => $plant]);
+        return $this->render('plant/plant.html.twig', ['plant' => $plant, 'totalDaysDuration' => $stepsTotalDaysDuration]);
 
     }
 

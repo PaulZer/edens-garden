@@ -59,7 +59,7 @@ class Garden
 
     /**
      * One Garden has many plots. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Plot", mappedBy="garden")
+     * @ORM\OneToMany(targetEntity="Plot", mappedBy="garden", cascade={"persist"})
      */
     private $plots;
 
