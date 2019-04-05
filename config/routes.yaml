@@ -113,3 +113,7 @@ specimen_go_to_life_cycle_step:
 specimen_daily_life_result:
   path: /specimen/{id}/dailyLifeResult
   controller: App\Controller\SpecimenController::dailyLifeResult
+
+specimen_set_fertilizer:
+  path: /specimen/{id}/fertilize/{fertilizerId}
+  controller: App\Controller\SpecimenController::setFertilizer

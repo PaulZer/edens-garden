@@ -12,6 +12,7 @@ namespace App\Service;
 use App\Entity\API\CurrentWeather;
 use App\Entity\Garden\Specimen;
 use App\Entity\Garden\SpecimenLifeResult;
+use App\Entity\Plant\FertilizerType;
 use App\Entity\Util\LogEvent;
 use App\Repository\SpecimenRepository;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -37,11 +38,21 @@ class SpecimenService
         $this->om->flush();
     }
 
+    public function setFertilizer(int $specimenId, int $fertilizerId)
+    {
+        $specimen = $this->specimenRepository->find($specimenId);
+        $fertilizer = $this->om->getRepository(FertilizerType::class)->findOneBy(['id' => $fertilizerId]);
+        $specimen->setFertilizer($fertilizer);
+        $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $specimen->addLog(new LogEvent("Fertilize", "The Plant has been Fertilized with " . $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
+        $this->updateSpecimen($specimen);
+    }
+
     public function fertilize(int $specimenId)
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
-        $specimen->addLog(new LogEvent("Fertilize", "The Plant has been Fertilized with " .  $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
+        $specimen->addLog(new LogEvent("Fertilize", "The Plant has been Fertilized with " . $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
         $this->updateSpecimen($specimen);
     }
 

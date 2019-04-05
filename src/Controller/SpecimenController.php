@@ -10,6 +10,24 @@ use Symfony\Component\HttpFoundation\Response;
 class SpecimenController extends AbstractController
 {
 
+
+    public function setFertilizer(Request $request, SpecimenService $specimenService){
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        try {
+            $specimenService->setFertilizer($request->get("id"),$request->get("fertilizerId"));
+            $response->setContent(json_encode([
+                'Message' => 'Specimen has been fertilized with the chosen fertilizer',
+                'Code' => 200
+            ]));
+        } catch (\Exception $e) {
+            $response->setContent(json_encode([
+                'Message' => $e->getMessage(),
+                'Code' => 500
+            ]));
+        }
+        return $response;
+    }
     public function fertilize(Request $request, SpecimenService $specimenService)
     {
         $response = new Response();
