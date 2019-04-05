@@ -1,26 +1,113 @@
 {% extends "base.html.twig" %}
+
 {% block body %}
-   {{ form_start(formPlant) }}
+    {{ form_start(formPlant) }}
 
-   <div class="form-group">
-      {{ form_row(formPlant.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
-   </div>
-   <div class="form-group">
-      {{ form_row(formPlant.latinName, {'attr': {'class': 'form-control', 'autofocus': false}}) }}
-   </div>
-   <div class="form-group">
-      {{ form_row(formPlant.picturePath, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
-   </div>
-   <div class="form-group">
-      {{ form_row(formPlant.plantFamily, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
-   </div>
-   <div class="form-group">
-      {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
-   </div>
-   
+    <div class="form-group">
+        {{ form_row(formPlant.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+    </div>
+    <div class="form-group">
+         {{ form_row(formPlant.latinName, {'attr': {'class': 'form-control', 'autofocus': false}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(formPlant.picturePath, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(formPlant.plantFamily, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
+    </div>
+    <hr>
+    <div class="form-group" id="preferedSoilTypes">
+        <ul class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
+        </ul>
+    </div>
+    <hr>
 
-
-   {{ form_rest(formPlant) }}
-   {{ form_end(formPlant) }}
+    {{ form_rest(formPlant) }}
+    {{ form_end(formPlant) }}
 {% endblock %}
 
+{% block stylesheets %}
+<style>
+    .preferedSoilTypes {
+        list-style: none;
+    }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
+    <script type="text/javascript">
+        let $collectionHolder;
+
+        // setup an "add" button
+        let $addPlantSoilTypeButton = $('<button type="button" class="add_plant_soil_type">Ajouter un type de sol</button>').addClass('btn btn-success');
+        $('#preferedSoilTypes').append($addPlantSoilTypeButton);
+
+        let $newLinkLi = $('<li></li>');
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.preferedSoilTypes');
+
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addPlantSoilTypeButton.on('click', function(e) {
+                // add a new tag form (see next code block)
+                addForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            let prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            let index = $collectionHolder.data('index');
+
+            //setup "remove" button
+            let deleteButton = $('<button class="text-right btn btn-danger" id="deleteNewPlantSoilTypeButton"><span class="fa fa-times"></span></button>');
+            deleteButton.on('click', function(e) {
+                $('#plant_preferedSoilTypes_' + index).remove();
+            });
+
+            let newForm = deleteButton;
+
+            newForm += prototype;
+            // You need this only if you didn't set 'label' => false in your tags field in TaskType
+            // Replace '__name__label__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            newForm = newForm.replace(/__name__label__/g, index);
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            newForm = newForm.replace(/__name__/g, index);
+
+
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            let $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            // Validator
+            let soilTypeEfficiencyInput = document.getElementById('plant_preferedSoilTypes_' + index + '_efficiency');
+            bindInputIntegerValidation(
+                soilTypeEfficiencyInput,
+                ['change'],
+                parseInt(soilTypeEfficiencyInput.getAttribute('min')),
+                parseInt(soilTypeEfficiencyInput.getAttribute('max'))
+            );
+        }
+
+    </script>
+{% endblock %}
