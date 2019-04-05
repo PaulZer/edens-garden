@@ -13,7 +13,7 @@
                 <td><a href='/plant/{{plant.id}}'>{{plant.name}}</a></td>
                 <td>{{plant.latinName}}</td>
                 <td>
-                    <a id="editPlant" href="{{ path('plant_create') }}" class="btn btn-warning">
+                    <a id="editPlant" href="{{ path('plant_edit', { 'id': plant.id }) }}" class="btn btn-warning">
                         Modifier
                     </a>
                 </td>
