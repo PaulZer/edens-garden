@@ -117,12 +117,15 @@ class SpecimenService
 
         foreach ($specimens as $specimen) {
             $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-            $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
-            $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
-            $waterEfficiency = 100;
-            if ($specimenWaterFrequency < $daysWithoutWater)
-                $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
-
+            if (!$specimen->getLastWateredDate()) {
+                $waterEfficiency = 0;
+            } else {
+                $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
+                $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
+                $waterEfficiency = 100;
+                if ($specimenWaterFrequency < $daysWithoutWater)
+                    $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
+            }
             $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
             $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
             $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
