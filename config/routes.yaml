@@ -50,6 +50,10 @@ plant_create:
     path: /createPlant
     controller: App\Controller\PlantController::editPlant
 
+delete_plant:
+    path: /deletePlant
+    controller: App\Controller\PlantController::deletePlant
+
 add_fertilizer:
     path: /plant/{plantId}/addFertilizer
     controller: App\Controller\PlantController::addFertilizer

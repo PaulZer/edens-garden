@@ -82,13 +82,30 @@ class PlantController extends AbstractController
                 $word = 'modifié';
             } else $word = 'créé';
 
-            $this->addFlash('success', 'Votre jardin "'.$plant->getName().'" a été '.$word.' avec succès ! Vous pouvez ajouter des plantes.');
+            $this->addFlash('success', 'Votre plante "'.$plant->getName().'" a été '.$word.' avec succès !');
             return $this->redirectToRoute('plants');
         }
 
         return $this->render('plant/form_plant.html.twig', [
             'formPlant' => $form->createView()
         ]);
+
+    }
+
+    public function deletePlant(Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $_GET['id'];
+
+        if(isset($id) && $id > 0)
+        {
+            $plant = $em->getRepository(Plant::class)->find($id);
+            if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
+            $em->remove($plant);
+            $em->flush();
+            return $this->redirectToRoute('plants');
+        }
+        else throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
 
     }
 
