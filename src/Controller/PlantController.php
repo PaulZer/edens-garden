@@ -103,6 +103,7 @@ class PlantController extends AbstractController
             if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
             $em->remove($plant);
             $em->flush();
+            
             return $this->redirectToRoute('plants');
         }
         else throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
