@@ -45,7 +45,7 @@
                 route = '{{ path("garden_create") }}';
             }
 
-            $.post(route, {
+            $.get(route, {
 
             }, (modal) => {
                 $('body').append(modal);

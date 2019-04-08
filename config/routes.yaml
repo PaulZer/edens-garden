@@ -90,6 +90,10 @@ plot:
   path: /plot/{id}
   controller: App\Controller\PlotController::viewPlot
 
+plot_edit:
+  path: /plot/{id}/edit
+  controller: App\Controller\PlotController::editPlot
+
 # SPECIMEN
 
 specimen_fertilize:

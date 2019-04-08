@@ -41,7 +41,7 @@
                                 <small class="plantSoilType">{{ plot.soilType.name }}</small>
                                 <div class="plotInfos d-flex">
                                     <div class="container text-center">
-                                        <a class="btn btn-sm btn-primary">Voir mes plantes</a>
+                                        <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
                                     </div>
                                 </div>
                             </div>
@@ -114,4 +114,36 @@
             height: 8px;
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var modalShown = 0;
+
+        $(document).on('hidden.bs.modal', () =>{
+            $('#modal').remove();
+            $('script[role="modal-script"]').remove();
+            modalShown = 0;
+        });
+
+        $(".seeSpecimensBtn").on('click', (event) => {
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
+            let route = "{{ path('plot_edit', {'id': 'XXX' }) }}";
+                route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
+
+            $.get(route, {
+
+            }, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
+        });
+    </script>
 {% endblock %}

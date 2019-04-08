@@ -1,16 +1,48 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Jardins : {{plot.name}}{% endblock %}
 {% block body %}
-    hello <b>{{ app.user.firstName }}</b>
-    <table border="1px">
-        <th>Name</th>
-        <th>Height</th>
-        <th>Length</th>
-        <tr>
-            <td>{{plot.name}}</td>
-            <td>{{plot.height}}</td>
-            <td>{{plot.length}}</td>
-        </tr>
-    </table>
+    <div class="row">
+        <div class="card w-100">
+            <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapsePlotParams" aria-expanded="false" aria-controls="collapsePlotParams">
+                Paramètres de la parcelle
+            </button>
+            <div class="collapse" id="collapsePlotParams">
+                <table border="1px">
+                    <th>Name</th>
+                    <tr>
+                        <td>{{plot.name}}</td>
+                    </tr>
+                </table>
+                TODO plot params form
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="card w-100">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSpecimens" aria-expanded="false" aria-controls="collapseSpecimens">
+                Vos spécimens plantés
+            </button>
+            <div class="collapse" id="collapseSpecimens">
+                {% for specimen in plot.specimens %}
+                    <div class="media">
+                        <img src="{{ specimen.plant.picturePath }}" class="align-self-center mr-3" alt="...">
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ specimen.plant.name }}</h5>
+                            <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                            <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
+                            <button class="btn btn-warning btn-sm actionButton" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}">Mettre de l'engrais</button>
+                            <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_life_cycle_step', {'id': specimen.id, 'order': 1}) }}">Etape de cycle de vie suivante</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('.actionButton').on('click', (event) => {
+            $.get(event.target.getAttribute('data-href'));
+        });
+    </script>
 {% endblock %}
