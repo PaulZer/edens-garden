@@ -1,4 +1,7 @@
 {% extends "base.html.twig" %}
+{% block title %}
+   Edition de plante
+{% endblock %}
 {% block body %}
    {{ form_start(formPlant) }}
 
@@ -17,6 +20,12 @@
    <div class="form-group">
       {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
    </div>
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> master
    {{ form_rest(formPlant) }}
    {{ form_end(formPlant) }}
 {% endblock %}

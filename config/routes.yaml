@@ -50,6 +50,16 @@ plant_create:
     path: /createPlant
     controller: App\Controller\PlantController::editPlant
 
+<<<<<<< HEAD
+plant_edit:
+    path: /editPlant
+    controller: App\Controller\PlantController::editPlant
+
+delete_plant:
+    path: /deletePlant
+    controller: App\Controller\PlantController::deletePlant
+=======
+>>>>>>> master
 
 add_fertilizer:
   path: /plant/{plantId}/addFertilizer

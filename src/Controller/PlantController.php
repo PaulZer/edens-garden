@@ -64,13 +64,16 @@ class PlantController extends AbstractController
 
     }
 
-    public function editPlant(Request $request, int $id = null): Response
+    public function editPlant(Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
-
+        $id = $request->get('id');
         if($id > 0) {
             $plant = $em->getRepository(Plant::class)->find($id);
-            if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
+            if (!$plant)
+            {
+                throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
+            }
         }
         else $plant = new Plant("", '', "",0);
 
@@ -80,22 +83,40 @@ class PlantController extends AbstractController
             'action' => $formAction]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $em->persist($plant);
             $em->flush();
 
-            if($request->attributes->get('_route') == 'plant_edit'){
+            if(isset($id)){
                 $word = 'modifié';
             } else $word = 'créé';
 
-            $this->addFlash('success', 'Votre jardin "'.$plant->getName().'" a été '.$word.' avec succès ! Vous pouvez ajouter des plantes.');
+            $this->addFlash('success', 'Votre plante "'.$plant->getName().'" a été '.$word.' avec succès !');
             return $this->redirectToRoute('plants');
         }
 
         return $this->render('plant/form_plant.html.twig', [
             'formPlant' => $form->createView()
         ]);
+
+    }
+
+    public function deletePlant(Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->get('id');
+
+        if(isset($id) && $id > 0)
+        {
+            $plant = $em->getRepository(Plant::class)->find($id);
+            if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
+            $em->remove($plant);
+            $em->flush();
+            
+            return $this->redirectToRoute('plants');
+        }
+        else throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
 
     }
 
