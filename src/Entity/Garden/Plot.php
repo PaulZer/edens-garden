@@ -67,7 +67,7 @@ class Plot
      * @param $specimens
      * @param $garden
      */
-    public function __construct(string $name, SunExposureType $sunExposureType, SoilType $soilType)
+    public function __construct(string $name, ?SunExposureType $sunExposureType = null, ?SoilType $soilType = null)
     {
         $this->name = $name;
         $this->sunExposureType = $sunExposureType;

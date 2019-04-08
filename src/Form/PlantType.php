@@ -42,6 +42,7 @@ class PlantType extends AbstractType
                 'label' => 'Sélectionnez une famille :',
                 'class' => PlantFamily::class,
                 'choice_label' => 'name',
+                'empty_data' => null,
             ])
             ->add('waterFrequency', NumberType::class, [
                 'label' => 'Fréquence d\'arrosage : ',

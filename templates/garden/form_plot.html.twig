@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    Edition de la parcelle
+{% endblock %}
+{% block body %}
+    {{ form_start(formPlot) }}
+    <div class="form-group">
+        {{ form_row(formPlot.name, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(formPlot.sunExposureType, {'attr': {'class': 'form-control', 'autofocus': false}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(formPlot.soilType, {'attr': {'class': 'form-control', 'autofocus': false}}) }}
+    </div>
+
+    {{ form_rest(formPlot) }}
+    {{ form_end(formPlot) }}
+{% endblock %}

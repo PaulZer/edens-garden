@@ -93,9 +93,19 @@ garden_edit:
   path: /garden/{id}/edit
   controller: App\Controller\GardenController::editGarden
 
+plot_create:
+  path: /plot/plotCreate
+  controller: App\Controller\PlotController::addPlot
+
+plot_edit:
+  path: /plot/plotEdit
+  controller: App\Controller\PlotController::addPlot
+
 plot:
   path: /plot/{id}
   controller: App\Controller\PlotController::viewPlot
+
+
 
 # SPECIMEN
 
