@@ -17,15 +17,7 @@ class PlantFertilizerTypeFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('plant', EntityType::class, [
-                'label' => 'Plante : ',
-                'class' => Plant::class,
-                'choice_label' => 'name',
-                'disabled' => true,
-                'attr' => [
-                    'class' => 'form-control form-control-sm'
-                ]
-            ])
+
             ->add('fertilizer', EntityType::class, [
                 'label' => 'Type d\'engrais : ',
                 'class' => FertilizerType::class,
