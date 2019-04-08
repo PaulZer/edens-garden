@@ -96,7 +96,7 @@ class Specimen
         $this->plant = $plant;
         $this->plantationDate = $plantationDate;
         $this->lastWateredDate = null;
-        $this->fertilizer = $this->getOptimalPlantFertilizer($plant);
+        $this->fertilizer = null;
         $this->lastFertilizedDate = null;
         $this->currentLifeCycleStep = $this->getPlantFirstLifeCycleStep($plant);
         $this->logs = new ArrayCollection();

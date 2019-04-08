@@ -261,9 +261,6 @@ class Plant
         return $this;
     }
 
-    /**
-     * @return Collection|FertilizerType[]
-     */
     public function getPreferedFertilizerTypes(): Collection
     {
         return $this->preferedFertilizerTypes;
