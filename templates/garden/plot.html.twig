@@ -30,7 +30,10 @@
                             <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
                             <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
                             <button class="btn btn-warning btn-sm actionButton" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}">Mettre de l'engrais</button>
-                            <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_life_cycle_step', {'id': specimen.id, 'order': 1}) }}">Etape de cycle de vie suivante</button>
+                            <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
+                            {% for log in specimen.logs %}
+                            {{ dump(log) }}
+                            {% endfor %}
                         </div>
                     </div>
                 {% endfor %}
