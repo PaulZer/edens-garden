@@ -8,7 +8,7 @@
 
 namespace App\Entity\Garden;
 
-use App\Entity\Plant\LifeCycleStep;
+use App\Entity\Plant\PlantLifeCycleStep;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -56,7 +56,7 @@ class Specimen
     private $lastFertilizedDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\LifeCycleStep")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\PlantLifeCycleStep")
      * @ORM\JoinColumn(name="current_life_cycle_step_id", referencedColumnName="id")
      */
     private $currentLifeCycleStep;
@@ -96,7 +96,7 @@ class Specimen
         $this->plant = $plant;
         $this->plantationDate = $plantationDate;
         $this->lastWateredDate = null;
-        $this->fertilizer = $this->getOptimalPlantFertilizer($plant);
+        $this->fertilizer = null;
         $this->lastFertilizedDate = null;
         $this->currentLifeCycleStep = $this->getPlantFirstLifeCycleStep($plant);
         $this->logs = new ArrayCollection();
@@ -114,7 +114,7 @@ class Specimen
     protected function getPlantFirstLifeCycleStep(Plant $plant)
     {
         foreach ($plant->getLifeCycleSteps() as $plantLifeCycleStep) {
-            return $plantLifeCycleStep->getLifeCycleStep();
+            return $plantLifeCycleStep;
         }
         throw new Exception('Plant does not have any lifecycle step.');
     }
@@ -168,7 +168,7 @@ class Specimen
     }
 
     /**
-     * @return LifeCycleStep
+     * @return PlantLifeCycleStep
      */
     public function getCurrentLifeCycleStep()
     {
@@ -218,7 +218,7 @@ class Specimen
         return $this;
     }
 
-    public function setCurrentLifeCycleStep(?LifeCycleStep $currentLifeCycleStep): self
+    public function setCurrentLifeCycleStep(?PlantLifeCycleStep $currentLifeCycleStep): self
     {
         $this->currentLifeCycleStep = $currentLifeCycleStep;
 

@@ -1,16 +1,88 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Jardins : {{plot.name}}{% endblock %}
 {% block body %}
-    hello <b>{{ app.user.firstName }}</b>
-    <table border="1px">
-        <th>Name</th>
-        <th>Height</th>
-        <th>Length</th>
-        <tr>
-            <td>{{plot.name}}</td>
-            <td>{{plot.height}}</td>
-            <td>{{plot.length}}</td>
-        </tr>
-    </table>
+    <div class="container">
+        <div class="card w-100">
+            <button class="btn btn-warning w-100" type="button" data-toggle="collapse" data-target="#collapsePlotParams" aria-expanded="false" aria-controls="collapsePlotParams">
+                Paramètres de la parcelle
+            </button>
+            <div class="collapse" id="collapsePlotParams">
+                <table border="1px">
+                    <th>Name</th>
+                    <tr>
+                        <td>{{plot.name}}</td>
+                    </tr>
+                </table>
+                TODO plot params form
+            </div>
+        </div>
+        <button class="btn btn-primary w-100" type="button" data-toggle="collapse" data-target="#collapseSpecimens" aria-expanded="false" aria-controls="collapseSpecimens">
+            Vos spécimens plantés
+        </button>
+        <div class="collapse" id="collapseSpecimens">
+            {% for specimen in plot.specimens %}
+                <div class="card specimenCard">
+                    <div class="media">
+                        <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="200" class="rounded align-self-center mr-3" alt="...">
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ specimen.plant.name }}</h5>
+                            {% if specimen.lastWateredDate is not same as(null) %}
+                                <small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small>
+                            {% endif %}
+                            {% if specimen.lastFertilizedDate is not same as(null) %}
+                                <small>Fertilisé(e) le <i>{{ specimen.lastFertilizedDate|date('d/m/Y à H:i') }}</i></small>
+                            {% endif %}
+                            <div class="container">
+                                <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
+                                <button class="btn btn-warning btn-sm actionButton" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}">Mettre de l'engrais</button>
+                                <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
+                            </div>
+                            <div class="container">
+                                <button class="btn btn-sm btn-success collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
+                                    Cycle de vie
+                                </button>
+                                <div class="collapse collapseSpecimenLogs" id="collapseSpecimenLogs-{{ specimen.id }}">
+                                    <ul class="list-group">
+                                        {% for log in specimen.logs %}
+                                            {% if log.eventAction == "Next Life Cycle Step" or log.eventAction == "Set Specific Life Cycle Step" %}
+                                                <li class="list-group-item" data-action="{{ log.eventAction }}"><small>{{ log.eventDate|date('d/m/Y à H:i') }} - {{ log.eventMessage }}</small></li>
+                                            {% endif %}
+                                            {% if log.eventAction == "Waterize" and log.eventDate == specimen.lastWateredDate %}
+                                                <li class="list-group-item" data-action="{{ log.eventAction }}"><small>{{ log.eventDate|date('d/m/Y à H:i') }} - {{ log.eventMessage }}</small></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .specimenCard {
+            margin-top:10px;
+            margin-bottom: 5px;
+        }
+
+        .collapseSpecimenLogsBtn {
+            margin-top:15px;
+            margin-bottom:15px;
+        }
+
+        .collapseSpecimenLogs {
+            margin-bottom:15px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('.actionButton').on('click', (event) => {
+            $.get(event.target.getAttribute('data-href'));
+        });
+    </script>
 {% endblock %}

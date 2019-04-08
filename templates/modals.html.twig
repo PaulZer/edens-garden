@@ -1,3 +1,4 @@
+{% set _route = app.request.attributes.get('_route') %}
 <div id="modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -8,7 +9,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                {% include template ~ '.html.twig' with {'formGarden': view} %}
+                {% if _route == 'garden_edit' or _route == 'garden_create' %}
+                    {% include template ~ '.html.twig' with {'formGarden': view} %}
+                {% elseif _route == 'plot_edit' %}
+                    {% include 'garden/plot.html.twig' with {'plot': plot} %}
+                {% endif %}
             </div>
         </div>
     </div>
