@@ -1,21 +1,17 @@
 {% block body %}
     <div class="container">
-        <div class="card w-100">
+        <div class="card plotParamsCard cw-100">
             <button class="btn btn-warning w-100" type="button" data-toggle="collapse" data-target="#collapsePlotParams" aria-expanded="false" aria-controls="collapsePlotParams">
                 Paramètres de la parcelle
             </button>
             <div class="collapse" id="collapsePlotParams">
-                <table border="1px">
-                    <th>Name</th>
-                    <tr>
-                        <td>{{plot.name}}</td>
-                    </tr>
-                </table>
                 TODO plot params form
             </div>
         </div>
         <button class="btn btn-primary w-100" type="button" data-toggle="collapse" data-target="#collapseSpecimens" aria-expanded="false" aria-controls="collapseSpecimens">
-            Vos spécimens plantés
+            <div class="container">
+                Vos spécimens plantés
+            </div>
         </button>
         <div class="collapse" id="collapseSpecimens">
             {% for specimen in plot.specimens %}
@@ -76,8 +72,15 @@
             margin-bottom:15px;
         }
 
+        .plotParamsCard {
+            margin-bottom: 15px;
+        }
+
         .modal-body {
             background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');
+        }
+
+        .modal-header {
         }
 
     </style>
@@ -88,5 +91,7 @@
         $('.actionButton').on('click', (event) => {
             $.get(event.target.getAttribute('data-href'));
         });
+
+        $('.modal-header').addClass('bg-success text-white');
     </script>
 {% endblock %}
