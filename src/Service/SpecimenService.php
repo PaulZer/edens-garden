@@ -89,7 +89,7 @@ class SpecimenService
         $defaultsLifeCycleStep = $specimen->getPlant()->getLifeCycleSteps();
         foreach ($defaultsLifeCycleStep as $lifeCycleStep) {
             if ($lifeCycleStep->getOrder() == $order) {
-                $specimen->setCurrentLifeCycleStep($lifeCycleStep);
+                $specimen->setCurrentLifeCycleStep($lifeCycleStep->getLifeCycleStep());
             }
         }
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
