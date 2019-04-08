@@ -8,6 +8,7 @@ use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\PlantSunExposureType;
 use App\Entity\Plant\SoilType;
+use phpDocumentor\Reflection\Types\String_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -35,6 +36,7 @@ class PlantType extends AbstractType
             ])
             ->add('picturePath', FileType::class, [
                 'label' => 'Sélectionnez une image :',
+                'data_class' => null
             ])
             ->add('plantFamily', EntityType::class, [
                 'label' => 'Sélectionnez une famille :',
