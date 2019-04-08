@@ -4,29 +4,31 @@
 {% block body %}
 
     <div class="container">
-        <table class="table table-striped">
-            <tr scope="col">
-                <td>Nom de la plante : </td>
-                <td>{{plant.name}}</td>
-                <td></td>
-            </tr>
+        <div class="row">
+            <div class="col-4">
+                <img src="{{ asset('assets/images/plants/' ~ plant.picturePath) }}"style="max-width:100%;">
+            </div>
+            <div class="col-8">
+                <table class="table table-striped">
+                    <tr scope="col">
+                        <td>Nom de la plante : </td>
+                        <td>{{plant.name}}</td>
+                        <td></td>
+                    </tr>
 
-            <tr scope="col">
-                <td>Nom latin : </td>
-                <td>{{plant.latinName}}</td>
-                <td></td>
-            </tr>
-            <tr scope="col">
-                <td>Chemin vers l'image : </td>
-                <td>{{plant.picturePath}}</td>
-                <td></td>
-            </tr>
-            <tr scope="col">
-                <td>Fréquence arrosage : </td>
-                <td>{{plant.waterFrequency}}</td>
-                <td></td>
-            </tr>
-        </table>
+                    <tr scope="col">
+                        <td>Nom latin : </td>
+                        <td>{{plant.latinName}}</td>
+                        <td></td>
+                    </tr>
+                    <tr scope="col">
+                        <td>Fréquence arrosage : </td>
+                        <td>{{plant.waterFrequency}}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <div class="row">
             <div class="col-6">
                 <label>Famille : </label>
