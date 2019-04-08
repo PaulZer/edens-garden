@@ -20,10 +20,20 @@
     </div>
     <hr>
     <div class="form-group" id="preferedSoilTypes">
-        <ul class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
-        </ul>
+            <div class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
+            </div>
     </div>
     <hr>
+    <div class="form-group" id="preferedFertilizerTypes">
+        <div class="preferedFertilizerTypes" data-prototype="{{ form_widget(formPlant.preferedFertilizerTypes.vars.prototype)|e('html_attr') }}">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group" id="preferedSunExposureTypes">
+        <div class="preferedSunExposureTypes" data-prototype="{{ form_widget(formPlant.preferedSunExposureTypes.vars.prototype)|e('html_attr') }}">
+        </div>
+    </div>
+
 
     {{ form_rest(formPlant) }}
     {{ form_end(formPlant) }}
@@ -31,83 +41,188 @@
 
 {% block stylesheets %}
 <style>
-    .preferedSoilTypes {
-        list-style: none;
-    }
+
 </style>
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
     <script type="text/javascript">
-        let $collectionHolder;
 
-        // setup an "add" button
-        let $addPlantSoilTypeButton = $('<button type="button" class="add_plant_soil_type">Ajouter un type de sol</button>').addClass('btn btn-success');
-        $('#preferedSoilTypes').append($addPlantSoilTypeButton);
+        const SOIL_TYPE_CLASS_NAME = "preferedSoilTypes";
+        const FERTILIZER_TYPE_CLASS_NAME = "preferedFertilizerTypes";
+        const SUN_EXPOSURE_TYPE_CLASS_NAME = "preferedSunExposureTypes";
 
-        let $newLinkLi = $('<li></li>');
+        const SOIL_OBJECT_NAME = "Soil";
+        const FERTILIZER_OBJECT_NAME = "Fertilizer";
+        const SUN_EXPOSURE_OBJECT_NAME = "SunExposure";
+
+
+        let addPlantSoilTypeButton = $('<button type="button" class="add_plant_soil_type">Ajouter un type de sol</button>').addClass('btn btn-success btn-sm');
+        $('#preferedSoilTypes').append(addPlantSoilTypeButton);
+
+        let addPlantFertilizerTypeButton = $('<button type="button" class="add_plant_fertilizer_type">Ajouter un type d\'engrais</button>').addClass('btn btn-success btn-sm');
+        $('#preferedFertilizerTypes').append(addPlantFertilizerTypeButton);
+
+        let addPlantSunExposureTypeButton = $('<button type="button" class="add_plant_sun_exposure_type">Ajouter un type d\'ensoleillement </button>').addClass('btn btn-success btn-sm');
+        $('#preferedSunExposureTypes').append(addPlantSunExposureTypeButton);
+
+
+        let newSoilLi = $('.preferedSoilTypes');
+        let newFertilizerLi = $('.preferedFertilizerTypes');
+        let newSunExposureLi = $('.preferedSunExposureTypes');
+
+        let plantSoilTypeCollectionHolder = initCollection(newSoilLi, SOIL_TYPE_CLASS_NAME);
+        let plantFertilizerTypeCollectionHolder = initCollection(newFertilizerLi, FERTILIZER_TYPE_CLASS_NAME);
+        let plantSunExposureTypeCollectionHolder = initCollection(newSunExposureLi, SUN_EXPOSURE_TYPE_CLASS_NAME);
 
         $(document).ready(function() {
-            // Get the ul that holds the collection of tags
-            $collectionHolder = $('ul.preferedSoilTypes');
-
-            // add the "add a tag" anchor and li to the tags ul
-            $collectionHolder.append($newLinkLi);
-
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
-
-            $addPlantSoilTypeButton.on('click', function(e) {
-                // add a new tag form (see next code block)
-                addForm($collectionHolder, $newLinkLi);
-            });
+            setClickListenersOnAddButtons();
+            setFormsAtInit();
         });
 
-        function addForm($collectionHolder, $newLinkLi) {
-            // Get the data-prototype explained earlier
-            let prototype = $collectionHolder.data('prototype');
+        function initCollection(newLinkLi, ulClassName) {
 
-            // get the new index
-            let index = $collectionHolder.data('index');
+            let collection = $('div.' + ulClassName);
 
-            //setup "remove" button
-            let deleteButton = $('<button class="text-right btn btn-danger" id="deleteNewPlantSoilTypeButton"><span class="fa fa-times"></span></button>');
-            deleteButton.on('click', function(e) {
-                $('#plant_preferedSoilTypes_' + index).remove();
+            collection.append(newLinkLi);
+
+            //items counter
+            collection.data('index', collection.find(':input').length);
+
+            return collection;
+        }
+
+        function setFormsAtInit() {
+            addForm(
+                plantSoilTypeCollectionHolder,
+                newSoilLi,
+                SOIL_OBJECT_NAME,
+                SOIL_TYPE_CLASS_NAME,
+                ['efficiency']
+            );
+
+            addForm(
+                plantFertilizerTypeCollectionHolder,
+                newFertilizerLi,
+                FERTILIZER_OBJECT_NAME,
+                FERTILIZER_TYPE_CLASS_NAME,
+                ['efficiency', 'nbDayBeforeFertilizing']
+            );
+
+            addForm(
+                plantSunExposureTypeCollectionHolder,
+                newSunExposureLi,
+                SUN_EXPOSURE_OBJECT_NAME,
+                SUN_EXPOSURE_TYPE_CLASS_NAME,
+                ['efficiency']
+            );
+
+
+        }
+        function setClickListenersOnAddButtons() {
+            addPlantSoilTypeButton.on('click', function(e) {
+                addForm(
+                    plantSoilTypeCollectionHolder,
+                    newSoilLi,
+                    SOIL_OBJECT_NAME,
+                    SOIL_TYPE_CLASS_NAME,
+                    ['efficiency']
+                );
             });
 
-            let newForm = deleteButton;
+            addPlantFertilizerTypeButton.on('click', function(e) {
+                addForm(
+                    plantFertilizerTypeCollectionHolder,
+                    newFertilizerLi,
+                    FERTILIZER_OBJECT_NAME,
+                    FERTILIZER_TYPE_CLASS_NAME,
+                    ['efficiency', 'nbDayBeforeFertilizing']
+                );
+            });
+
+            addPlantSunExposureTypeButton.on('click', function(e) {
+                addForm(
+                    plantSunExposureTypeCollectionHolder,
+                    newSunExposureLi,
+                    SUN_EXPOSURE_OBJECT_NAME,
+                    SUN_EXPOSURE_TYPE_CLASS_NAME,
+                    ['efficiency']
+                )
+            });
+        }
+
+        function addForm(CollectionHolder, newLinkLi, objectName, ulClassName, fieldNameArrayForIntegerValidator) {
+            // Get the data-prototype
+            let prototype = CollectionHolder.data('prototype');
+
+            let index = CollectionHolder.data('index');
+
+            let newForm = "";
 
             newForm += prototype;
-            // You need this only if you didn't set 'label' => false in your tags field in TaskType
-            // Replace '__name__label__' in the prototype's HTML to
-            // instead be a number based on how many items we have
             newForm = newForm.replace(/__name__label__/g, index);
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
             newForm = newForm.replace(/__name__/g, index);
 
+            // Display the form in the page, before the addButton
+            let $newLinkLi = $('.' + ulClassName).append(newForm);
+            newLinkLi.before($newLinkLi);
 
+            if(index !== 0) {
+                addDeleteButton(objectName, ulClassName, index);
+                addClickListenerOnDeleteButton(objectName, ulClassName, index);
+            }
+
+            // Validators
+            for(let fieldName of fieldNameArrayForIntegerValidator){
+                addInputIntegerValidator(ulClassName, fieldName, index);
+            }
+
+            addStyle(objectName, ulClassName, index);
 
             // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
+            CollectionHolder.data('index', index + 1);
+        }
 
-            // Display the form in the page in an li, before the "Add a tag" link li
-            let $newFormLi = $('<li></li>').append(newForm);
-            $newLinkLi.before($newFormLi);
+        function addDeleteButton(objectName, ulClassName, index) {
+            //setup "remove" button
+            let deleteButton =
+                "<div class='col-3 d-flex align-items-end'>" +
+                "<button class='btn btn-danger btn-sm' id='deleteNewPlant_objectName_TypeButton_id_'>" +
+                "<span class='fa fa-times'></span>" +
+                "</button>" +
+                "</div>";
 
-            // Validator
-            let soilTypeEfficiencyInput = document.getElementById('plant_preferedSoilTypes_' + index + '_efficiency');
+            deleteButton = deleteButton.replace(/_objectName_/g, objectName);
+            deleteButton = deleteButton.replace(/id_/g, index);
+
+            let removeButton = $(deleteButton);
+            // console.log(document.getElementById());
+            $('#plant_' + ulClassName + '_' + index).append(removeButton);
+
+        }
+        function addClickListenerOnDeleteButton(itemName, ulClass, index) {
+            $('#deleteNewPlant' + itemName + 'TypeButton_' + index).on('click', function(e) {
+                $('#plant_' + ulClass + '_' + index).remove();
+            })
+        }
+
+        function addInputIntegerValidator(ulClassName, fieldName, index) {
+            let field = document.getElementById('plant_' + ulClassName + '_' + index + '_' + fieldName);
             bindInputIntegerValidation(
-                soilTypeEfficiencyInput,
+                field,
                 ['change'],
-                parseInt(soilTypeEfficiencyInput.getAttribute('min')),
-                parseInt(soilTypeEfficiencyInput.getAttribute('max'))
+                parseInt(field.getAttribute('min')),
+                parseInt(field.getAttribute('max'))
             );
         }
 
+        function addStyle(objectName, ulClassName, index) {
+            const row = $('#plant_' + ulClassName + '_' + index);
+            row.addClass('row mb-3');
+            row.children().addClass('col-3');
+
+            $('#deleteNewPlant' + objectName + 'TypeButton_' + index).addClass('mt-4')
+        }
     </script>
 {% endblock %}

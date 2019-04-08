@@ -18,30 +18,30 @@ class PlantSoilTypeFormType extends AbstractType
     {
         $builder
             ->add('plant', EntityType::class, [
-                'label' => 'Plante: ',
+                'label' => 'Plante : ',
                 'class' => Plant::class,
                 'choice_label' => 'name',
                 'disabled' => true,
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control form-control-sm'
                 ]
             ])
             ->add('soilType', EntityType::class, [
-                'label' => 'Type de sol: ',
+                'label' => 'Type de sol : ',
                 'class' => SoilType::class,
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control form-control-sm'
                 ]
             ])
             ->add('efficiency', NumberType::class, [
-                'label' => 'Efficacité: ',
+                'label' => 'Efficacité : (%) ',
                 'attr' => [
-                    'min' => 0,
+                    'min' => 1,
                     'max' => 100,
-                    'class' => 'form-control'
+                    'class' => 'form-control form-control-sm'
                 ]
-            ]);
+            ])
         ;
     }
 

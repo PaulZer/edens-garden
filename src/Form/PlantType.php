@@ -63,8 +63,20 @@ class PlantType extends AbstractType
                 ]
             ])
             ->add('preferedSoilTypes', CollectionType::class, [
-                'label' => 'Types de sols préférés',
+                'label' => false,
                 'entry_type' => PlantSoilTypeFormType::class,
+                'entry_options' => [],
+                'allow_add' => true
+            ])
+            ->add('preferedFertilizerTypes', CollectionType::class, [
+                'label' => false,
+                'entry_type' => PlantFertilizerTypeFormType::class,
+                'entry_options' => [],
+                'allow_add' => true
+            ])
+            ->add('preferedSunExposureTypes', CollectionType::class, [
+                'label' => false,
+                'entry_type' => PlantSunExposureTypeFormType::class,
                 'entry_options' => [],
                 'allow_add' => true
             ])
