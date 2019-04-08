@@ -78,9 +78,9 @@ class SpecimenService
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
                 $specimen->addLog(new LogEvent("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now));
+                $this->updateSpecimen($specimen);
             }
         }
-        $this->updateSpecimen($specimen);
     }
 
     public function goToLifeCycleStep(int $specimenId, int $order)
