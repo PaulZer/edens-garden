@@ -76,10 +76,10 @@ class SpecimenService
         foreach ($defaultsLifeCycleStep as $lifeCycleStep) {
             if ($lifeCycleStep->getOrder() == $currentLifeCycleStep->getOrder() + 1) {
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
+                $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+                $specimen->addLog(new LogEvent("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now));
             }
         }
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $specimen->addLog(new LogEvent("Next Life Cycle Step", "The Plant has upgraded to the next life cycle step ", $now));
         $this->updateSpecimen($specimen);
     }
 
