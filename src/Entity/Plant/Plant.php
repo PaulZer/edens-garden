@@ -70,7 +70,7 @@ class Plant
 
     /**
      * Many Plant may have Many PlantingDateInterval.
-     * @ORM\ManyToMany(targetEntity="PlantingDateInterval")
+     * @ORM\ManyToMany(targetEntity="PlantingDateInterval", cascade={"persist"})
      * @ORM\JoinTable(name="plant_planting_date_interval",
      *      joinColumns={@ORM\JoinColumn(name="plant_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="planting_date_interval_id", referencedColumnName="id")}
@@ -80,17 +80,13 @@ class Plant
 
     /**
      * Plant constructor.
-     * @param $id
-     * @param $plantFamily
-     * @param $waterFrequency
-     * @param $preferedSunExposureTypes
-     * @param $preferedSoilTypes
-     * @param $plantingDateIntervals
      * @param $name
      * @param $latinName
      * @param $picturePath
+     * @param $picturePath
+     * @param $waterFrequency
      */
-    public function __construct(string $name,string $latinName,string $picturePath, int $waterFrequency)
+    public function __construct(string $name, string $latinName, string $picturePath, int $waterFrequency)
     {
         $this->name = $name;
         $this->latinName = $latinName;
