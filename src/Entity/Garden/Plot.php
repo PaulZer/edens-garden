@@ -32,16 +32,6 @@ class Plot
     private $name;
 
     /**
-     * @ORM\Column(type="float")
-     */
-    private $height;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $length;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Plant\SunExposureType")
      * @ORM\JoinColumn(name="sun_exposure_type_id", referencedColumnName="id")
      */
@@ -53,10 +43,9 @@ class Plot
      */
     private $soilType;
 
-
     /**
      * One Plot has many specimens. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="plot")
+     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="plot", cascade={"persist"})
      */
     private $specimens;
 
@@ -78,16 +67,12 @@ class Plot
      * @param $specimens
      * @param $garden
      */
-    public function __construct(string $id,string $name,float $height,float $length,SunExposureType $sunExposureType,SoilType $soilType,Garden $garden)
+    public function __construct(string $name, SunExposureType $sunExposureType, SoilType $soilType)
     {
-        $this->id = $id;
         $this->name = $name;
-        $this->height = $height;
-        $this->length = $length;
         $this->sunExposureType = $sunExposureType;
         $this->soilType = $soilType;
         $this->specimens = new ArrayCollection();
-        $this->garden = $garden;
     }
 
     /**
@@ -104,22 +89,6 @@ class Plot
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return float
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLength()
-    {
-        return $this->length;
     }
 
     /**
@@ -157,20 +126,6 @@ class Plot
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function setHeight(float $height): self
-    {
-        $this->height = $height;
-
-        return $this;
-    }
-
-    public function setLength(float $length): self
-    {
-        $this->length = $length;
 
         return $this;
     }

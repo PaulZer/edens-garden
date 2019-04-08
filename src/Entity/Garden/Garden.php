@@ -59,7 +59,7 @@ class Garden
 
     /**
      * One Garden has many plots. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Plot", mappedBy="garden")
+     * @ORM\OneToMany(targetEntity="Plot", mappedBy="garden", cascade={"persist"})
      */
     private $plots;
 
@@ -215,6 +215,18 @@ class Garden
                 $plot->setGarden(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
