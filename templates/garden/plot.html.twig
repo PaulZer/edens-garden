@@ -19,7 +19,8 @@
                     <div class="media">
                         <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="200" class="rounded align-self-center mr-3" alt="...">
                         <div class="media-body">
-                            <h5 class="mt-0">{{ specimen.plant.name }}</h5>
+                            <h5 class="plantName">{{ specimen.plant.name }}</h5>
+                            <em>Planté(e) le {{ specimen.plantationDate|date('d/m/Y à H:i') }}</em>
                             {% if specimen.lastWateredDate is not same as(null) %}
                                 <small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small>
                             {% endif %}
@@ -47,6 +48,13 @@
                                         {% endfor %}
                                     </ul>
                                 </div>
+                                <canvas class="specimenLifeChart" data-specimen-id="{{ specimen.id }}" width="100%" height="30vh"></canvas>
+                                <br>
+                                <button class="btn btn-sm" id="randomizeData-{{ specimen.id }}">Randomize Data</button>
+                                <button class="btn btn-sm" id="addDataset-{{ specimen.id }}">Add Dataset</button>
+                                <button class="btn btn-sm" id="removeDataset-{{ specimen.id }}">Remove Dataset</button>
+                                <button class="btn btn-sm" id="addData-{{ specimen.id }}">Add Data</button>
+                                <button class="btn btn-sm" id="removeData-{{ specimen.id }}">Remove Data</button>
                             </div>
                         </div>
                     </div>
@@ -80,18 +88,169 @@
             background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');
         }
 
-        .modal-header {
+        .plantName {
+            margin-top:2rem;
         }
 
     </style>
+    <style type="text/css">/* Chart.js */
+        @keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style>
 {% endblock %}
 
 {% block javascripts %}
     <script>
+        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        window.randomScalingFactor = function() {
+            return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.random() * 100;
+        };
+
         $('.actionButton').on('click', (event) => {
             $.get(event.target.getAttribute('data-href'));
         });
 
         $('.modal-header').addClass('bg-success text-white');
+
+        $.each($('.specimenLifeChart'), (i, el) => {
+
+            var ctx = el.getContext('2d');
+            console.log(ctx);
+            window.myLine = new Chart(ctx, config);
+            let specimenId = el.getAttribute('data-specimen-id')
+
+            var config = {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ],
+                        fill: false,
+                    }, {
+                        label: 'My Second dataset',
+                        fill: false,
+                        backgroundColor: window.chartColors.blue,
+                        borderColor: window.chartColors.blue,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Chart.js Line Chart'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Month'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Value'
+                            }
+                        }]
+                    }
+                }
+            };
+
+            document.getElementById('randomizeData-' + specimenId).addEventListener('click', function() {
+                config.data.datasets.forEach(function(dataset) {
+                    dataset.data = dataset.data.map(function() {
+                        return randomScalingFactor();
+                    });
+
+                });
+
+                window.myLine.update();
+            });
+
+            var colorNames = Object.keys(window.chartColors);
+            document.getElementById('addDataset-' + specimenId).addEventListener('click', function() {
+                var colorName = colorNames[config.data.datasets.length % colorNames.length];
+                var newColor = window.chartColors[colorName];
+                var newDataset = {
+                    label: 'Dataset ' + config.data.datasets.length,
+                    backgroundColor: newColor,
+                    borderColor: newColor,
+                    data: [],
+                    fill: false
+                };
+
+                for (var index = 0; index < config.data.labels.length; ++index) {
+                    newDataset.data.push(randomScalingFactor());
+                }
+
+                config.data.datasets.push(newDataset);
+                window.myLine.update();
+            });
+
+            document.getElementById('addData-' + specimenId).addEventListener('click', function() {
+                if (config.data.datasets.length > 0) {
+                    var month = MONTHS[config.data.labels.length % MONTHS.length];
+                    config.data.labels.push(month);
+
+                    config.data.datasets.forEach(function(dataset) {
+                        dataset.data.push(randomScalingFactor());
+                    });
+
+                    window.myLine.update();
+                }
+            });
+
+            document.getElementById('removeDataset-' + specimenId).addEventListener('click', function() {
+                config.data.datasets.splice(0, 1);
+                window.myLine.update();
+            });
+
+            document.getElementById('removeData-' + specimenId).addEventListener('click', function() {
+                config.data.labels.splice(-1, 1); // remove the label first
+
+                config.data.datasets.forEach(function(dataset) {
+                    dataset.data.pop();
+                });
+
+                window.myLine.update();
+            });
+        });
     </script>
 {% endblock %}
