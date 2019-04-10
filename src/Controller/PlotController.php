@@ -72,8 +72,10 @@ class PlotController extends AbstractController
         ]);
     }
 
-    public function editPlot(Request $request, int $id = null): Response
+    public function editPlot(Request $request): Response
     {
+        $id = $request->get('id');
+
         $em = $this->getDoctrine()->getManager();
 
         if ($id > 0) {
@@ -81,10 +83,24 @@ class PlotController extends AbstractController
             if (!$plot) throw $this->createNotFoundException('Plot with id ' . $id . ' does not exist');
         } else $plot = null;
 
+        $formAction = "plot_edit";
+
+        $form = $this->createForm(PlotType::class, $plot, [
+            'action' => $formAction]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($plot);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été modifié avec succès !');
+            return $this->redirectToRoute('plots');
+        }
+
 
         return $this->render('garden/form_plot.html.twig', [
-            'modalTitle' => 'Parcelle '.$plot->getName(),
-            'plot' => $plot
+            'formPlot' => $form->createView()
         ]);
     }
 }

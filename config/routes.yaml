@@ -102,7 +102,7 @@ plot:
   controller: App\Controller\PlotController::viewPlot
 
 plot_edit:
-  path: /plot/{id}/edit
+  path: /editPlot
   controller: App\Controller\PlotController::editPlot
 
 # SPECIMEN

@@ -48,6 +48,12 @@
                                     <div class="container text-center">
                                         <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
                                     </div>
+                                    <div class="container text-center">
+                                        <a id="editPlot" href="{{ path('plot_edit', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
+                                            Modifier
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
