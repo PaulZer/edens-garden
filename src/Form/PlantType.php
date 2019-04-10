@@ -80,6 +80,12 @@ class PlantType extends AbstractType
                 'entry_options' => [],
                 'allow_add' => true
             ])
+            ->add('lifeCycleSteps', CollectionType::class, [
+                'label' => false,
+                'entry_type' => PlantLifeCycleStepFormType::class,
+                'entry_options' => [],
+                'allow_add' => true
+            ])
             ->add('save', SubmitType::class, [
                 'attr' => [
                   'class' => 'btn btn-success'

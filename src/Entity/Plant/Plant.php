@@ -83,7 +83,6 @@ class Plant
      * @param $name
      * @param $latinName
      * @param $picturePath
-     * @param $picturePath
      * @param $waterFrequency
      */
     public function __construct(string $name, string $latinName, string $picturePath, int $waterFrequency)

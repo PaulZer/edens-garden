@@ -18,19 +18,32 @@
     <div class="form-group">
         {{ form_row(formPlant.waterFrequency, {'attr': {'class': 'form-control', 'autofocus': false }}) }}
     </div>
+    <br>
+    <h3>Type de sol préféré</h3>
     <hr>
     <div class="form-group" id="preferedSoilTypes">
             <div class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
             </div>
     </div>
+    <br>
+    <h3>Type d'engrais préféré</h3>
     <hr>
     <div class="form-group" id="preferedFertilizerTypes">
         <div class="preferedFertilizerTypes" data-prototype="{{ form_widget(formPlant.preferedFertilizerTypes.vars.prototype)|e('html_attr') }}">
         </div>
     </div>
+    <br>
+    <h3>Type d'ensolleiment préféré</h3>
     <hr>
     <div class="form-group" id="preferedSunExposureTypes">
         <div class="preferedSunExposureTypes" data-prototype="{{ form_widget(formPlant.preferedSunExposureTypes.vars.prototype)|e('html_attr') }}">
+        </div>
+    </div>
+    <br>
+    <h3>Cycle de vie</h3>
+    <hr>
+    <div class="form-group" id="lifeCycleSteps">
+        <div class="lifeCycleSteps" data-prototype="{{ form_widget(formPlant.lifeCycleSteps.vars.prototype)|e('html_attr') }}">
         </div>
     </div>
 
@@ -41,7 +54,9 @@
 
 {% block stylesheets %}
 <style>
-
+    button:disabled{
+        cursor: not-allowed;
+    }
 </style>
 {% endblock %}
 
@@ -52,10 +67,12 @@
         const SOIL_TYPE_CLASS_NAME = "preferedSoilTypes";
         const FERTILIZER_TYPE_CLASS_NAME = "preferedFertilizerTypes";
         const SUN_EXPOSURE_TYPE_CLASS_NAME = "preferedSunExposureTypes";
+        const LIFE_CYCLE_STEPS_CLASS_NAME = "lifeCycleSteps";
 
         const SOIL_OBJECT_NAME = "Soil";
         const FERTILIZER_OBJECT_NAME = "Fertilizer";
         const SUN_EXPOSURE_OBJECT_NAME = "SunExposure";
+        const LIFE_CYCLE_STEP_OBJECT_NAME = "LifeCycleStep";
 
 
         let addPlantSoilTypeButton = $('<button type="button" class="add_plant_soil_type">Ajouter un type de sol</button>').addClass('btn btn-success btn-sm');
@@ -67,14 +84,19 @@
         let addPlantSunExposureTypeButton = $('<button type="button" class="add_plant_sun_exposure_type">Ajouter un type d\'ensoleillement </button>').addClass('btn btn-success btn-sm');
         $('#preferedSunExposureTypes').append(addPlantSunExposureTypeButton);
 
+        let addPlantLifeCycleStepsButton = $('<button type="button" class="add_plant_life_cycle_steps">Ajouter une étape de cycle de vie </button>').addClass('btn btn-success btn-sm');
+        $('#lifeCycleSteps').append(addPlantLifeCycleStepsButton);
+
 
         let newSoilLi = $('.preferedSoilTypes');
         let newFertilizerLi = $('.preferedFertilizerTypes');
         let newSunExposureLi = $('.preferedSunExposureTypes');
+        let newLifeCycleStepsLi = $('.lifeCycleSteps');
 
         let plantSoilTypeCollectionHolder = initCollection(newSoilLi, SOIL_TYPE_CLASS_NAME);
         let plantFertilizerTypeCollectionHolder = initCollection(newFertilizerLi, FERTILIZER_TYPE_CLASS_NAME);
         let plantSunExposureTypeCollectionHolder = initCollection(newSunExposureLi, SUN_EXPOSURE_TYPE_CLASS_NAME);
+        let plantLifeCycleStepsCollectionHolder = initCollection(newLifeCycleStepsLi, LIFE_CYCLE_STEPS_CLASS_NAME);
 
         $(document).ready(function() {
             setClickListenersOnAddButtons();
@@ -117,7 +139,14 @@
                 SUN_EXPOSURE_TYPE_CLASS_NAME,
                 ['efficiency']
             );
-
+            addForm(
+                plantLifeCycleStepsCollectionHolder,
+                newLifeCycleStepsLi,
+                LIFE_CYCLE_STEP_OBJECT_NAME,
+                LIFE_CYCLE_STEPS_CLASS_NAME,
+                ['stepDaysDuration', 'order']
+            );
+            fillOrderFieldLifeCycleStep();
 
         }
         function setClickListenersOnAddButtons() {
@@ -129,6 +158,8 @@
                     SOIL_TYPE_CLASS_NAME,
                     ['efficiency']
                 );
+
+                disableIfMaxInputIsReach(plantSoilTypeCollectionHolder, 6, 'add_plant_soil_type');
             });
 
             addPlantFertilizerTypeButton.on('click', function(e) {
@@ -139,6 +170,8 @@
                     FERTILIZER_TYPE_CLASS_NAME,
                     ['efficiency', 'nbDayBeforeFertilizing']
                 );
+
+                disableIfMaxInputIsReach(plantFertilizerTypeCollectionHolder, 6, 'add_plant_fertilizer_type');
             });
 
             addPlantSunExposureTypeButton.on('click', function(e) {
@@ -148,7 +181,21 @@
                     SUN_EXPOSURE_OBJECT_NAME,
                     SUN_EXPOSURE_TYPE_CLASS_NAME,
                     ['efficiency']
-                )
+                );
+
+                disableIfMaxInputIsReach(plantSunExposureTypeCollectionHolder, 3, 'add_plant_sun_exposure_type');
+            });
+            addPlantLifeCycleStepsButton.on('click', function(e) {
+                addForm(
+                    plantLifeCycleStepsCollectionHolder,
+                    newLifeCycleStepsLi,
+                    LIFE_CYCLE_STEP_OBJECT_NAME,
+                    LIFE_CYCLE_STEPS_CLASS_NAME,
+                    ['stepDaysDuration', 'order']
+                );
+
+                disableIfMaxInputIsReach(plantLifeCycleStepsCollectionHolder, 6, 'add_plant_life_cycle_steps');
+                fillOrderFieldLifeCycleStep();
             });
         }
 
@@ -170,7 +217,7 @@
 
             if(index !== 0) {
                 addDeleteButton(objectName, ulClassName, index);
-                addClickListenerOnDeleteButton(objectName, ulClassName, index);
+                addClickListenerOnDeleteButton(CollectionHolder, objectName, ulClassName, index);
             }
 
             // Validators
@@ -201,10 +248,32 @@
             $('#plant_' + ulClassName + '_' + index).append(removeButton);
 
         }
-        function addClickListenerOnDeleteButton(itemName, ulClass, index) {
+        function addClickListenerOnDeleteButton(collectionHolder, itemName, ulClass, index) {
             $('#deleteNewPlant' + itemName + 'TypeButton_' + index).on('click', function(e) {
                 $('#plant_' + ulClass + '_' + index).remove();
+
+                collectionHolder.data('index', collectionHolder.data('index') - 1);
+
+                enableIfMaxInputIsNotReach(plantSoilTypeCollectionHolder, 6, 'add_plant_soil_type');
+                enableIfMaxInputIsNotReach(plantFertilizerTypeCollectionHolder, 6, 'add_plant_fertilizer_type');
+                enableIfMaxInputIsNotReach(plantSunExposureTypeCollectionHolder, 3, 'add_plant_sun_exposure_type');
+                enableIfMaxInputIsNotReach(plantLifeCycleStepsCollectionHolder, 6, 'add_plant_life_cycle_steps');
             })
+        }
+
+        function disableIfMaxInputIsReach(CollectionHolder, nbMaxInputs, buttonClassName){
+            console.log('disabled index: ', CollectionHolder.data('index'));
+            console.log('disabled: ', CollectionHolder.data('index') >= nbMaxInputs);
+            if(CollectionHolder.data('index') >= nbMaxInputs){
+                document.getElementsByClassName(buttonClassName)[0].disabled = true;
+            }
+        }
+        function enableIfMaxInputIsNotReach(CollectionHolder, nbMaxInputs, buttonClassName){
+            console.log('enable index: ', CollectionHolder.data('index'));
+            console.log('enable: ', CollectionHolder.data('index') < nbMaxInputs);
+            if(CollectionHolder.data('index') < nbMaxInputs){
+                document.getElementsByClassName(buttonClassName)[0].disabled = false;
+            }
         }
 
         function addInputIntegerValidator(ulClassName, fieldName, index) {
@@ -215,6 +284,15 @@
                 parseInt(field.getAttribute('min')),
                 parseInt(field.getAttribute('max'))
             );
+        }
+
+        function fillOrderFieldLifeCycleStep(){
+
+            console.log('plant_' + LIFE_CYCLE_STEPS_CLASS_NAME + '_' + plantLifeCycleStepsCollectionHolder.data('index') - 1 + '_order');
+            let field = document.getElementById('plant_' + LIFE_CYCLE_STEPS_CLASS_NAME + '_' + (plantLifeCycleStepsCollectionHolder.data('index') - 1) + '_order');
+
+            field.value = plantLifeCycleStepsCollectionHolder.data('index');
+            field.disabled = true;
         }
 
         function addStyle(objectName, ulClassName, index) {
