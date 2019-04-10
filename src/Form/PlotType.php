@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Garden\Garden;
 use App\Entity\Garden\Plot;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\SoilType;
@@ -34,6 +35,12 @@ class PlotType extends AbstractType
             ->add('soilType', EntityType::class, [
                 'label' => 'Type de terre :',
                 'class' => SoilType::class,
+                'choice_label' => 'name',
+                'empty_data' => null,
+            ])
+            ->add('garden', EntityType::class, [
+                'label' => 'Type de terre :',
+                'class' => Garden::class,
                 'choice_label' => 'name',
                 'empty_data' => null,
             ])

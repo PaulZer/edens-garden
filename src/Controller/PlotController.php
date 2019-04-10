@@ -52,11 +52,12 @@ class PlotController extends AbstractController
 
         $plot = new Plot("", null, null);
 
-        $formAction = "plot_add";
+        $formAction = "plot_create";
 
         $form = $this->createForm(PlotType::class, $plot, [
             'action' => $formAction]);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($plot);
@@ -81,7 +82,7 @@ class PlotController extends AbstractController
         } else $plot = null;
 
 
-        return $this->render('modals.html.twig', [
+        return $this->render('garden/form_plot.html.twig', [
             'modalTitle' => 'Parcelle '.$plot->getName(),
             'plot' => $plot
         ]);
