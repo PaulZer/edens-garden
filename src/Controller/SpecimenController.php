@@ -66,6 +66,44 @@ class SpecimenController extends AbstractController
         return $response;
     }
 
+    public function waterizePlot(Request $request, SpecimenService $specimenService): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        try {
+            $specimenService->waterizePlot($request->get("id"), false);
+            $response->setContent(json_encode([
+                'Message' => 'Plot has been waterized',
+                'Code' => 200
+            ]));
+        } catch (\Exception $e) {
+            $response->setContent(json_encode([
+                'Message' => $e->getMessage(),
+                'Code' => 500
+            ]));
+        }
+        return $response;
+    }
+
+    public function waterizeGarden(Request $request, SpecimenService $specimenService): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        try {
+            $specimenService->waterizeGarden($request->get("id"), false);
+            $response->setContent(json_encode([
+                'Message' => 'Garden has been waterized',
+                'Code' => 200
+            ]));
+        } catch (\Exception $e) {
+            $response->setContent(json_encode([
+                'Message' => $e->getMessage(),
+                'Code' => 500
+            ]));
+        }
+        return $response;
+    }
+
     public function hourlyWeatherResult(Request $request, SpecimenService $specimenService): Response
     {
         $response = new Response();
@@ -150,5 +188,26 @@ class SpecimenController extends AbstractController
         }
         return $response;
 
+    }
+
+    public function getSpecimenLifeResults(Request $request, SpecimenRepository $specimenRepository): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $tempResponse = [];
+        $specimen = $specimenRepository->find($request->get("id"));
+        $lifeResults = $specimen->getSpecimenLifeResults();
+        foreach ($lifeResults as $lifeResult) {
+            $tempContent = [
+                "waterEfficiency" => $lifeResult->getWaterEfficiency(),
+                "soilEffiency" => $lifeResult->getSoilEfficiency(),
+                "sunExposureEffiency" => $lifeResult->getSunExposureEfficiency(),
+                "fertilizerEfficiency" => $lifeResult->getFertilizerEfficiency(),
+                "totalEfficiency" => $lifeResult->getTotalEfficiency()];
+
+            $tempResponse[] = [$lifeResult->getDate()->getTimestamp() => $tempContent];
+        }
+        $response->setContent(json_encode($tempResponse));
+        return $response;
     }
 }
