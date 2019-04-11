@@ -2,16 +2,16 @@
 
 {% block title %}Jardins : {{garden.name}}{% endblock %}
 {% block body %}
-    <div class="container-fluid">
+    <div class="container-fluid" width="100%">
         <div class="row">
             <div class="col-4">
                 <h3>Jardin {{garden.name}} - Infos</h3>
-                <table border="1px">
-                    <th>Name</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                    <th>Length</th>
-                    <th>Height</th>
+                <table  class="table table-striped" >
+                    <th scope="col">Nom</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">Longeur</th>
+                    <th scope="col">Largeur</th>
                     <tr>
                         <td>{{garden.name}}</td>
                         <td>{{garden.latitude}}</td>
