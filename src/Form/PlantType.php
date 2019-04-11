@@ -89,6 +89,12 @@ class PlantType extends AbstractType
                 'entry_options' => [],
                 'allow_add' => true
             ])
+            ->add('plantingDateIntervals', CollectionType::class, [
+                'label' => false,
+                'entry_type' => PlantPlantingDateIntervalFormType::class,
+                'entry_options' => [],
+                'allow_add' => true
+            ])
             ->add('save', SubmitType::class, [
                 'attr' => [
                   'class' => 'btn btn-success'
