@@ -272,7 +272,7 @@ class AppFixtures extends Fixture
             'tomato' => [
                 'name' => 'Plant de tomate',
                 'latinName' => 'Solanum lycopersicum',
-                'picturePath' => '',
+                'picturePath' => 'tomato.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'fructable'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -303,7 +303,7 @@ class AppFixtures extends Fixture
             'appleTree' => [
                 'name' => 'Pommier',
                 'latinName' => 'Malus',
-                'picturePath' => '',
+                'picturePath' => 'appletree.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'fructable'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -336,7 +336,7 @@ class AppFixtures extends Fixture
             'carrot' => [
                 'name' => 'Carotte',
                 'latinName' => 'Daucus carota',
-                'picturePath' => '',
+                'picturePath' => 'carrot.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'eatable'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -365,7 +365,7 @@ class AppFixtures extends Fixture
             'radish' => [
                 'name' => 'Radis',
                 'latinName' => 'Raphanus sativus',
-                'picturePath' => '',
+                'picturePath' => 'radish.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'eatable'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -396,7 +396,7 @@ class AppFixtures extends Fixture
             'geranium' => [
                 'name' => 'Géranium',
                 'latinName' => 'Geranium',
-                'picturePath' => '',
+                'picturePath' => 'geranium.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'flower'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -426,7 +426,7 @@ class AppFixtures extends Fixture
             'daffodil' => [
                 'name' => 'Jonquille véritable',
                 'latinName' => 'Narcissus jonquilla',
-                'picturePath' => '',
+                'picturePath' => 'daffodil.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'flower'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [
@@ -454,7 +454,7 @@ class AppFixtures extends Fixture
             'fir' => [
                 'name' => 'Sapin',
                 'latinName' => 'Abies',
-                'picturePath' => '',
+                'picturePath' => 'fir.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'other'),
                 'waterFrequency' => 1,
                 'plantingDateIntervals' => [
@@ -490,7 +490,7 @@ class AppFixtures extends Fixture
             'fern' => [
                 'name' => 'Fougère',
                 'latinName' => 'Filicophyta',
-                'picturePath' => '',
+                'picturePath' => 'fern.jpg',
                 'plantFamily' => $this->getPlantFamilyByCode( 'other'),
                 'waterFrequency' => 12,
                 'plantingDateIntervals' => [

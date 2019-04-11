@@ -2,45 +2,65 @@
 
 {% block title %}Jardins : {{garden.name}}{% endblock %}
 {% block body %}
-    <div class="row">
-        <div class="col-6">
-            <h3>Jardin {{garden.name}} - Infos</h3>
-            <table border="1px">
-                <th>Name</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Length</th>
-                <th>Height</th>
-                <tr>
-                    <td>{{garden.name}}</td>
-                    <td>{{garden.latitude}}</td>
-                    <td>{{garden.longitude}}</td>
-                    <td>{{garden.length}}</td>
-                    <td>{{garden.height}}</td>
-                </tr>
-            </table>
+    <div class="container-fluid" width="100%">
+        <div class="row">
+            <div class="col-4">
+                <h3>Jardin {{garden.name}} - Infos</h3>
+                <table  class="table table-striped" >
+                    <th scope="col">Nom</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">Longeur</th>
+                    <th scope="col">Largeur</th>
+                    <tr>
+                        <td>{{garden.name}}</td>
+                        <td>{{garden.latitude}}</td>
+                        <td>{{garden.longitude}}</td>
+                        <td>{{garden.length}}</td>
+                        <td>{{garden.height}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4 text-center ">
+                <a class="btn btn-success text-white" style="margin-top:20px;">Planter <i class="fas fa-seedling"></i></a>
+            </div>
+            <div class="col-4">
+                TODO infos météo localisation déclencher waterize
+            </div>
         </div>
-        <div class="col-6">
-            TODO infos météo localisation déclencher waterize
-        </div>
-    </div>
-
-    <div class="container-fluid">
         <h3>Vos parcelles</h3>
+        <div>
+            <a href="{{ path('plot_create') }}" class="btn btn-warning">
+                Ajouter une parcelle
+            </a>
+        </div>
         <div id="gardenPlotContainer">
             <div class="row">
                 {% for i, plot in garden.plots %}
                     <div class="col">
-                        <div class="card gardenPlot" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
-                            <div class="card-body">
+                        <div class="card gardenPlot mx-auto" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
+                            <div class="card-body" style="">
                                 <small class="plotName">{{ plot.name }}</small>
                                 <div class="plantCount">{{ plot.specimens|length }} <i class="fas fa-spa text-success"></i></div>
-                                <small class="plotSunExpType">Exposition {{ plot.sunExposureType.name }}</small>
-                                <small class="plantSoilType">{{ plot.soilType.name }}</small>
-                                <div class="plotInfos">
-                                    {#
-                                    eruherogrgrgkrkrigketugrtfgherhvlefvnejfvnekuvnitrnverljflerglerilrvnuenvrnernovenoernvejlrfhglerjgkjrgkhjefhgkjefgjehvrnvjdnflenlvenvlnrveorvnldncljnefkjvncncdnldcnklcednklcenjfvenjfvlfvenlfvnlfvnnenevklnenenneennvklnneenklenklvnevenenklenklennevnklenlennvklfvnkfvnkenenvklvknlenlenklenvklvneklenlenlenlfvnkl
-                                #}</div>
+                                <span class="plotSunExpType badge" data-code="{{ plot.sunExposureType.code }}">Exposition {{ plot.sunExposureType.name }}</span>
+                                <span class="plantSoilType badge badge-dark">{{ plot.soilType.name }}</span>
+                                <div class="plotInfos d-flex">
+                                    <div class="container text-center">
+                                        <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
+                                    </div>
+                                    <div class="container text-center">
+                                        <a id="editPlot" href="{{ path('plot_edit', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
+                                            Modifier
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a id="deletePlot" href="{{ path('plot_delete', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
+                                            Supprimer
+                                        </a>
+                                    </div>
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,15 +72,12 @@
 
 {% block stylesheets %}
     <style>
-        #gardenPlotContainer {
-
-        }
-
         .gardenPlot {
             margin-top: 5px;
             margin-bottom: 5px;
             min-height:250px;
-            min-width:250px;
+            min-width:275px;
+            max-width:350px;
             max-height:30vh;
             background-repeat: repeat;
             color: #f1f1f1;
@@ -91,9 +108,75 @@
         }
 
         .plotInfos {
-            max-height:100%;
-            padding-top:10px;
-            padding-bottom:12px;
+            position: absolute;
+            top: 30px;
+
+            width: calc(100% - 40px);
+            max-height:190px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .plotInfos::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .plotInfos::-webkit-scrollbar-track {
+            border-radius: 4px;
+        }
+
+        .plotInfos::-webkit-scrollbar-thumb {
+            background: orange;
+            border-radius: 2px;
+            height: 8px;
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <script src="{{ asset('assets/js/chartUtil.js') }}"></script>
+    <script>
+        var modalShown = 0;
+
+        $(document).on('hidden.bs.modal', () =>{
+            $('#modal').remove();
+            $('script[role="modal-script"]').remove();
+            modalShown = 0;
+        });
+
+        $(".seeSpecimensBtn").on('click', (event) => {
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
+            let route = "{{ path('plot', {'id': 'XXX' }) }}";
+                route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
+
+            $.get(route, {
+
+            }, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
+        });
+
+        $.each($('.plotSunExpType'), (i, el) => {
+            switch (el.getAttribute('data-code')) {
+                case 'sun':
+                    el.classList.add('badge-light');
+                    break;
+                case 'half-sun':
+                    el.classList.add('badge-warning');
+                    break;
+                case 'shadow':
+                    el.classList.add('badge-secondary');
+                    break;
+            }
+        });
+    </script>
 {% endblock %}

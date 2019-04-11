@@ -170,6 +170,12 @@ class Plant
         return $this->plantingDateIntervals;
     }
 
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function setName(string $name): self
     {
@@ -260,9 +266,6 @@ class Plant
         return $this;
     }
 
-    /**
-     * @return Collection|FertilizerType[]
-     */
     public function getPreferedFertilizerTypes(): Collection
     {
         return $this->preferedFertilizerTypes;
