@@ -27,7 +27,7 @@
                             {% if specimen.lastFertilizedDate is not same as(null) %}
                                 <small>Fertilisé(e) le <i>{{ specimen.lastFertilizedDate|date('d/m/Y à H:i') }}</i></small>
                             {% endif %}
-                            <div class="container">
+                            <div class="container media-container">
                                 <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
                                 <button class="btn btn-warning btn-sm actionButton" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}">Mettre de l'engrais</button>
                                 <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
@@ -35,27 +35,22 @@
                                 <button class="btn btn-sm btn-secondary collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
                                     Cycle de vie
                                 </button>
-                                <button class="btn btn-sm btn-success collapseLifeCycleGraph" type="button" data-toggle="collapse" data-target="#collapseLifeCycleGraph-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseLifeCycleGraph-{{ specimen.id }}">
-                                    Graphique du cycle de vie
-                                </button>
-                                <div class="collapse collapseLifeCycleGraph" id="collapseLifeCycleGraph-{{ specimen.id }}">
-                                    <ul class="list-group">
-                                        <div class="row">
-                                            <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="40vh"></canvas>
-                                            <br>
-                                            <button class="btn btn-sm" id="randomizeData-{{ specimen.id }}">Randomize Data</button>
-                                            <button class="btn btn-sm" id="addDataset-{{ specimen.id }}">Add Dataset</button>
-                                            <button class="btn btn-sm" id="removeDataset-{{ specimen.id }}">Remove Dataset</button>
-                                            <button class="btn btn-sm" id="addData-{{ specimen.id }}">Add Data</button>
-                                            <button class="btn btn-sm" id="removeData-{{ specimen.id }}">Remove Data</button>
-                                        </div>
-                                        <div class="row">
-                                            {% for result in specimen.specimenLifeResults %}
-                                                {{ dump(result) }}
-                                            {% endfor %}
-                                        </div>
-                                    </ul>
-                                </div>
+                                <ul class="list-group">
+                                    <div class="row">
+                                        <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="40vh"></canvas>
+                                        <br>
+                                        <button class="btn btn-sm" id="randomizeData-{{ specimen.id }}">Randomize Data</button>
+                                        <button class="btn btn-sm" id="addDataset-{{ specimen.id }}">Add Dataset</button>
+                                        <button class="btn btn-sm" id="removeDataset-{{ specimen.id }}">Remove Dataset</button>
+                                        <button class="btn btn-sm" id="addData-{{ specimen.id }}">Add Data</button>
+                                        <button class="btn btn-sm" id="removeData-{{ specimen.id }}">Remove Data</button>
+                                    </div>
+                                    <div class="row">
+                                        {% for result in specimen.specimenLifeResults %}
+                                            {{ dump(result) }}
+                                        {% endfor %}
+                                    </div>
+                                </ul>
                                 <div class="collapse collapseSpecimenLogs" id="collapseSpecimenLogs-{{ specimen.id }}">
                                     <ul class="list-group">
                                         {% for log in specimen.logs %}
@@ -112,190 +107,140 @@
 
 {% block javascripts %}
     <script>
-        var config = {
-            type: 'line',
-            data:{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'My First dataset',
-                    backgroundColor: window.chartColors.red,
-                    borderColor: window.chartColors.red,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ], fill: false,
-                }, {
-                    label: 'My Second dataset',
-                    fill: false,
-                    backgroundColor: window.chartColors.blue,
-                    borderColor: window.chartColors.blue,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ],
-                }]
-            }, options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text
-                        :
-                        'Chart.js Line Chart'
-                }, tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                }, hover: {
-                    mode: 'nearest',
-                    intersect: true
-                }, scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Month'
-                        }
-                    }], yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value'
-                        }
+        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var config = [];
+        var ctx = [];
+        var charts = [];
+
+        $('.specimenLifeChart').each((i, el) => {
+            var specimenId = el.getAttribute('data-specimen-id');
+            config[specimenId] = {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ],
+                        fill: false,
+                    }, {
+                        label: 'My Second dataset',
+                        fill: false,
+                        backgroundColor: window.chartColors.blue,
+                        borderColor: window.chartColors.blue,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ],
                     }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Chart.js Line Chart'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Month'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Value'
+                            }
+                        }]
+                    }
                 }
-            }
-        };
-        var MONTHS = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
-        ];
+            };
+            ctx[specimenId] = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
+            charts[specimenId] = new Chart(ctx[specimenId], config[specimenId]);
 
-        window.currentHandledChart = null;
-        var ctx = null;
-
-        var randomizeDataEL = null;
-        var addDatasetEL = null;
-        var addDataEL = null;
-        var removeDatasetEL = null;
-        var removeDataEL = null;
-
-        $('.actionButton').on('click', (event) => {
-            $.get(event.target.getAttribute('data-href'));
-        });
-
-        $('.modal-header').addClass('bg-success text-white');
-
-        function destroyLifeCycleChart(specimenId) {
-            window.currentHandledChart.destroy();
-            document.getElementById('randomizeData-' + specimenId).removeEventListener('click', randomizeDataEL);
-            document.getElementById('addDataset-' + specimenId).removeEventListener('click', addDatasetEL);
-            document.getElementById('addData-' + specimenId).removeEventListener('click', addDataEL);
-            document.getElementById('removeDataset-' + specimenId).removeEventListener('click', removeDatasetEL);
-            document.getElementById('removeData-' + specimenId).removeEventListener('click', removeDataEL);
-        }
-
-        function initLifeCycleChart(specimenId) {
-            console.log('chart >', window.currentHandledChart);
-            $.when(() => {if(window.currentHandledChart) {
-                window.currentHandledChart.destroy();
-                console.log('init stopped > destroying');
-            }}).then(() => {
-                console.log('init begin');
-                ctx = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
-                var colorNames = Object.keys(window.chartColors);
-                window.currentHandledChart = new Chart(ctx, config);
-
-                randomizeDataEL = function() {
-                    config.data.datasets.forEach(function (dataset) {
-                        dataset.data = dataset.data.map(function () {
-                            return randomScalingFactor();
-                        });
-
-                    });
-                    window.currentHandledChart.update();
-                };
-                document.getElementById('randomizeData-' + specimenId).addEventListener('click', randomizeDataEL);
-
-                addDatasetEL = function() {
-                    var colorName = colorNames[config.data.datasets.length % colorNames.length];
-                    var newColor = window.chartColors[colorName];
-                    var newDataset = {
-                        label: 'Dataset ' + config.data.datasets.length,
-                        backgroundColor: newColor,
-                        borderColor: newColor,
-                        data: [],
-                        fill: false
-                    };
-
-                    for (var index = 0; index < config.data.labels.length; ++index) {
-                        newDataset.data.push(randomScalingFactor());
-                    }
-
-                    config.data.datasets.push(newDataset);
-                    window.currentHandledChart.update();
-                };
-                document.getElementById('addDataset-' + specimenId).addEventListener('click', addDatasetEL);
-
-                addDataEL = function() {
-                    if (config.data.datasets.length > 0) {
-                        var month = MONTHS[config.data.labels.length % MONTHS.length];
-                        config.data.labels.push(month);
-
-                        config.data.datasets.forEach(function(dataset) {
-                            dataset.data.push(randomScalingFactor());
-                        });
-
-                        window.currentHandledChart.update();
-                    }
-                };
-                document.getElementById('addData-' + specimenId).addEventListener('click', addDataEL);
-
-
-                removeDatasetEL = function() {
-                    config.data.datasets.splice(0, 1);
-                    window.currentHandledChart.update();
-                };
-                document.getElementById('removeDataset-' + specimenId).addEventListener('click', removeDatasetEL);
-
-                removeDataEL = function() {
-                    config.data.labels.splice(-1, 1); // remove the label first
-
-                    config.data.datasets.forEach(function(dataset) {
-                        dataset.data.pop();
+            document.getElementById('randomizeData-' + specimenId).addEventListener('click', function() {
+                config[specimenId].data.datasets.forEach(function(dataset) {
+                    dataset.data = dataset.data.map(function() {
+                        return randomScalingFactor();
                     });
 
-                    window.currentHandledChart.update();
-                };
-                document.getElementById('removeData-' + specimenId).addEventListener('click', removeDataEL);
+                });
+
+                charts[specimenId].update();
             });
-        }
 
-        $('.collapseLifeCycleGraph').on('click', (event) => {
-            let btnId = event.target.getAttribute('data-target');
-            let btn = $(btnId);
-            let init = !btn.is(':visible');
-            let specimenId = btn.find('canvas').attr('data-specimen-id');
-            if(init) initLifeCycleChart(specimenId);
-            else destroyLifeCycleChart(specimenId);
+            var colorNames = Object.keys(window.chartColors);
+            document.getElementById('addDataset-' + specimenId).addEventListener('click', function() {
+                var colorName = colorNames[config[specimenId].data.datasets.length % colorNames.length];
+                var newColor = window.chartColors[colorName];
+                var newDataset = {
+                    label: 'Dataset ' + config[specimenId].data.datasets.length,
+                    backgroundColor: newColor,
+                    borderColor: newColor,
+                    data: [],
+                    fill: false
+                };
+
+                for (var index = 0; index < config[specimenId].data.labels.length; ++index) {
+                    newDataset.data.push(randomScalingFactor());
+                }
+
+                config[specimenId].data.datasets.push(newDataset);
+                charts[specimenId].update();
+            });
+
+            document.getElementById('addData-' + specimenId).addEventListener('click', function() {
+                if (config[specimenId].data.datasets.length > 0) {
+                    var month = MONTHS[config[specimenId].data.labels.length % MONTHS.length];
+                    config[specimenId].data.labels.push(month);
+
+                    config[specimenId].data.datasets.forEach(function(dataset) {
+                        dataset.data.push(randomScalingFactor());
+                    });
+
+                    charts[specimenId].update();
+                }
+            });
+
+            document.getElementById('removeDataset-' + specimenId).addEventListener('click', function() {
+                config[specimenId].data.datasets.splice(0, 1);
+                charts[specimenId].update();
+            });
+
+            document.getElementById('removeData-' + specimenId).addEventListener('click', function() {
+                config[specimenId].data.labels.splice(-1, 1); // remove the label first
+
+                config[specimenId].data.datasets.forEach(function(dataset) {
+                    dataset.data.pop();
+                });
+
+                charts[specimenId].update();
+            });
         });
     </script>
 {% endblock %}
