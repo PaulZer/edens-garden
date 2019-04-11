@@ -77,7 +77,7 @@ class PlantController extends AbstractController
         }
         else $plant = new Plant("", '', "",0);
 
-        $formAction = $request->attributes->get('_route') == 'plant_create' ? $this->generateUrl('plant_create'): $this->generateUrl('plant_edit', ['id' => $plant->getId()]);
+        $formAction = $request->attributes->get('_route') == 'plot_create' ? $this->generateUrl('plot_create'): $this->generateUrl('plot_edit', ['id' => $plant->getId()]);
 
         $form = $this->createForm(PlantType::class, $plant, [
             'action' => $formAction]);
