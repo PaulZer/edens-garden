@@ -4,8 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Plant\FertilizerType;
-use App\Entity\Plant\LifeCycleStep;
-use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\PlantFertilizerType;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantSoilType;
@@ -132,8 +130,10 @@ class PlantController extends AbstractController
             0
         );
 
-        $form = $this->createForm(PlantFertilizerTypeFormType::class, $plantFertilizerType,
-            ['action' => $this->generateUrl('add_fertilizer', ['plantId' => $plant->getId()])]);
+        $form = $this->createForm(PlantFertilizerTypeFormType::class, $plantFertilizerType, [
+            'action' => $this->generateUrl('add_fertilizer',
+                ['plantId' => $plant->getId()])
+        ]);
 
         $form->handleRequest($request);
 

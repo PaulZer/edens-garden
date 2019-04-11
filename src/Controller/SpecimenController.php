@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Garden\Specimen;
+use App\Entity\Plant\FertilizerType;
+use App\Entity\Plant\PlantFertilizerType;
+use App\Form\PlantFertilizerTypeFormType;
 use App\Service\SpecimenService;
 use App\Repository\SpecimenRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -201,8 +206,8 @@ class SpecimenController extends AbstractController
         foreach ($lifeResults as $lifeResult) {
             $tempContent = [
                 "waterEfficiency" => $lifeResult->getWaterEfficiency(),
-                "soilEffiency" => $lifeResult->getSoilEfficiency(),
-                "sunExposureEffiency" => $lifeResult->getSunExposureEfficiency(),
+                "soilEfficiency" => $lifeResult->getSoilEfficiency(),
+                "sunExposureEfficiency" => $lifeResult->getSunExposureEfficiency(),
                 "fertilizerEfficiency" => $lifeResult->getFertilizerEfficiency(),
                 "totalEfficiency" => $lifeResult->getTotalEfficiency()];
 
@@ -210,5 +215,36 @@ class SpecimenController extends AbstractController
         }
         $response->setContent(json_encode($tempResponse));
         return $response;
+    }
+
+    public function specimenFertilizerForm(Request $request, int $id = null): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if ($id > 0) {
+            $specimen = $em->getRepository(Specimen::class)->find($id);
+            if (!$specimen) throw $this->createNotFoundException('Specimen with id ' . $id . ' does not exist');
+        } else $specimen = null;
+
+        if($specimen->getFertilizer() !== null){
+            $fertilizer = $specimen->getFertilizer();
+        } else $fertilizer = $em->getRepository(FertilizerType::class)->findOneBy(['code' => 'N-K']);
+
+        $form = $this->createForm(PlantFertilizerTypeFormType::class, new PlantFertilizerType($specimen->getPlant(), $fertilizer, 0, 0), [
+            'action' => null
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($specimen);
+            $em->flush();
+
+            return new JsonResponse(1);
+        }
+        dump('wesh les iencli');
+        return $this->render('garden/specimen_fertilizer_form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

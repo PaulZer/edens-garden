@@ -15,7 +15,7 @@
         </button>
         <div class="collapse" id="collapseSpecimens">
             {% for specimen in plot.specimens %}
-                <div class="card specimenCard">
+                <div class="card specimenCard" data-fertilizer-id="{{ specimen.fertilizer is same as(null) ? 0: specimen.fertilizer.id }}">
                     <div class="media">
                         <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="200" class="rounded align-self-center mr-3" alt="...">
                         <div class="media-body">
@@ -29,7 +29,7 @@
                             {% endif %}
                             <div class="container">
                                 <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
-                                <button class="btn btn-warning btn-sm actionButton" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}">Mettre de l'engrais</button>
+                                <button class="btn btn-warning btn-sm actionButton fertilize" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}" data-formpath="{{ path('specimen_fertilizer_form', {id: specimen.id}) }}">Mettre de l'engrais</button>
                                 <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
 
                                 <button class="btn btn-sm btn-secondary collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
@@ -37,17 +37,12 @@
                                 </button>
                                 <ul class="list-group">
                                     <div class="row">
-                                        <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="40vh"></canvas>
+                                        <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="50vh"></canvas>
                                         <br>
-                                        <button class="btn btn-sm" id="randomizeData-{{ specimen.id }}">Randomize Data</button>
-                                        <button class="btn btn-sm" id="addDataset-{{ specimen.id }}">Add Dataset</button>
-                                        <button class="btn btn-sm" id="removeDataset-{{ specimen.id }}">Remove Dataset</button>
-                                        <button class="btn btn-sm" id="addData-{{ specimen.id }}">Add Data</button>
-                                        <button class="btn btn-sm" id="removeData-{{ specimen.id }}">Remove Data</button>
                                     </div>
                                     <div class="row">
                                         {% for result in specimen.specimenLifeResults %}
-                                            {{ dump(result) }}
+                                        {#{{ dump(result) }}#}
                                         {% endfor %}
                                     </div>
                                 </ul>
@@ -107,139 +102,111 @@
 
 {% block javascripts %}
     <script>
-        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         var config = [];
         var ctx = [];
         var charts = [];
+        var specChartData = [];
+        var dataURL = '{{ path('specimen_get_life_result', {id: "XXX"}) }}';
+
+        $('.actionButton').on('click', (event) => {
+            if(event.target.classList.contains('fertilize')) {
+                if($(event.target).parents('.specimenCard').attr('data-fertilizer-id') > 0) {
+                    $.get(event.target.getAttribute('data-href'));
+                } else {
+                    $.get(event.target.getAttribute('data-formpath'), (view) => {
+                        $(event.target).after(view);
+                    });
+                }
+            } else $.get(event.target.getAttribute('data-href'));
+        });
 
         $('.specimenLifeChart').each((i, el) => {
             var specimenId = el.getAttribute('data-specimen-id');
-            config[specimenId] = {
-                type: 'line',
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                    datasets: [{
-                        label: 'My First dataset',
-                        backgroundColor: window.chartColors.red,
-                        borderColor: window.chartColors.red,
-                        data: [
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor()
-                        ],
-                        fill: false,
-                    }, {
-                        label: 'My Second dataset',
-                        fill: false,
-                        backgroundColor: window.chartColors.blue,
-                        borderColor: window.chartColors.blue,
-                        data: [
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor()
-                        ],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: 'Chart.js Line Chart'
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    hover: {
-                        mode: 'nearest',
-                        intersect: true
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Month'
-                            }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Value'
-                            }
-                        }]
+
+            $.get(dataURL.replace('XXX', specimenId), (data) => {
+                var getChartData = (type) => {
+                    let res = [];
+                    for(let result of data.values()){
+                        let timestamp = Object.getOwnPropertyNames(result)[0];
+                        let date = new Date(parseInt(timestamp) * 1000);
+                        if(type == 'dates') {
+                            res.push([pad(date.getDate()), pad(date.getMonth()+1), date.getFullYear()].join('/'));
+                        } else res.push(result[timestamp][type]);
+                        if(res.length == 10) return res;
                     }
-                }
-            };
-            ctx[specimenId] = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
-            charts[specimenId] = new Chart(ctx[specimenId], config[specimenId]);
-
-            document.getElementById('randomizeData-' + specimenId).addEventListener('click', function() {
-                config[specimenId].data.datasets.forEach(function(dataset) {
-                    dataset.data = dataset.data.map(function() {
-                        return randomScalingFactor();
-                    });
-
-                });
-
-                charts[specimenId].update();
-            });
-
-            var colorNames = Object.keys(window.chartColors);
-            document.getElementById('addDataset-' + specimenId).addEventListener('click', function() {
-                var colorName = colorNames[config[specimenId].data.datasets.length % colorNames.length];
-                var newColor = window.chartColors[colorName];
-                var newDataset = {
-                    label: 'Dataset ' + config[specimenId].data.datasets.length,
-                    backgroundColor: newColor,
-                    borderColor: newColor,
-                    data: [],
-                    fill: false
+                    return res;
                 };
 
-                for (var index = 0; index < config[specimenId].data.labels.length; ++index) {
-                    newDataset.data.push(randomScalingFactor());
-                }
-
-                config[specimenId].data.datasets.push(newDataset);
-                charts[specimenId].update();
-            });
-
-            document.getElementById('addData-' + specimenId).addEventListener('click', function() {
-                if (config[specimenId].data.datasets.length > 0) {
-                    var month = MONTHS[config[specimenId].data.labels.length % MONTHS.length];
-                    config[specimenId].data.labels.push(month);
-
-                    config[specimenId].data.datasets.forEach(function(dataset) {
-                        dataset.data.push(randomScalingFactor());
-                    });
-
-                    charts[specimenId].update();
-                }
-            });
-
-            document.getElementById('removeDataset-' + specimenId).addEventListener('click', function() {
-                config[specimenId].data.datasets.splice(0, 1);
-                charts[specimenId].update();
-            });
-
-            document.getElementById('removeData-' + specimenId).addEventListener('click', function() {
-                config[specimenId].data.labels.splice(-1, 1); // remove the label first
-
-                config[specimenId].data.datasets.forEach(function(dataset) {
-                    dataset.data.pop();
-                });
-
-                charts[specimenId].update();
+                config[specimenId] = {
+                    type: 'line',
+                    data: {
+                        labels: getChartData('dates'),
+                        datasets: [{
+                            label: 'Apport en eau',
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            data: getChartData('waterEfficiency'),
+                            fill: false,
+                        }, {
+                            label: 'Apport en engrais',
+                            fill: false,
+                            backgroundColor: window.chartColors.purple,
+                            borderColor: window.chartColors.purple,
+                            data: getChartData('fertilizerEfficiency'),
+                        }, {
+                            label: 'Type de sol',
+                            fill: false,
+                            backgroundColor: window.chartColors.brown,
+                            borderColor: window.chartColors.brown,
+                            data: getChartData('soilEfficiency'),
+                        }, {
+                            label: 'Exposition au soleil',
+                            fill: false,
+                            backgroundColor: window.chartColors.orange,
+                            borderColor: window.chartColors.orange,
+                            data: getChartData('sunExposureEfficiency'),
+                        }, {
+                    label: 'Optimisation globale',
+                        fill: false,
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
+                        data: getChartData('totalEfficiency'),
+                }]
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Suivi d\'évolution de votre plante'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Date'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Optimisation (%)'
+                                }
+                            }]
+                        }
+                    }
+                };
+                ctx[specimenId] = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
+                charts[specimenId] = new Chart(ctx[specimenId], config[specimenId]);
             });
         });
     </script>

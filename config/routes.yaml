@@ -152,3 +152,6 @@ specimen_set_fertilizer:
 specimen_get_life_result:
   path: /specimen/{id}/lifeResult
   controller: App\Controller\SpecimenController::getSpecimenLifeResults
+specimen_fertilizer_form:
+  path: /specimen/{id}/fertilizerForm
+  controller: App\Controller\SpecimenController::specimenFertilizerForm
