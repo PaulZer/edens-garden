@@ -99,7 +99,7 @@ plot_create:
 
 plot:
   path: /plot/{id}
-  controller: App\Controller\PlotController::viewPlot
+  controller: App\Controller\PlotController::modalPlot
 
 plot_edit:
   path: /editPlot
