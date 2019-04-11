@@ -105,6 +105,10 @@ plot_edit:
   path: /editPlot
   controller: App\Controller\PlotController::editPlot
 
+plot_delete:
+  path: /deletePlot
+  controller: App\Controller\PlotController::deletePlot
+
 # SPECIMEN
 
 specimen_fertilize:

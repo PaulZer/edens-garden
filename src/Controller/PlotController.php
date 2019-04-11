@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Garden\Plot;
+use App\Entity\Plant\Plant;
 use App\Form\PlotType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,24 +84,42 @@ class PlotController extends AbstractController
             if (!$plot) throw $this->createNotFoundException('Plot with id ' . $id . ' does not exist');
         } else $plot = null;
 
-        $formAction = "plot_edit";
+        $formAction = $request->attributes->get('_route') == 'plot_create' ? $this->generateUrl('plot_create'): $this->generateUrl('plot_edit', ['id' => $plot->getId()]);
 
         $form = $this->createForm(PlotType::class, $plot, [
             'action' => $formAction]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
 
             $em->persist($plot);
             $em->flush();
 
             $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été modifié avec succès !');
-            return $this->redirectToRoute('plots');
+            return $this->redirectToRoute('garden', ['id' => $plot->getGardenId()]);
         }
-
 
         return $this->render('garden/form_plot.html.twig', [
             'formPlot' => $form->createView()
         ]);
+    }
+
+    public function deletePlot(Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->get('id');
+
+        if(isset($id) && $id > 0)
+        {
+            $plot = $em->getRepository(Plot::class)->find($id);
+            if (!$plot) throw $this->createNotFoundException('Plot with id '.$id.' does not exist');
+            $em->remove($plot);
+            $em->flush();
+
+            return $this->redirectToRoute('garden', ['id' => $plot->getGardenId()]);
+        }
+        else throw $this->createNotFoundException('Plot with id '.$id.' does not exist');
+
     }
 }

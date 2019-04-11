@@ -123,6 +123,14 @@ class Plot
         return $this->garden;
     }
 
+    /**
+     * @return int
+     */
+    public function getGardenId()
+    {
+        return $this->garden->getId();
+    }
+
     public function setName(string $name): self
     {
         $this->name = $name;

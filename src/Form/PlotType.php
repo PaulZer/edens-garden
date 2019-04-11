@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Garden\Garden;
 use App\Entity\Garden\Plot;
-use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\SoilType;
 use App\Entity\Plant\SunExposureType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -39,7 +38,7 @@ class PlotType extends AbstractType
                 'empty_data' => null,
             ])
             ->add('garden', EntityType::class, [
-                'label' => 'Type de terre :',
+                'label' => 'Jardin :',
                 'class' => Garden::class,
                 'choice_label' => 'name',
                 'empty_data' => null,
