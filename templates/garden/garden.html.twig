@@ -38,12 +38,12 @@
             <div class="row">
                 {% for i, plot in garden.plots %}
                     <div class="col">
-                        <div class="card gardenPlot" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
+                        <div class="card gardenPlot mx-auto" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
                             <div class="card-body" style="">
                                 <small class="plotName">{{ plot.name }}</small>
                                 <div class="plantCount">{{ plot.specimens|length }} <i class="fas fa-spa text-success"></i></div>
-                                <small class="plotSunExpType">Exposition {{ plot.sunExposureType.name }}</small>
-                                <small class="plantSoilType">{{ plot.soilType.name }}</small>
+                                <span class="plotSunExpType badge" data-code="{{ plot.sunExposureType.code }}">Exposition {{ plot.sunExposureType.name }}</span>
+                                <span class="plantSoilType badge badge-dark">{{ plot.soilType.name }}</span>
                                 <div class="plotInfos d-flex">
                                     <div class="container text-center">
                                         <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
@@ -70,7 +70,7 @@
             margin-top: 5px;
             margin-bottom: 5px;
             min-height:250px;
-            min-width:250px;
+            min-width:275px;
             max-width:350px;
             max-height:30vh;
             background-repeat: repeat;
@@ -128,6 +128,8 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
+    <script src="{{ asset('assets/js/chartUtil.js') }}"></script>
     <script>
         var modalShown = 0;
 
@@ -155,6 +157,20 @@
                     keyboard: true
                 });
             });
+        });
+
+        $.each($('.plotSunExpType'), (i, el) => {
+            switch (el.getAttribute('data-code')) {
+                case 'sun':
+                    el.classList.add('badge-light');
+                    break;
+                case 'half-sun':
+                    el.classList.add('badge-warning');
+                    break;
+                case 'shadow':
+                    el.classList.add('badge-secondary');
+                    break;
+            }
         });
     </script>
 {% endblock %}

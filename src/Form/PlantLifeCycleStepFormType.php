@@ -1,44 +1,49 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: lp
+ * Date: 10/04/2019
+ * Time: 15:21
+ */
 
 namespace App\Form;
 
-use App\Entity\Plant\FertilizerType;
-use App\Entity\Plant\Plant;
-use App\Entity\Plant\PlantFertilizerType;
+
+use App\Entity\Plant\LifeCycleStep;
+use App\Entity\Plant\PlantLifeCycleStep;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PlantFertilizerTypeFormType extends AbstractType
+class PlantLifeCycleStepFormType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-
-            ->add('fertilizer', EntityType::class, [
-                'label' => 'Type d\'engrais : ',
-                'class' => FertilizerType::class,
+            ->add('lifeCycleStep', EntityType::class, [
+                'label' => 'Etape de cycle de vie : ',
+                'class' => LifeCycleStep::class,
                 'choice_label' => 'name',
                 'attr' => [
                     'class' => 'form-control form-control-sm'
                 ]
             ])
-            ->add('efficiency', NumberType::class, [
-                'label' => 'Efficacité : (%)',
+            ->add('stepDaysDuration', NumberType::class, [
+                'label' => 'Durée de l\'étape : (jours) ',
                 'attr' => [
                     'min' => 1,
                     'max' => 100,
                     'class' => 'form-control form-control-sm'
                 ]
             ])
-            ->add('nbDayBeforeFertilizing', NumberType::class, [
-                'label' => 'Nombre de jours avant fertilisation : ',
+            ->add('order', NumberType::class, [
+                'label' => 'Ordre de l\'étape : (1-6) ',
                 'attr' => [
                     'min' => 1,
-                    'max' => 100,
+                    'max' => 6,
                     'class' => 'form-control form-control-sm'
                 ]
             ])
@@ -48,7 +53,7 @@ class PlantFertilizerTypeFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PlantFertilizerType::class,
+            'data_class' => PlantLifeCycleStep::class,
         ]);
     }
 }
