@@ -68,6 +68,20 @@ class SpecimenService
         $this->updateSpecimen($specimen);
     }
 
+    public function waterizePlot(int $plotId,bool $weather){
+        $plot = $this->om->getRepository(Plot::class)->findOneBy(['id' => $plotId]);
+        foreach($plot->getSpecimens() as $specimen){
+            $this->waterize($specimen->getId(),$weather);
+        }
+    }
+
+    public function waterizeGarden(int $gardenId, bool $weather){
+        $garden = $this->om->getRepository(Garden::class)->findOneBy(['id' => $gardenId]);
+        foreach ($garden->getPlots() as $plot){
+            $this->waterizePlot($plot->getId(),$weather);
+        }
+    }
+
     public function goToNextLifeCycleStep(int $specimenId)
     {
         $specimen = $this->specimenRepository->find($specimenId);
