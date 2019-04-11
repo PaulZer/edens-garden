@@ -8,6 +8,7 @@
 
 namespace App\Entity\Util;
 
+use App\Entity\Garden\Specimen;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,11 +40,11 @@ class LogEvent
     private $eventDate;
 
     /**
-     * Many LogEvent have one Logger. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Logger", inversedBy="logs")
-     * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
+     * Many LogEvent have one Specimen. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="App\Entity\Garden\Specimen", inversedBy="logs")
+     * @ORM\JoinColumn(name="specimen_id", referencedColumnName="id")
      */
-    private $parent;
+    private $specimen;
 
     /**
      * LogEvent constructor.
@@ -114,14 +115,14 @@ class LogEvent
         $this->eventDate = $eventDate;
     }
 
-    public function getParent(): ?Logger
+    public function getSpecimen(): ?Specimen
     {
-        return $this->parent;
+        return $this->specimen;
     }
 
-    public function setParent(?Logger $parent): self
+    public function setSpecimen(?Specimen $specimen): self
     {
-        $this->parent = $parent;
+        $this->specimen = $specimen;
 
         return $this;
     }

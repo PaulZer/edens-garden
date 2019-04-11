@@ -32,7 +32,7 @@ class PlantSunExposureType
     /**
      * Many PlantSunExposureType is relative to One SunExposureType.
      * @ORM\ManyToOne(targetEntity="SunExposureType", inversedBy="plantSunExposureType")
-     * @ORM\JoinColumn(name="soil_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="sun_exposure_type_id", referencedColumnName="id")
      */
     private $sunExposureType;
 

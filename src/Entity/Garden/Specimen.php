@@ -8,13 +8,13 @@
 
 namespace App\Entity\Garden;
 
-use App\Entity\Plant\LifeCycleStep;
+use App\Entity\Plant\PlantLifeCycleStep;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\FertilizerType;
-use App\Entity\Util\Logger;
+use App\Entity\Util\LogEvent;
 use mysql_xdevapi\Exception;
 
 /**
@@ -56,7 +56,7 @@ class Specimen
     private $lastFertilizedDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\LifeCycleStep")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Plant\PlantLifeCycleStep")
      * @ORM\JoinColumn(name="current_life_cycle_step_id", referencedColumnName="id")
      */
     private $currentLifeCycleStep;
@@ -69,17 +69,17 @@ class Specimen
     private $plot;
 
     /**
-     * One Specimen has One Logger.
-     * @ORM\OneToOne(targetEntity="App\Entity\Util\Logger", cascade={"persist"})
-     * @ORM\JoinColumn(name="logger_id", referencedColumnName="id")
+     * One Specimen has many logs. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="App\Entity\Util\LogEvent", mappedBy="specimen",cascade={"persist"})
      */
-    private $logger;
+    private $logs;
 
     /**
      * One Specimen may have Many SpecimenLifeResult.
      * @ORM\OneToMany(targetEntity="SpecimenLifeResult", mappedBy="specimen", cascade={"persist"})
      */
     private $specimenLifeResults;
+
     /**
      * Specimen constructor.
      * @param $id
@@ -96,25 +96,25 @@ class Specimen
         $this->plant = $plant;
         $this->plantationDate = $plantationDate;
         $this->lastWateredDate = null;
-        $this->fertilizer = $this->getOptimalPlantFertilizer($plant);
+        $this->fertilizer = null;
         $this->lastFertilizedDate = null;
         $this->currentLifeCycleStep = $this->getPlantFirstLifeCycleStep($plant);
-        $this->logger = new Logger();
+        $this->logs = new ArrayCollection();
         $this->specimenLifeResults = new ArrayCollection();
     }
 
     protected function getOptimalPlantFertilizer(Plant $plant)
     {
-        foreach($plant->getPreferedFertilizerTypes() as $ppft) {
-            if($ppft->getEfficiency() === 100) return $ppft->getFertilizer();
+        foreach ($plant->getPreferedFertilizerTypes() as $ppft) {
+            if ($ppft->getEfficiency() === 100) return $ppft->getFertilizer();
         }
         throw new Exception('Plant does not have an optimal (efficiency==100) fertilizer.');
     }
 
     protected function getPlantFirstLifeCycleStep(Plant $plant)
     {
-        foreach($plant->getLifeCycleSteps() as $plantLifeCycleStep) {
-            return $plantLifeCycleStep->getLifeCycleStep();
+        foreach ($plant->getLifeCycleSteps() as $plantLifeCycleStep) {
+            return $plantLifeCycleStep;
         }
         throw new Exception('Plant does not have any lifecycle step.');
     }
@@ -168,7 +168,7 @@ class Specimen
     }
 
     /**
-     * @return LifeCycleStep
+     * @return PlantLifeCycleStep
      */
     public function getCurrentLifeCycleStep()
     {
@@ -218,7 +218,7 @@ class Specimen
         return $this;
     }
 
-    public function setCurrentLifeCycleStep(?LifeCycleStep $currentLifeCycleStep): self
+    public function setCurrentLifeCycleStep(?PlantLifeCycleStep $currentLifeCycleStep): self
     {
         $this->currentLifeCycleStep = $currentLifeCycleStep;
 
@@ -228,18 +228,6 @@ class Specimen
     public function setPlot(?Plot $plot): self
     {
         $this->plot = $plot;
-
-        return $this;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    public function setLogger(?Logger $logger): self
-    {
-        $this->logger = $logger;
 
         return $this;
     }
@@ -269,6 +257,37 @@ class Specimen
             // set the owning side to null (unless already changed)
             if ($specimenLifeResult->getSpecimen() === $this) {
                 $specimenLifeResult->setSpecimen(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LogEvent[]
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(LogEvent $log): self
+    {
+        if (!$this->logs->contains($log)) {
+            $this->logs[] = $log;
+            $log->setSpecimen($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(LogEvent $log): self
+    {
+        if ($this->logs->contains($log)) {
+            $this->logs->removeElement($log);
+            // set the owning side to null (unless already changed)
+            if ($log->getSpecimen() === $this) {
+                $log->setSpecimen(null);
             }
         }
 

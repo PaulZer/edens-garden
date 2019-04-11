@@ -25,17 +25,17 @@ class SpecimenRepository extends ServiceEntityRepository
 
         switch ($type) {
             case "plant_soil_type" :
-                $sql = "Select efficiency from" . $type . " where plant_id=:plant_id and where soil_type_id=:soil_type_id";
+                $sql = "Select efficiency from " . $type . " where plant_id=:plant_id and soil_type_id=:soil_type_id";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute(['plant_id' => $plant_id, 'soil_type_id' => $type_id]);
                 break;
             case "plant_sun_exposure_type":
-                $sql = "Select efficiency from" . $type . " where plant_id=:plant_id and where sun_exposure_type_id=:sun_exposure_type_id";
+                $sql = "Select efficiency from " . $type . " where plant_id=:plant_id and sun_exposure_type_id=:sun_exposure_type_id";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute(['plant_id' => $plant_id, 'sun_exposure_type_id' => $type_id]);
                 break;
             case "plant_fertilizer_type":
-                $sql = "Select efficiency from" . $type . " where plant_id=:plant_id and where fertilizer_type_id=:fertilizer_type_id";
+                $sql = "Select efficiency from " . $type . " where plant_id=:plant_id and fertilizer_type_id=:fertilizer_type_id";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute(['plant_id' => $plant_id, 'fertilizer_type_id' => $type_id]);
                 break;
@@ -47,36 +47,36 @@ class SpecimenRepository extends ServiceEntityRepository
     {
         $plotSoilType = $specimen->getPlot()->getSoilType();
         $plantPreferedSoilType = $specimen->getPlant()->getPreferedSoilTypes();
-
-        if (!$plantPreferedSoilType->contains($plotSoilType)) {
-            return 0;
-        } else {
-            return $this->getEfficiencyByType("plant_soil_type", $specimen->getPlant()->getId(), $plotSoilType->getId());
+        foreach ($plantPreferedSoilType as $soilType) {
+            if ($plotSoilType == $soilType->getSoilType()) {
+                return $this->getEfficiencyByType("plant_soil_type", $specimen->getPlant()->getId(), $soilType->getSoilType()->getId())["efficiency"];
+            }
         }
+        return 0;
     }
 
     public function getSpecimenSunExposureTypeEfficiency(Specimen $specimen)
     {
         $plotSunExposureType = $specimen->getPlot()->getSunExposureType();
         $plantPreferedSunExposureType = $specimen->getPlant()->getPreferedSunExposureTypes();
-
-        if (!$plantPreferedSunExposureType->contains($plotSunExposureType)) {
-            return 0;
-        } else {
-            return $this->getEfficiencyByType("plant_sun_exposure_type", $specimen->getPlant()->getId(), $plotSunExposureType->getId());
+        foreach ($plantPreferedSunExposureType as $sunExposureType) {
+            if ($plotSunExposureType == $sunExposureType->getSunExposureType()) {
+                return $this->getEfficiencyByType("plant_sun_exposure_type", $specimen->getPlant()->getId(), $sunExposureType->getSunExposureType()->getId())["efficiency"];
+            }
         }
+        return 0;
     }
 
     public function getSpecimenFertilizerTypeEfficiency(Specimen $specimen)
     {
         $specimenFertilizer = $specimen->getFertilizer();
         $plantPreferedFertilizerType = $specimen->getPlant()->getPreferedFertilizerTypes();
-
-        if (!$plantPreferedFertilizerType->contains($specimenFertilizer)) {
-            return 0;
-        } else {
-            return $this->getEfficiencyByType("plant_fertilizer_type", $specimen->getPlant()->getId(), $plantPreferedFertilizerType->getId());
+        foreach ($plantPreferedFertilizerType as $fertilizerType) {
+            if ($specimenFertilizer == $fertilizerType->getFertilizer()) {
+                return $this->getEfficiencyByType("plant_fertilizer_type", $specimen->getPlant()->getId(), $fertilizerType->getFertilizer()->getId())["efficiency"];
+            }
         }
+        return 0;
     }
 
     public function getSpecimenCompatibilityWithEnvironment(Specimen $specimen)
