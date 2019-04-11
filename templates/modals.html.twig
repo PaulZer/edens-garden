@@ -11,7 +11,7 @@
             <div class="modal-body">
                 {% if _route == 'garden_edit' or _route == 'garden_create' %}
                     {% include template ~ '.html.twig' with {'formGarden': view} %}
-                {% elseif _route == 'plot_edit' %}
+                {% elseif _route == 'plot' %}
                     {% include 'garden/plot.html.twig' with {'plot': plot} %}
                 {% endif %}
             </div>

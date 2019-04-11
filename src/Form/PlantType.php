@@ -46,6 +46,7 @@ class PlantType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-success'
                 ],
+                'data_class' => null,
             ])
             ->add('plantFamily', EntityType::class, [
                 'label' => 'Sélectionnez une famille :',

@@ -30,21 +30,20 @@ class PlotController extends AbstractController
         ]);
     }
 
-    public function viewPlot(int $id): Response
+    public function modalPlot(int $id = null): Response
     {
-        $plot = $this->getDoctrine()
-            ->getRepository(Plot::class)
-            ->findOneBy(
-                ['id' => $id]
-            );
+        $em = $this->getDoctrine()->getManager();
 
-        if (!$plot) {
-            throw $this->createNotFoundException(
-                'Please add a plot to continue'
-            );
-        }
+        if ($id > 0) {
+            $plot = $em->getRepository(Plot::class)->find($id);
+            if (!$plot) throw $this->createNotFoundException('Plot with id ' . $id . ' does not exist');
+        } else $plot = null;
 
-        return $this->render('garden/plot.html.twig', ['plot' => $plot]);
+
+        return $this->render('modals.html.twig', [
+            'modalTitle' => 'Parcelle '.$plot->getName(),
+            'plot' => $plot
+        ]);
     }
 
     public function addPlot(Request $request): Response

@@ -151,7 +151,7 @@
                 return;
             }
             modalShown = 1;
-            let route = "{{ path('plot_edit', {'id': 'XXX' }) }}";
+            let route = "{{ path('plot', {'id': 'XXX' }) }}";
                 route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
 
             $.get(route, {
