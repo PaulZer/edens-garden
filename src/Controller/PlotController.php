@@ -4,7 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Garden\Plot;
-use App\Entity\Plant\Plant;
 use App\Form\PlotType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
