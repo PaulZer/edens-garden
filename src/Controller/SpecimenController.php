@@ -21,7 +21,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->setFertilizer($request->get("id"),$request->get("fertilizerId"));
+            $specimenService->setFertilizer($request->get("id"),$request->get("fertilizerId"), new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen has been fertilized with the chosen fertilizer',
                 'Code' => 200
@@ -39,7 +39,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->fertilize($request->get("id"));
+            $specimenService->fertilize($request->get("id"), new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen has been fertilized',
                 'Code' => 200
@@ -58,7 +58,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->waterize($request->get("id"), false);
+            $specimenService->waterize($request->get("id"), false, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen has been waterized',
                 'Code' => 200
@@ -77,7 +77,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->waterizePlot($request->get("id"), false);
+            $specimenService->waterizePlot($request->get("id"), false, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Plot has been waterized',
                 'Code' => 200
@@ -96,7 +96,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->waterizeGarden($request->get("id"), false);
+            $specimenService->waterizeGarden($request->get("id"), false, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Garden has been waterized',
                 'Code' => 200
@@ -116,7 +116,7 @@ class SpecimenController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         try {
             if ($specimenService->hourlyWeatherResult(intval($request->query->get("id")))) {
-                $specimenService->waterize($request->get("id"), true);
+                $specimenService->waterize($request->get("id"), true, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
                 $response->setContent(json_encode([
                     'Message' => 'Specimen has been waterized by the rain',
                     'Code' => 200
@@ -142,7 +142,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->goToNextLifeCycleStep($request->get("id"));
+            $specimenService->goToNextLifeCycleStep($request->get("id"), new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen next life cycle step',
                 'Code' => 200
@@ -162,7 +162,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->goToLifeCycleStep($request->get("id"), $request->get("order"));
+            $specimenService->goToLifeCycleStep($request->get("id"), $request->get("order"), new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen life cycle step set',
                 'Code' => 200
@@ -181,7 +181,7 @@ class SpecimenController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         try {
-            $specimenService->dailyLifeResultForAllSpecimen();
+            $specimenService->dailyLifeResultForAllSpecimen(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $response->setContent(json_encode([
                 'Message' => 'Specimen daily life result done',
                 'Code' => 200

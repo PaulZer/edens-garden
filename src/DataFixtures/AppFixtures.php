@@ -31,7 +31,6 @@ class AppFixtures extends Fixture
     private $userTest = null;
     private $soilTypes = ['clay', 'limestone', 'sand', 'humus', 'silica', 'peaty'];
     private $sunExposureTypes = ['sun', 'half-sun', 'shadow'];
-    private $fertilizerTypes = ['N', 'K', 'P', 'N-K', 'N-P', 'K-P'];
     private $plants = ['tomato', 'appleTree', 'carrot', 'radish', 'geranium', 'daffodil', 'fir', 'fern'];
 
     private $tomato = null;
@@ -580,7 +579,7 @@ class AppFixtures extends Fixture
                     $plantName = $this->plants[array_rand($this->plants)];
                     $specimen = new Specimen(
                         $this->$plantName,
-                        new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+                        $this->getRandomPlantationDate()
                     );
 
                     $plot->addSpecimen($specimen);
@@ -639,5 +638,13 @@ class AppFixtures extends Fixture
         ]);
         if(!$plantingDateInterval) return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
         else return $plantingDateInterval;
+    }
+
+    protected function getRandomPlantationDate(): \DateTimeImmutable
+    {
+        $days = array_rand([8, 9, 10, 11, 12]);
+        $date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $date = $date->modify('-'.$days.' day');
+        return $date;
     }
 }

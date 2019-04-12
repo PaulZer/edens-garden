@@ -2,18 +2,10 @@
 
 namespace App\Controller;
 
-
-use App\Entity\User;
 use App\Entity\Plant\PlantFamily;
 use App\Entity\Plant\Plant;
-use App\Form\RegistrationFormType;
-use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class PlantFamilyController extends AbstractController
 {

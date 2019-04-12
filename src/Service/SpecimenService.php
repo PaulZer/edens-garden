@@ -10,6 +10,8 @@ namespace App\Service;
 
 
 use App\Entity\API\CurrentWeather;
+use App\Entity\Garden\Garden;
+use App\Entity\Garden\Plot;
 use App\Entity\Garden\Specimen;
 use App\Entity\Garden\SpecimenLifeResult;
 use App\Entity\Plant\FertilizerType;
@@ -38,28 +40,28 @@ class SpecimenService
         $this->om->flush();
     }
 
-    public function setFertilizer(int $specimenId, int $fertilizerId)
+    public function setFertilizer(int $specimenId, int $fertilizerId, \DateTimeImmutable $today)
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $fertilizer = $this->om->getRepository(FertilizerType::class)->findOneBy(['id' => $fertilizerId]);
         $specimen->setFertilizer($fertilizer);
-        $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $specimen->setLastFertilizedDate($today);
         $specimen->addLog(new LogEvent("Fertilize", "La plante a été fertilisé avec " . $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
         $this->updateSpecimen($specimen);
     }
 
-    public function fertilize(int $specimenId)
+    public function fertilize(int $specimenId, \DateTimeImmutable $today)
     {
         $specimen = $this->specimenRepository->find($specimenId);
-        $specimen->setLastFertilizedDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $specimen->setLastFertilizedDate($today);
         $specimen->addLog(new LogEvent("Fertilize", "La plante a été fertilisé avec " . $specimen->getFertilizer()->getName(), $specimen->getLastFertilizedDate()));
         $this->updateSpecimen($specimen);
     }
 
-    public function waterize(int $specimenId, bool $weather)
+    public function waterize(int $specimenId, bool $weather, \DateTimeImmutable $today)
     {
         $specimen = $this->specimenRepository->find($specimenId);
-        $specimen->setLastWateredDate(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $specimen->setLastWateredDate($today);
         if ($weather == false)
             $specimen->addLog(new LogEvent("Waterize", "La plante a été arrosé", $specimen->getLastWateredDate()));
         else
@@ -68,21 +70,21 @@ class SpecimenService
         $this->updateSpecimen($specimen);
     }
 
-    public function waterizePlot(int $plotId,bool $weather){
+    public function waterizePlot(int $plotId,bool $weather, \DateTimeImmutable $today){
         $plot = $this->om->getRepository(Plot::class)->findOneBy(['id' => $plotId]);
         foreach($plot->getSpecimens() as $specimen){
-            $this->waterize($specimen->getId(),$weather);
+            $this->waterize($specimen->getId(), $weather, $today);
         }
     }
 
-    public function waterizeGarden(int $gardenId, bool $weather){
+    public function waterizeGarden(int $gardenId, bool $weather,  \DateTimeImmutable $today){
         $garden = $this->om->getRepository(Garden::class)->findOneBy(['id' => $gardenId]);
         foreach ($garden->getPlots() as $plot){
-            $this->waterizePlot($plot->getId(),$weather);
+            $this->waterizePlot($plot->getId(), $weather, $today);
         }
     }
 
-    public function goToNextLifeCycleStep(int $specimenId)
+    public function goToNextLifeCycleStep(int $specimenId, \DateTimeImmutable $today)
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $currentLifeCycleStep = $specimen->getCurrentLifeCycleStep();
@@ -90,24 +92,22 @@ class SpecimenService
         foreach ($defaultsLifeCycleStep as $lifeCycleStep) {
             if ($lifeCycleStep->getOrder() == $currentLifeCycleStep->getOrder() + 1) {
                 $specimen->setCurrentLifeCycleStep($lifeCycleStep);
-                $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-                $specimen->addLog(new LogEvent("Next Life Cycle Step", "La plante est passé à sa prochaine étape de cycle de vie", $now));
+                $specimen->addLog(new LogEvent("Next Life Cycle Step", "La plante est passé à sa prochaine étape de cycle de vie", $today));
                 $this->updateSpecimen($specimen);
             }
         }
     }
 
-    public function goToLifeCycleStep(int $specimenId, int $order)
+    public function goToLifeCycleStep(int $specimenId, int $order, \DateTimeImmutable $today)
     {
         $specimen = $this->specimenRepository->find($specimenId);
         $defaultsLifeCycleStep = $specimen->getPlant()->getLifeCycleSteps();
         foreach ($defaultsLifeCycleStep as $lifeCycleStep) {
             if ($lifeCycleStep->getOrder() == $order) {
-                $specimen->setCurrentLifeCycleStep($lifeCycleStep->getLifeCycleStep());
+                $specimen->setCurrentLifeCycleStep($lifeCycleStep);
             }
         }
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $specimen->addLog(new LogEvent("Set Specific Life Cycle Step", "La cycle de vie de la plante actuel a été modifié à " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $now));
+        $specimen->addLog(new LogEvent("Set Specific Life Cycle Step", "La cycle de vie de la plante actuel a été modifié à " . $specimen->getCurrentLifeCycleStep()->getName() . " step", $today));
         $this->updateSpecimen($specimen);
     }
 
@@ -125,16 +125,15 @@ class SpecimenService
         }
     }
 
-    public function dailyLifeResultForAllSpecimen()
+    public function dailyLifeResultForAllSpecimen(\DateTimeImmutable $today)
     {
         $specimens = $this->specimenRepository->findAll();
 
         foreach ($specimens as $specimen) {
-            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
             if (!$specimen->getLastWateredDate()) {
                 $waterEfficiency = 0;
             } else {
-                $daysWithoutWater = $specimen->getLastWateredDate()->diff($now)->days;
+                $daysWithoutWater = $specimen->getLastWateredDate()->diff($today)->days;
                 $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
                 $waterEfficiency = 100;
                 if ($specimenWaterFrequency < $daysWithoutWater)
@@ -143,7 +142,7 @@ class SpecimenService
             $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
             $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
             $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
-            $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $now, $specimen));
+            $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $today, $specimen));
 
             $this->updateSpecimen($specimen);
         }

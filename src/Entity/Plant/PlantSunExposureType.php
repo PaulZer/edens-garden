@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yoann
- * Date: 18/03/2019
- * Time: 09:55
- */
 
 namespace App\Entity\Plant;
 

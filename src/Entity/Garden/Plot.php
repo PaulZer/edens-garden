@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yoann
- * Date: 25/02/2019
- * Time: 12:32
- */
 
 namespace App\Entity\Garden;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\SunExposureType;
 use App\Entity\Plant\SoilType;
