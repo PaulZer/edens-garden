@@ -7,22 +7,22 @@ class CurrentWeather
 {
     private $longitude;
     private $latitude;
-    private $appToken;
+    private $appToken = '41483201f4e8d0ac0d8fd986ac4adb01';
     private $unit;
     private $url;
 
-    public function __contruct(string $latitude, string $longitude, string $unit = 'metric')
+    public function __construct(string $latitude, string $longitude, string $appToken, string $unit = 'metric')
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
-
-        $this->appToken = '41483201f4e8d0ac0d8fd986ac4adb01';
+        $this->appToken = $appToken;
         $this->unit = $unit;
         $this->url = "api.openweathermap.org/data/2.5/weather?lat=" . $latitude . "&lon=" . $longitude . "&units=" . $unit . "&mode=json&APPID=" . $this->appToken;
     }
 
-    function getCurrentWeatherData($url)
+    function getCurrentWeatherData()
     {
+        $url = $this->getUrl();
         // Get cURL resource
         $curl = curl_init();
         // Set some options - we are passing in a useragent too here

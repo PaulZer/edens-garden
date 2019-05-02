@@ -3,6 +3,8 @@
 
 namespace App\Entity\API;
 
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
+
 class WeatherForecast
 {
     private $longitude;
@@ -11,17 +13,18 @@ class WeatherForecast
     private $unit;
     private $url;
 
-    public function __contruct(string $latitude, string $longitude, string $unit = 'metric')
+    public function __construct(string $latitude, string $longitude, string $appToken, string $unit = 'metric')
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
-        $this->appToken = '41483201f4e8d0ac0d8fd986ac4adb01';
+        $this->appToken = $appToken;
         $this->unit = $unit;
         $this->url = "api.openweathermap.org/data/2.5/forecast?lat=".$latitude."&lon=".$longitude."&units=".$unit."&mode=json&APPID=".$appToken;
     }
 
-    function getWeatherForecastData($url)
+    function getWeatherForecastData()
     {
+        $url = $this->getUrl();
         // Get cURL resource
         $curl = curl_init();
         // Set some options - we are passing in a useragent too here
@@ -41,9 +44,25 @@ class WeatherForecast
     {
         foreach($weatherForecastArray['list'] as $forecastId => $forecastData)
         {
-            $formattedWeatherForecastArray[date('d/m/Y', $forecastData['dt'])] = $forecastData;
+            $formattedWeatherForecastArray[date('d.m.y', $forecastData['dt'])][date('H:i:s', $forecastData['dt'])]= $forecastData;
         }
-        return $formattedWeatherForecastArray;
+        if(isset($formattedWeatherForecastArray))
+        {
+            return $formattedWeatherForecastArray;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
     
 }
