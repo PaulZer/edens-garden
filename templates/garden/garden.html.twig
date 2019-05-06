@@ -56,26 +56,35 @@
                 </table>
             </div>
         </div>
-        <div>
-            <table class="table table-striped" >
-                {% for date,forecastData in weatherForecast %}
-                    <th scope="col">{{ date }}</th><th></th>
-                        <tr>
+        <h3>Météo</h3>
+        <div class="accordion" id="accordionExample">
+            {% for date,forecastData in weatherForecast %}
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#{{ date }}" aria-expanded="false" aria-controls="{{ date }}">
+                                    {{ date }}
+                                </button>
+                            </h2>
+                        </div>
+
                         {% for time,forecast in forecastData %}
-                            <tr>
-                            <td>{{ time }}</td>
+                            <div id="{{ date }}" class="collapse show" aria-labelledby="{{ date }}" data-parent="#accordionExample">
+                                {% if forecast.weather.conditions is defined and forecast.weather.fontawsome is defined  %}
+                                    <div class="card-body">
+                                        {{ time }} : {{ forecast.weather.fontawsome | raw  }}  {{ forecast.weather.conditions }} : {{ forecast.main.temp }}°C
+                                    </div>
+                                {% endif %}
 
-                                <td>
-                                    {{ forecast.weather.0.description }} : {{ forecast.main.temp }}°C
-                                </td>
-
+                            </div>
                         {% endfor %}
-                        </tr>
-                    </tr>
-                {% endfor %}
+                    </div>
 
-            </table>
+            {% endfor %}
         </div>
+
+
         <h3>Vos parcelles</h3>
         <div>
             <a href="{{ path('plot_create') }}" class="btn btn-warning">

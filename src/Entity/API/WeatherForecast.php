@@ -101,37 +101,44 @@ class WeatherForecast
         {
             $formattedDate = $this->getDateDifference($forecastData['dt']);
             $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']= $forecastData;
-
-            switch($forecastData['weather'][0]['main'])
+            if(isset($forecastData['weather'][0]['main']))
             {
-                case 'Clear':
-                    unset($forecastData['weather']);
-                    $forecastData['weather']['conditions'] = "Ensoleillé";
-                    $forecastData['weather']['fontawsome'] = "<i class==\"fas fa-sun=\"></i>";
-                    break;
-                case 'Rain';
-                    unset($forecastData['weather']);
-                    $forecastData['weather']['conditions'] = "Pluie";
-                    $forecastData['weather']['fontawsome'] = "<i class=\"fas fa-cloud-showers-heavy\"></i>";
-                    break;
-                case 'Clouds';
-                    unset($forecastData['weather']);
-                    $forecastData['weather']['conditions'] = "Nuageux";
-                    $forecastData['weather']['fontawsome'] = "<i class=\"fas fa-cloud\"></i>";
-                    break;
-                case 'Snow';
-                    unset($forecastData['weather']);
-                    $forecastData['weather']['conditions'] = "Neige";
-                    $forecastData['weather']['fontawsome'] = "<i class=\"far fa-snowflake\"></i>";
-                    break;
-                default:
-                    unset($forecastData['weather']);
-                    $forecastData['weather']['conditions'] = "Ensoleillé";
-                    $forecastData['weather']['fontawsome'] = "<i class==\"fas fa-sun=\"></i>";
-                    break;
+                switch($forecastData['weather'][0]['main'])
+                {
+                    case 'Clear':
+                        unset($formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'][0]);
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['conditions'] = "Ensoleillé";
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['fontawsome'] = "<i class=\"fas fa-sun\"></i>";
+                        break;
+                    case 'Rain';
+                        unset($formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'][0]);
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['conditions'] = "Pluie";
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['fontawsome'] = "<i class=\"fas fa-cloud-showers-heavy\"></i>";
+                        break;
+                    case 'Clouds';
+                        unset($formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'][0]);
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['conditions'] = "Nuageux";
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['fontawsome'] = "<i class=\"fas fa-cloud\"></i>";
+                        break;
+                    case 'Snow';
+                        unset($formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'][0]);
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['conditions'] = "Neige";
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['fontawsome'] = "<i class=\"far fa-snowflake\"></i>";
+                        break;
+                    default:
+                        unset($formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'][0]);
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['conditions'] = "Ensoleillé";
+                        $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather']['fontawsome'] = "<i class=\"fas fa-sun\"></i>";
+                        break;
 
+                }
             }
-            dump($forecastData);
+            else
+            {
+                $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'] = null;
+            }
+
+
 
         }
         if(isset($formattedWeatherForecastArray))

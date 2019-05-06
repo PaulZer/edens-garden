@@ -49,8 +49,7 @@ class GardenController extends AbstractController
         $weatherForecastData = $weatherForecastObject ->getWeatherForecastData();
         $currentWeather = $currentWeatherObject->formatCurrentWeatherArray($currentWeatherData);
         $weatherForecast = $weatherForecastObject->formatWeatherForecastArray($weatherForecastData);
-        dump($currentWeather);
-        dump($weatherForecast);
+
         return $this->render('garden/garden.html.twig', ['garden' => $garden,
                                                     'currentWeather'=> $currentWeather,
                                                     'weatherForecast' => $weatherForecast
