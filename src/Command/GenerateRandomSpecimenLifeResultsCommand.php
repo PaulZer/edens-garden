@@ -70,6 +70,5 @@ class GenerateRandomSpecimenLifeResultsCommand extends Command
             }
             $this->specService->dailyLifeResultForAllSpecimen($date);
         }
-        exit;
     }
 }
