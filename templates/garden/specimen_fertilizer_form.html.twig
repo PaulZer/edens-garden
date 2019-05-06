@@ -1,0 +1,12 @@
+{% block body %}
+    {{ form_start(form) }}
+        <div class="form-group sr-only">
+            {{ form_row(form.efficiency) }}
+        </div>
+        <div class="form-group sr-only">
+        {{ form_row(form.nbDayBeforeFertilizing) }}
+        </div>
+
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

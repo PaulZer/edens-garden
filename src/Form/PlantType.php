@@ -2,13 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Plant\FertilizerType;
-use App\Entity\Plant\LifeCycleStep;
 use App\Entity\Plant\Plant;
 use App\Entity\Plant\PlantFamily;
-use App\Entity\Plant\PlantSunExposureType;
-use App\Entity\Plant\SoilType;
-use phpDocumentor\Reflection\Types\String_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -86,6 +81,12 @@ class PlantType extends AbstractType
             ->add('lifeCycleSteps', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantLifeCycleStepFormType::class,
+                'entry_options' => [],
+                'allow_add' => true
+            ])
+            ->add('plantingDateIntervals', CollectionType::class, [
+                'label' => false,
+                'entry_type' => PlantPlantingDateIntervalFormType::class,
                 'entry_options' => [],
                 'allow_add' => true
             ])

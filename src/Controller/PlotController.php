@@ -4,7 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Garden\Plot;
-use App\Entity\Plant\Plant;
 use App\Form\PlotType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +41,7 @@ class PlotController extends AbstractController
 
         return $this->render('modals.html.twig', [
             'modalTitle' => 'Parcelle '.$plot->getName(),
-            'plot' => $plot
+            'plot' => $plot,
         ]);
     }
 
@@ -91,7 +90,6 @@ class PlotController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-
             $em->persist($plot);
             $em->flush();
 

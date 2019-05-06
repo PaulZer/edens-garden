@@ -47,16 +47,16 @@ plant:
   controller: App\Controller\PlantController::viewPlant
 
 plant_create:
-    path: /createPlant
-    controller: App\Controller\PlantController::editPlant
+  path: /createPlant
+  controller: App\Controller\PlantController::editPlant
 
 plant_edit:
-    path: /editPlant
-    controller: App\Controller\PlantController::editPlant
+  path: /editPlant
+  controller: App\Controller\PlantController::editPlant
 
 delete_plant:
-    path: /deletePlant
-    controller: App\Controller\PlantController::deletePlant
+  path: /deletePlant
+  controller: App\Controller\PlantController::deletePlant
 
 add_fertilizer:
   path: /plant/{plantId}/addFertilizer
@@ -86,12 +86,22 @@ index:
   controller: App\Controller\GardenController::index
 
 garden_create:
-    path: /garden
-    controller: App\Controller\GardenController::editGarden
+  path: /garden
+  controller: App\Controller\GardenController::editGarden
 
 garden_edit:
   path: /garden/{id}/edit
   controller: App\Controller\GardenController::editGarden
+
+garden_waterize:
+  path: /garden/{id}/waterize
+  controller: App\Controller\SpecimenController::waterizeGarden
+
+# PLOT
+
+plot_waterize:
+  path: /plot/{id}/waterize
+  controller: App\Controller\SpecimenController::waterizePlot
 
 plot_create:
   path: /plot_create
@@ -138,3 +148,10 @@ specimen_daily_life_result:
 specimen_set_fertilizer:
   path: /specimen/{id}/fertilize/{fertilizerId}
   controller: App\Controller\SpecimenController::setFertilizer
+
+specimen_get_life_result:
+  path: /specimen/{id}/lifeResult
+  controller: App\Controller\SpecimenController::getSpecimenLifeResults
+specimen_fertilizer_form:
+  path: /specimen/{id}/fertilizerForm
+  controller: App\Controller\SpecimenController::specimenFertilizerForm
