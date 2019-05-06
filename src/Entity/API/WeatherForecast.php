@@ -71,7 +71,7 @@ class WeatherForecast
                     case 'Mon':
                         $date = 'Lundi';
                     break;
-                    case 'Tus':
+                    case 'Tue':
                         $date = 'Mardi';
                         break;
                     case 'Wed':
@@ -100,7 +100,39 @@ class WeatherForecast
         foreach($weatherForecastArray['list'] as $forecastId => $forecastData)
         {
             $formattedDate = $this->getDateDifference($forecastData['dt']);
-            $formattedWeatherForecastArray[$formattedDate][date('H:i:s', $forecastData['dt'])]= $forecastData;
+            $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']= $forecastData;
+
+            switch($forecastData['weather'][0]['main'])
+            {
+                case 'Clear':
+                    unset($forecastData['weather']);
+                    $forecastData['weather']['conditions'] = "Ensoleillé";
+                    $forecastData['weather']['fontawsome'] = "<i class==\"fas fa-sun=\"></i>";
+                    break;
+                case 'Rain';
+                    unset($forecastData['weather']);
+                    $forecastData['weather']['conditions'] = "Pluie";
+                    $forecastData['weather']['fontawsome'] = "<i class=\"fas fa-cloud-showers-heavy\"></i>";
+                    break;
+                case 'Clouds';
+                    unset($forecastData['weather']);
+                    $forecastData['weather']['conditions'] = "Nuageux";
+                    $forecastData['weather']['fontawsome'] = "<i class=\"fas fa-cloud\"></i>";
+                    break;
+                case 'Snow';
+                    unset($forecastData['weather']);
+                    $forecastData['weather']['conditions'] = "Neige";
+                    $forecastData['weather']['fontawsome'] = "<i class=\"far fa-snowflake\"></i>";
+                    break;
+                default:
+                    unset($forecastData['weather']);
+                    $forecastData['weather']['conditions'] = "Ensoleillé";
+                    $forecastData['weather']['fontawsome'] = "<i class==\"fas fa-sun=\"></i>";
+                    break;
+
+            }
+            dump($forecastData);
+
         }
         if(isset($formattedWeatherForecastArray))
         {

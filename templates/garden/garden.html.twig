@@ -59,16 +59,18 @@
         <div>
             <table class="table table-striped" >
                 {% for date,forecastData in weatherForecast %}
-                    <th scope="col">{{ date }}</th>
-                    <tr>
-                    {% for time,forecast in forecastData %}
-                        <td>{{ time }}</td>
+                    <th scope="col">{{ date }}</th><th></th>
+                        <tr>
+                        {% for time,forecast in forecastData %}
+                            <tr>
+                            <td>{{ time }}</td>
 
-                            <td>
-                                {{ forecast.weather.0.description }} : {{ forecast.main.temp }}°C
-                            </td>
+                                <td>
+                                    {{ forecast.weather.0.description }} : {{ forecast.main.temp }}°C
+                                </td>
 
-                    {% endfor %}
+                        {% endfor %}
+                        </tr>
                     </tr>
                 {% endfor %}
 
