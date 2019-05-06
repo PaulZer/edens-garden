@@ -70,16 +70,18 @@ class SpecimenService
         $this->updateSpecimen($specimen);
     }
 
-    public function waterizePlot(int $plotId,bool $weather, \DateTimeImmutable $today){
+    public function waterizePlot(int $plotId, bool $weather, \DateTimeImmutable $today)
+    {
         $plot = $this->om->getRepository(Plot::class)->findOneBy(['id' => $plotId]);
-        foreach($plot->getSpecimens() as $specimen){
+        foreach ($plot->getSpecimens() as $specimen) {
             $this->waterize($specimen->getId(), $weather, $today);
         }
     }
 
-    public function waterizeGarden(int $gardenId, bool $weather,  \DateTimeImmutable $today){
+    public function waterizeGarden(int $gardenId, bool $weather, \DateTimeImmutable $today)
+    {
         $garden = $this->om->getRepository(Garden::class)->findOneBy(['id' => $gardenId]);
-        foreach ($garden->getPlots() as $plot){
+        foreach ($garden->getPlots() as $plot) {
             $this->waterizePlot($plot->getId(), $weather, $today);
         }
     }
@@ -119,9 +121,25 @@ class SpecimenService
         $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn));
         $currentWeather = $currentWeatherProvider->getCurrentWeatherData($currentWeatherProvider->getUrl());
         if ($currentWeather['rain_1h'] > 2) {
-            return true;
+            $now = new \DateTimeImmutable('now');
+            $this->waterize($specimenId, true, $now);
         } else {
             return false;
+        }
+    }
+
+    public function allSpecimensHourlyWeatherResult()
+    {
+        $specimens = $this->specimenRepository->findAll();
+        foreach ($specimens as $specimen) {
+            $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
+            $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
+            $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn));
+            $currentWeather = $currentWeatherProvider->getCurrentWeatherData($currentWeatherProvider->getUrl());
+            if ($currentWeather['rain_1h'] > 2) {
+                $now = new \DateTimeImmutable('now');
+                $this->waterize($specimen->getId(), true, $now);
+            }
         }
     }
 
