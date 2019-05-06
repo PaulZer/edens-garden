@@ -12,6 +12,7 @@
                     <th scope="col">Longitude</th>
                     <th scope="col">Longeur</th>
                     <th scope="col">Largeur</th>
+
                     <tr>
                         <td>{{garden.name}}</td>
                         <td>{{garden.latitude}}</td>
@@ -25,8 +26,55 @@
                 <a class="btn btn-success text-white" style="margin-top:20px;">Planter <i class="fas fa-seedling"></i></a>
             </div>
             <div class="col-4">
-                TODO infos météo localisation déclencher waterize
+                <table  class="table table-striped" >
+                    <th scope="col">Température</th>
+                    <th scope="col">Météo</th>
+                    <th scope="col">Pluie 1h</th>
+                    <th scope="col">Pluie 3h</th>
+                    <th scope="col">Humidité</th>
+                    <tr>
+                        <td>{{ currentWeather['current_temperature'] }}°C</td>
+                        <td align="center">
+                            {% if currentWeather['weather_description'] == "overcast clouds" %}
+                                <i class="fas fa-cloud"></i>
+                                <br>Nuageux
+                            {% endif %}
+                            {% if currentWeather['weather_description'] == "clear sky" %}
+                                <i class="fas fa-sun"></i>
+                                <br>Ensoleillé
+                            {% endif %}
+                            {% if currentWeather['weather_description'] == "shower rain" %}
+                                <i class="fas fa-cloud-sun-rain"></i>
+                                <br>Averses de pluie
+                            {% endif %}
+
+                        </td>
+                        <td>{{ currentWeather['rain_1h'] }}</td>
+                        <td>{{ currentWeather['rain_3h'] }}</td>
+                        <td>{{ currentWeather['humidity'] }}%</td>
+                    </tr>
+                </table>
             </div>
+        </div>
+        <div>
+            <table class="table table-striped" >
+                {% for date,forecastData in weatherForecast %}
+                    <th scope="col">{{ date }}</th><th></th>
+                        <tr>
+                        {% for time,forecast in forecastData %}
+                            <tr>
+                            <td>{{ time }}</td>
+
+                                <td>
+                                    {{ forecast.weather.0.description }} : {{ forecast.main.temp }}°C
+                                </td>
+
+                        {% endfor %}
+                        </tr>
+                    </tr>
+                {% endfor %}
+
+            </table>
         </div>
         <h3>Vos parcelles</h3>
         <div>
