@@ -41,12 +41,12 @@ class PlantingDateInterval
      * @param $monthEnd
      * @param $climaticArea
      */
-    public function __construct(Month $monthBegin, Month $monthEnd, ClimaticArea $climaticArea)
+    /*public function __construct(Month $monthBegin, Month $monthEnd, ClimaticArea $climaticArea)
     {
         $this->monthBegin = $monthBegin;
         $this->monthEnd = $monthEnd;
         $this->climaticArea = $climaticArea;
-    }
+    }*/
 
     /**
      * @return int

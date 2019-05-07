@@ -43,6 +43,18 @@ class SpecimenRepository extends ServiceEntityRepository
         return $stmt->fetch();
     }
 
+    public function getSpecimenLifeResults(int $specimenId, \DateTimeImmutable $dateBegin, \DateTimeImmutable $dateEnd)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "Select * from specimen_life_result where specimen_id=:specimen_id and where life_result_date between life_result_date_begin and life_result_date_end";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'specimen_id' => $specimenId,
+            'life_result_date_begin' => $dateBegin,
+            'life_result_date_end' => $dateEnd,
+        ]);
+    }
+
     public function getSpecimenSoilTypeEfficiency(Specimen $specimen)
     {
         $plotSoilType = $specimen->getPlot()->getSoilType();

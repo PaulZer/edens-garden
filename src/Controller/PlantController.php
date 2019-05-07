@@ -55,7 +55,7 @@ class PlantController extends AbstractController
         $stepsTotalDaysDuration = 0;
 
         foreach($plant->getLifeCycleSteps() as $step){
-            $stepsTotalDaysDuration += $step->getNbDayFromPreviousStep();
+            $stepsTotalDaysDuration += $step->getStepDaysDuration();
         }
        
         return $this->render('plant/plant.html.twig', ['plant' => $plant, 'totalDaysDuration' => $stepsTotalDaysDuration]);
@@ -75,7 +75,7 @@ class PlantController extends AbstractController
         }
         else $plant = new Plant("", '', "",0);
 
-        $formAction = $request->attributes->get('_route') == 'plot_create' ? $this->generateUrl('plot_create'): $this->generateUrl('plot_edit', ['id' => $plant->getId()]);
+        $formAction = $request->attributes->get('_route') == 'plant_create' ? $this->generateUrl('plant_create'): $this->generateUrl('plant_edit', ['id' => $plant->getId()]);
 
         $form = $this->createForm(PlantType::class, $plant, [
             'action' => $formAction]);
@@ -90,7 +90,7 @@ class PlantController extends AbstractController
                 $word = 'modifié';
             } else $word = 'créé';
 
-            $this->addFlash('success', 'Votre plante "'.$plant->getName().'" a été '.$word.' avec succès !');
+            $this->addFlash('success', 'La plante "'.$plant->getName().'" a été '.$word.' avec succès !');
             return $this->redirectToRoute('plants');
         }
 
@@ -111,7 +111,8 @@ class PlantController extends AbstractController
             if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
             $em->remove($plant);
             $em->flush();
-            
+
+            $this->addFlash('success', 'La plante "'.$plant->getName().'" a été supprimée avec succès !');
             return $this->redirectToRoute('plants');
         }
         else throw $this->createNotFoundException('Plant with id '.$id.' does not exist');

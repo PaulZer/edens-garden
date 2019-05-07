@@ -46,25 +46,25 @@ class Plant
 
     /**
      * One Plant may have Many PlantSunExposureType.
-     * @ORM\OneToMany(targetEntity="PlantSunExposureType", mappedBy="plant", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PlantSunExposureType", mappedBy="plant", cascade={"persist", "remove"})
      */
     private $preferedSunExposureTypes;
 
     /**
      * One Plant may have Many PlantSoilType.
-     * @ORM\OneToMany(targetEntity="PlantSoilType", mappedBy="plant", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PlantSoilType", mappedBy="plant", cascade={"persist", "remove"})
      */
     private $preferedSoilTypes;
 
     /**
      * One Plant may have Many PlantFertilizerType.
-     * @ORM\OneToMany(targetEntity="PlantFertilizerType", mappedBy="plant", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PlantFertilizerType", mappedBy="plant", cascade={"persist", "remove"})
      */
     private $preferedFertilizerTypes;
 
     /**
      * One Plant may have Many LifeCycleStep.
-     * @ORM\OneToMany(targetEntity="PlantLifeCycleStep", mappedBy="plant", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PlantLifeCycleStep", mappedBy="plant", cascade={"persist", "remove"})
      */
     private $lifeCycleSteps;
 
@@ -96,6 +96,11 @@ class Plant
         $this->preferedFertilizerTypes = new ArrayCollection();
         $this->plantingDateIntervals = new ArrayCollection();
         $this->lifeCycleSteps = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     /**
