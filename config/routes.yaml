@@ -120,7 +120,7 @@ plot_delete:
   controller: App\Controller\PlotController::deletePlot
 
 add_plant:
-  path: /addPlant
+  path: /addPlant/{id}
   controller : App\Controller\GardenController::addPlant
 
 # SPECIMEN

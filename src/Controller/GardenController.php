@@ -6,6 +6,7 @@ use App\Entity\API\CurrentWeather;
 use App\Entity\API\WeatherForecast;
 use App\Entity\Garden\Garden;
 use App\Form\GardenType;
+use App\Form\GardenPlantType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,12 +94,24 @@ class GardenController extends AbstractController
 
     public function addPlant(Request $request, int $id = null): Response
     {
-        $form = $this->createForm(GardenType::class);
+        $em = $this->getDoctrine()->getManager();
+
+        if ($id > 0) {
+            $garden = $em->getRepository(Garden::class)->find($id);
+            if (!$garden) throw $this->createNotFoundException('Garden with id ' . $id . ' does not exist');
+        }
+
+        $form = $this->createForm(GardenPlantType::class);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->addFlash('success', 'Votre plante à été plantée avec succès');
+            return $this->redirectToRoute('garden/'.$id);
+        }
 
         return $this->render('modals.html.twig', [
             'modalTitle' => 'Planter une plante dans le jardin',
-            'template' => 'garden/form_garden',
+            'template' => 'garden/form_specimen',
             'view' => $form->createView()
         ]);
     }
