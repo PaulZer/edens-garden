@@ -90,7 +90,7 @@ class PlantController extends AbstractController
                 $word = 'modifié';
             } else $word = 'créé';
 
-            $this->addFlash('success', 'Votre plante "'.$plant->getName().'" a été '.$word.' avec succès !');
+            $this->addFlash('success', 'La plante "'.$plant->getName().'" a été '.$word.' avec succès !');
             return $this->redirectToRoute('plants');
         }
 
@@ -111,7 +111,8 @@ class PlantController extends AbstractController
             if (!$plant) throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
             $em->remove($plant);
             $em->flush();
-            
+
+            $this->addFlash('success', 'La plante "'.$plant->getName().'" a été supprimée avec succès !');
             return $this->redirectToRoute('plants');
         }
         else throw $this->createNotFoundException('Plant with id '.$id.' does not exist');
