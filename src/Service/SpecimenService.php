@@ -156,7 +156,7 @@ class SpecimenService
                 $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
                 $waterEfficiency = 100;
                 if ($specimenWaterFrequency < $daysWithoutWater)
-                    $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * $waterEfficiency / $specimenWaterFrequency);
+                    $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * ($waterEfficiency / $specimenWaterFrequency));
             }
 
             if (!$specimen->getLastFertilizedDate()) {
@@ -167,7 +167,7 @@ class SpecimenService
                 $fertilizerFrequency = $specimenPlantFertilizerType->getNbDayBeforeFertilizing();
                 $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
                 if ($fertilizerFrequency < $daysSinceLastFertilizing)
-                    $fertilizerEfficiency = $fertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * $fertilizerEfficiency / $fertilizerFrequency);
+                    $fertilizerEfficiency = $fertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * ($fertilizerEfficiency / $fertilizerFrequency));
             }
 
             $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
