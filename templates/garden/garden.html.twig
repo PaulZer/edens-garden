@@ -57,32 +57,28 @@
             </div>
         </div>
         <h3>Météo</h3>
-        <div class="accordion" id="accordionExample">
+        <table>
             {% for date,forecastData in weatherForecast %}
-
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#{{ date }}" aria-expanded="false" aria-controls="{{ date }}">
-                                    {{ date }}
-                                </button>
-                            </h2>
-                        </div>
-
-                        {% for time,forecast in forecastData %}
-                            <div id="{{ date }}" class="collapse show" aria-labelledby="{{ date }}" data-parent="#accordionExample">
+                <td>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#{{ date }}" role="button" aria-expanded="false" aria-controls="{{ date }}">{{ date }}</a>
+                </td>
+                <div class="row">
+                    <div class="col">
+                        <div class="collapse multi-collapse" id="{{ date }}">
+                            
+                            {% for time,forecast in forecastData %}
                                 {% if forecast.weather.conditions is defined and forecast.weather.fontawsome is defined  %}
-                                    <div class="card-body">
+                                    <div class="card card-body">
                                         {{ time }} : {{ forecast.weather.fontawsome | raw  }}  {{ forecast.weather.conditions }} : {{ forecast.main.temp }}°C
                                     </div>
                                 {% endif %}
+                            {% endfor %}
 
-                            </div>
-                        {% endfor %}
+                        </div>
                     </div>
-
+                </div>
             {% endfor %}
-        </div>
+        </table>
 
 
         <h3>Vos parcelles</h3>
