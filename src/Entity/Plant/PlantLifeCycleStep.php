@@ -47,13 +47,13 @@ class PlantLifeCycleStep
      * @param $stepDaysDuration
      * @param $order
      */
-    public function __construct(Plant $plant, LifeCycleStep $lifeCycleStep, int $stepDaysDuration, int $order)
+    /*public function __construct(Plant $plant, LifeCycleStep $lifeCycleStep, int $stepDaysDuration, int $order)
     {
         $this->plant = $plant;
         $this->lifeCycleStep = $lifeCycleStep;
         $this->stepDaysDuration = $stepDaysDuration;
         $this->order = $order;
-    }
+    }*/
 
     /**
      * @return int
@@ -93,22 +93,6 @@ class PlantLifeCycleStep
     public function setLifeCycleStep(LifeCycleStep $lifeCycleStep): void
     {
         $this->lifeCycleStep = $lifeCycleStep;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbDayFromPreviousStep()
-    {
-        return $this->stepDaysDuration;
-    }
-
-    /**
-     * @param int $stepDaysDuration
-     */
-    public function setNbDayFromPreviousStep(int $stepDaysDuration): void
-    {
-        $this->stepDaysDuration = $stepDaysDuration;
     }
 
     /**

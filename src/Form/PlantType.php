@@ -19,6 +19,7 @@ class PlantType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $plant = $builder->getData();
         $builder
             ->setAction($options['action'])
             ->setMethod('')
@@ -63,32 +64,45 @@ class PlantType extends AbstractType
             ->add('preferedSoilTypes', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantSoilTypeFormType::class,
-                'entry_options' => [],
-                'allow_add' => true
+                'entry_options' => [
+                    'attr' => ['plant' => $plant]
+                ],
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('preferedFertilizerTypes', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantFertilizerTypeFormType::class,
-                'entry_options' => [],
-                'allow_add' => true
+                'entry_options' => [
+                    'attr' => ['plant' => $plant]
+                ],
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('preferedSunExposureTypes', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantSunExposureTypeFormType::class,
-                'entry_options' => [],
-                'allow_add' => true
+                'entry_options' => [
+                    'attr' => ['plant' => $plant]
+                ],
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('lifeCycleSteps', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantLifeCycleStepFormType::class,
-                'entry_options' => [],
-                'allow_add' => true
+                'entry_options' => [
+                    'attr' => ['plant' => $plant]
+                ],
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('plantingDateIntervals', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PlantPlantingDateIntervalFormType::class,
                 'entry_options' => [],
-                'allow_add' => true
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [

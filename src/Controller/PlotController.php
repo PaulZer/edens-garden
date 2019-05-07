@@ -62,7 +62,7 @@ class PlotController extends AbstractController
             $em->persist($plot);
             $em->flush();
 
-            $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été créé avec succès !');
+            $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été créée avec succès !');
             return $this->redirectToRoute('plots');
         }
 
@@ -93,7 +93,7 @@ class PlotController extends AbstractController
             $em->persist($plot);
             $em->flush();
 
-            $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été modifié avec succès !');
+            $this->addFlash('success', 'Votre parcelle "' . $plot->getName() . '" a été modifiée avec succès !');
             return $this->redirectToRoute('garden', ['id' => $plot->getGardenId()]);
         }
 
