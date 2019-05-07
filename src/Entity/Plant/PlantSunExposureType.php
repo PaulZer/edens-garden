@@ -36,19 +36,6 @@ class PlantSunExposureType
     private $efficiency;
 
     /**
-     * PlantSunExposureType constructor.
-     * @param $plant
-     * @param $sunExposureType
-     * @param $efficiency
-     */
-    /*public function __construct(Plant $plant,SunExposureType $sunExposureType,int $efficiency)
-    {
-        $this->plant = $plant;
-        $this->sunExposureType = $sunExposureType;
-        $this->efficiency = $efficiency;
-    }*/
-
-    /**
      * @return int
      */
     public function getId()

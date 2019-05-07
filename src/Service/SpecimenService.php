@@ -146,7 +146,10 @@ class SpecimenService
             $fertilizerEfficiency = 0;
         } else {
             $daysSinceLastFertilizing = $specimen->getLastFertilizedDate()->diff($today)->days;
+            dump($specimen->getPlant()->getId());
             $specimenPlantFertilizerType = $specimen->getFertilizer()->getSpecimenFertilizerTypes($specimen->getPlant());
+            dump($specimenPlantFertilizerType);
+            echo "--- \n";
             $fertilizerFrequency = $specimenPlantFertilizerType->getNbDayBeforeFertilizing();
             $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
             if ($fertilizerFrequency < $daysSinceLastFertilizing)

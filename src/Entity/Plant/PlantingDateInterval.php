@@ -35,20 +35,6 @@ class PlantingDateInterval
     private $climaticArea;
 
     /**
-     * PlantingDateInterval constructor.
-     * @param $id
-     * @param $monthBegin
-     * @param $monthEnd
-     * @param $climaticArea
-     */
-    /*public function __construct(Month $monthBegin, Month $monthEnd, ClimaticArea $climaticArea)
-    {
-        $this->monthBegin = $monthBegin;
-        $this->monthEnd = $monthEnd;
-        $this->climaticArea = $climaticArea;
-    }*/
-
-    /**
      * @return int
      */
     public function getId()

@@ -194,7 +194,6 @@
 
         $(document).on('hidden.bs.modal', () =>{
             $('#modal').remove();
-            $('script[role="modal-script"]').remove();
             modalShown = 0;
         });
 
@@ -205,7 +204,7 @@
             }
             modalShown = 1;
             let route = "{{ path('plot', {'id': 'XXX' }) }}";
-                route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
+            route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
 
             $.get(route, {
 

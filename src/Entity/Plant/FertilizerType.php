@@ -120,6 +120,7 @@ class FertilizerType
                 return $plantFertilizerType;
             }
         }
+        return null;
     }
 
     public function addPlantFertilizerType(PlantFertilizerType $plantFertilizerType): self

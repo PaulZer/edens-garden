@@ -521,7 +521,8 @@ class AppFixtures extends Fixture
             $plant = new Plant($p['name'], $p['latinName'], $p['picturePath'], $p['waterFrequency']);
             $plant->setPlantFamily($p['plantFamily']);
             foreach ($p['plantingDateIntervals'] as $pdi){
-                $plant->addPlantingDateInterval($this->getPlantingDateIntervalByCode( $pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']));
+                $plantingDateInterval = $this->getPlantingDateIntervalByCode($pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']);
+                $plant->addPlantingDateInterval($plantingDateInterval);
             }
             foreach ($p['preferedSoilTypes'] as $pst){
                 $plantSoilType = new PlantSoilType();
@@ -543,6 +544,7 @@ class AppFixtures extends Fixture
                 $plantFertilizerType->setFertilizer($this->getFertilizerTypeByCode( $pft['code']));
                 $plantFertilizerType->setEfficiency($pft['efficiency']);
                 $plantFertilizerType->setNbDayBeforeFertilizing($pft['nbDaysBeforeFertilizing']);
+                dump($plantFertilizerType);exit;
                 $plant->addPreferedFertilizerType($plantFertilizerType);
             }
             foreach ($p['lifeCycleSteps'] as $pls){
@@ -658,8 +660,13 @@ class AppFixtures extends Fixture
             'monthEnd' => $monthEnd,
             'climaticArea' => $climaticArea
         ]);
-        if(!$plantingDateInterval) return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
-        else return $plantingDateInterval;
+        if(!$plantingDateInterval){
+            $plantingDateInterval = new PlantingDateInterval();
+            $plantingDateInterval->setClimaticArea($climaticArea);
+            $plantingDateInterval->setMonthBegin($monthBegin);
+            $plantingDateInterval->setMonthEnd($monthEnd);
+        }
+        return $plantingDateInterval;
     }
 
     protected function getRandomPlantationDate(Plant $plant): \DateTimeImmutable

@@ -347,13 +347,13 @@
             let field = document.getElementById('plant_' + LIFE_CYCLE_STEPS_CLASS_NAME + '_' + (plantLifeCycleStepsCollectionHolder.data('index') - 1) + '_order');
 
             field.value = plantLifeCycleStepsCollectionHolder.data('index');
-            //field.disabled = true;
+            field.disabled = true;
         }
 
         function addStyle(objectName, divClassName, index) {
             const row = $('#plant_' + divClassName + '_' + index);
             row.addClass('row mb-3 mx-auto');
-            row.children().addClass('col-3');
+            row.children().addClfass('col-3');
         }
     </script>
 {% endblock %}
