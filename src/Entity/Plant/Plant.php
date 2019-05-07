@@ -98,6 +98,11 @@ class Plant
         $this->lifeCycleSteps = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * @return int
      */

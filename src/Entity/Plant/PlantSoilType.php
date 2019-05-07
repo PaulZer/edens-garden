@@ -41,12 +41,12 @@ class PlantSoilType
      * @param $soilType
      * @param $efficiency
      */
-    public function __construct(Plant $plant,SoilType $soilType,int $efficiency)
+    /*public function __construct(Plant $plant,SoilType $soilType,int $efficiency)
     {
         $this->plant = $plant;
         $this->soilType = $soilType;
         $this->efficiency = $efficiency;
-    }
+    }*/
 
     /**
      * @return int

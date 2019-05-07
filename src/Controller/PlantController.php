@@ -55,7 +55,7 @@ class PlantController extends AbstractController
         $stepsTotalDaysDuration = 0;
 
         foreach($plant->getLifeCycleSteps() as $step){
-            $stepsTotalDaysDuration += $step->getNbDayFromPreviousStep();
+            $stepsTotalDaysDuration += $step->getStepDaysDuration();
         }
        
         return $this->render('plant/plant.html.twig', ['plant' => $plant, 'totalDaysDuration' => $stepsTotalDaysDuration]);
@@ -75,7 +75,7 @@ class PlantController extends AbstractController
         }
         else $plant = new Plant("", '', "",0);
 
-        $formAction = $request->attributes->get('_route') == 'plot_create' ? $this->generateUrl('plot_create'): $this->generateUrl('plot_edit', ['id' => $plant->getId()]);
+        $formAction = $request->attributes->get('_route') == 'plant_create' ? $this->generateUrl('plant_create'): $this->generateUrl('plant_edit', ['id' => $plant->getId()]);
 
         $form = $this->createForm(PlantType::class, $plant, [
             'action' => $formAction]);

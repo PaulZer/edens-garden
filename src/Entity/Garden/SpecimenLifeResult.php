@@ -37,7 +37,7 @@ class SpecimenLifeResult
     private $sunExposureEfficiency;
 
     /**
-     * @ORM\Column(type="datetime", name ="plantation_date")
+     * @ORM\Column(type="datetime", name ="life_result_date")
      */
     private $date;
 

@@ -548,18 +548,22 @@ class AppFixtures extends Fixture
 
     protected function loadGardens(): bool
     {
+        $gardenMaxNumber = random_int(1, 1);
+        $gardenMaxSize = random_int(1, 1);
+        $plotMaxSpecimens = random_int(1, 2);
+
         $gardens = [
-            ['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],
+            /*['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],*/
         ];
 
-        for($i = 0 ; $i < random_int(1, 5); $i++){
+        for($i = 0 ; $i < $gardenMaxNumber; $i++){
             array_push($gardens, [
                 'user' => $this->userTest,
                 'name' => 'Random garden '.strval($i+1),
                 'latitude' => random_int(42000000, 48000000)/1000000,
                 'longitude' => random_int(-500000, 8000000)/1000000,
-                'height' => random_int(1, 5),
-                'length' => random_int(1, 5)
+                'height' => $gardenMaxSize,
+                'length' => $gardenMaxSize
             ]);
         }
 
@@ -575,11 +579,11 @@ class AppFixtures extends Fixture
                     $this->getSoilTypeByCode($this->soilTypes[array_rand($this->soilTypes)])
                 );
 
-                for ($j = 0 ; $j < random_int(1, 5) ; $j++){
+                for ($j = 0 ; $j < $plotMaxSpecimens ; $j++){
                     $plantName = $this->plants[array_rand($this->plants)];
                     $specimen = new Specimen(
                         $this->$plantName,
-                        $this->getRandomPlantationDate()
+                        $this->getRandomPlantationDate($this->$plantName)
                     );
 
                     $plot->addSpecimen($specimen);
@@ -640,11 +644,16 @@ class AppFixtures extends Fixture
         else return $plantingDateInterval;
     }
 
-    protected function getRandomPlantationDate(): \DateTimeImmutable
+    protected function getRandomPlantationDate(Plant $plant): \DateTimeImmutable
     {
-        $days = array_rand([8, 9, 10, 11, 12]);
+        $nbDaysInSpecimenLifecycle = 0;
+        foreach($plant->getLifeCycleSteps() as $specimenLifecycleStep){
+            $nbDaysInSpecimenLifecycle += $specimenLifecycleStep->getStepDaysDuration();
+        }
+        
+        $rDays = array_rand([8, 9, 10, 11, 12]);
         $date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $date = $date->modify('-'.$days.' day');
+        $date = $date->modify('-'.strval($nbDaysInSpecimenLifecycle + $rDays).' day');
         return $date;
     }
 }

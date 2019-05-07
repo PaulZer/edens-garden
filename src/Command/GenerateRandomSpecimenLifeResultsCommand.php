@@ -41,35 +41,7 @@ class GenerateRandomSpecimenLifeResultsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $specimens = $this->specRepo->findAll();
-        $now = new \DateTimeImmutable('now');
-        $now = $now->modify('-11 day');
-        for ($i = 1; $i <= 10; $i++){
-            $dates[] = $now->modify('+'.$i.' day');
-        }
 
-        foreach ($dates as $date) {
-            foreach ($specimens as $specimen){
-                if($date->getTimeStamp() >= $specimen->getPlantationDate()->getTimeStamp()){
-                    $specWaterFrequency = $specimen->getPlant()->getWaterFrequency();
-                    if(random_int(0, 1000)/1000 > 1/$specWaterFrequency){
-                        echo "waterize\n";
-                        $this->specService->waterize($specimen->getId(), random_int(0, 1), $date);
-                    }
-                    if($specimen->getFertilizer() == null){
-                        if(random_int(0, 1)){
-                            $fertilizer = $this->manager->getRepository("App\Entity\Plant\FertilizerType")->findOneBy([
-                                'code' => $this->fertilizerTypes[array_rand($this->fertilizerTypes)]
-                            ]);
-                            $specimen->setFertilizer($fertilizer);
-
-                            echo "fertilize\n";
-                            $this->specService->fertilize($specimen->getId(), $date);
-                        }
-                    }
-                }
-            }
-            $this->specService->dailyLifeResultForAllSpecimen($date);
-        }
-        exit;
+        $this->specService->generateRandomLifeResults($specimens);
     }
 }

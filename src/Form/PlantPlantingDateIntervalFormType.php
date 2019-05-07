@@ -30,7 +30,7 @@ class PlantPlantingDateIntervalFormType extends AbstractType
                     'class' => 'form-control form-control-sm'
                 ]
             ])
-            ->add('monthStart', EntityType::class, [
+            ->add('monthBegin', EntityType::class, [
                 'label' => 'Mois de début : ',
                 'class' => Month::class,
                 'choice_label' => 'name',

@@ -41,12 +41,12 @@ class PlantSunExposureType
      * @param $sunExposureType
      * @param $efficiency
      */
-    public function __construct(Plant $plant,SunExposureType $sunExposureType,int $efficiency)
+    /*public function __construct(Plant $plant,SunExposureType $sunExposureType,int $efficiency)
     {
         $this->plant = $plant;
         $this->sunExposureType = $sunExposureType;
         $this->efficiency = $efficiency;
-    }
+    }*/
 
     /**
      * @return int
