@@ -524,16 +524,34 @@ class AppFixtures extends Fixture
                 $plant->addPlantingDateInterval($this->getPlantingDateIntervalByCode( $pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']));
             }
             foreach ($p['preferedSoilTypes'] as $pst){
-                $plant->addPreferedSoilType(new PlantSoilType($plant, $this->getSoilTypeByCode($pst['code']), $pst['efficiency']));
+                $plantSoilType = new PlantSoilType();
+                $plantSoilType->setPlant($plant);
+                $plantSoilType->setSoilType($this->getSoilTypeByCode($pst['code']));
+                $plantSoilType->setEfficiency($pst['efficiency']);
+                $plant->addPreferedSoilType($plantSoilType);
             }
             foreach ($p['preferedSunExposureType'] as $pset){
-                $plant->addPreferedSunExposureType(new PlantSunExposureType($plant, $this->getSunExposureTypeByCode( $pset['code']), $pset['efficiency']));
+                $plantSunExposureType = new PlantSunExposureType();
+                $plantSunExposureType->setPlant($plant);
+                $plantSunExposureType->setSunExposureType($this->getSunExposureTypeByCode($pset['code']));
+                $plantSunExposureType->setEfficiency($pset['efficiency']);
+                $plant->addPreferedSunExposureType($plantSunExposureType);
             }
             foreach ($p['preferedFertilizerType'] as $pft){
-                $plant->addPreferedFertilizerType(new PlantFertilizerType($plant, $this->getFertilizerTypeByCode( $pft['code']), $pft['efficiency'], $pft['nbDaysBeforeFertilizing']));
+                $plantFertilizerType = new PlantFertilizerType();
+                $plantFertilizerType->setPlant($plant);
+                $plantFertilizerType->setFertilizer($this->getFertilizerTypeByCode( $pft['code']));
+                $plantFertilizerType->setEfficiency($pft['efficiency']);
+                $plantFertilizerType->setNbDayBeforeFertilizing($pft['nbDaysBeforeFertilizing']);
+                $plant->addPreferedFertilizerType($plantFertilizerType);
             }
             foreach ($p['lifeCycleSteps'] as $pls){
-                $plant->addLifeCycleStep(new PlantLifeCycleStep($plant, $this->getLifeCycleStepByCode( $pls['code']), $pls['stepDaysDuration'], $pls['order']));
+                $plantLifecycleStep = new PlantLifeCycleStep();
+                $plantLifecycleStep->setPlant($plant);
+                $plantLifecycleStep->setLifeCycleStep($this->getLifeCycleStepByCode( $pls['code']));
+                $plantLifecycleStep->setStepDaysDuration($pls['stepDaysDuration']);
+                $plantLifecycleStep->setOrder($pls['order']);
+                $plant->addLifeCycleStep($plantLifecycleStep);
             }
 
             $this->manager->persist($plant);
