@@ -2,6 +2,7 @@
 
 namespace App\Entity\Garden;
 
+use App\Entity\API\CurrentWeather;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -222,6 +223,11 @@ class Garden
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getGardenCurrentWeatherData(){
+        $currentWeather = new CurrentWeather($this->getLatitude(), $this->getLongitude());
+        return $currentWeather;
     }
 
 

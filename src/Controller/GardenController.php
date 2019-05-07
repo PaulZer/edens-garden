@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\API\CurrentWeather;
+use App\Entity\API\WeatherForecast;
 use App\Entity\Garden\Garden;
 use App\Form\GardenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,8 +43,17 @@ class GardenController extends AbstractController
                 ['id' => $id]
             );
         if (!$garden) throw $this->createNotFoundException('Garden with id ' . $id . ' does not exist');
+        $currentWeatherObject = new CurrentWeather($garden->getLatitude(), $garden->getLongitude(), '41483201f4e8d0ac0d8fd986ac4adb01');
+        $weatherForecastObject = new WeatherForecast($garden->getLatitude(), $garden->getLongitude(), '41483201f4e8d0ac0d8fd986ac4adb01');
+        $currentWeatherData = $currentWeatherObject->getCurrentWeatherData();
+        $weatherForecastData = $weatherForecastObject ->getWeatherForecastData();
+        $currentWeather = $currentWeatherObject->formatCurrentWeatherArray($currentWeatherData);
+        $weatherForecast = $weatherForecastObject->formatWeatherForecastArray($weatherForecastData);
 
-        return $this->render('garden/garden.html.twig', ['garden' => $garden]);
+        return $this->render('garden/garden.html.twig', ['garden' => $garden,
+                                                    'currentWeather'=> $currentWeather,
+                                                    'weatherForecast' => $weatherForecast
+        ]);
     }
 
     public function editGarden(Request $request, int $id = null): Response

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: yoann
+ * Date: 06/05/2019
+ * Time: 11:23
+ */
 
 namespace App\Command;
 
@@ -10,13 +15,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-class GenerateRandomSpecimenLifeResultsCommand extends Command
+class HourlyWeatherResultCommand extends Command
 {
     private $specRepo;
     private $specService;
     private $manager;
-    private $fertilizerTypes = ['N', 'K', 'P', 'N-K', 'N-P', 'K-P'];
 
     public function __construct(SpecimenRepository $specRepo, SpecimenService $specService, ObjectManager $manager)
     {
@@ -27,20 +30,18 @@ class GenerateRandomSpecimenLifeResultsCommand extends Command
         parent::__construct();
     }
 
-    // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'app:generate_random_life_results';
+
+    protected static $defaultName = 'app:hourly_weather_result';
 
     protected function configure()
     {
         $this
-            ->setDescription('Generates for the 10 last days random conditions and logs all the specimens life results during those days')
-            ->setHelp('Load fixtures, then run php bin/console app:generate_random_life_results')
-        ;
+            ->setDescription('If it rain a lot it will waterize the specimen')
+            ->setHelp('Just set a chron each hours with this command  :  php bin/console app:hourly_weather_result');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $specimens = $this->specRepo->findAll();
-        $this->specService->generateRandomLifeResults($specimens);
+      $this->specService->allSpecimensHourlyWeatherResult();
     }
 }
