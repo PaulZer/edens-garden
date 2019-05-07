@@ -113,6 +113,15 @@ class FertilizerType
         return $this->plantFertilizerTypes;
     }
 
+    public function getSpecimenFertilizerTypes(Plant $reference):PlantFertilizerType
+    {
+        foreach($this->plantFertilizerTypes as $plantFertilizerType){
+            if($plantFertilizerType->getPlant() == $reference){
+                return $plantFertilizerType;
+            }
+        }
+    }
+
     public function addPlantFertilizerType(PlantFertilizerType $plantFertilizerType): self
     {
         if (!$this->plantFertilizerTypes->contains($plantFertilizerType)) {

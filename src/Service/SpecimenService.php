@@ -118,8 +118,9 @@ class SpecimenService
         $specimen = $this->specimenRepository->find($specimenId);
         $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
         $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
-        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn));
-        $currentWeather = $currentWeatherProvider->getCurrentWeatherData($currentWeatherProvider->getUrl());
+        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn),"41483201f4e8d0ac0d8fd986ac4adb01");
+        $currentWeatherData = $currentWeatherProvider->getCurrentWeatherData();
+        $currentWeather = $currentWeatherProvider->formatCurrentWeatherArray($currentWeatherData);
         if ($currentWeather['rain_1h'] > 2) {
             $now = new \DateTimeImmutable('now');
             $this->waterize($specimenId, true, $now);
@@ -130,15 +131,14 @@ class SpecimenService
 
     public function allSpecimensHourlyWeatherResult()
     {
-        $specimens = $this->specimenRepository->findAll();
-        foreach ($specimens as $specimen) {
-            $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
-            $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
-            $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn));
-            $currentWeather = $currentWeatherProvider->getCurrentWeatherData($currentWeatherProvider->getUrl());
-            if ($currentWeather['rain_1h'] > 2) {
+        $gardens = $this->om->getRepository(Garden::class)->findAll();
+        foreach ($gardens as $garden) {
+            $currentWeatherProvider = new CurrentWeather(strval($garden->getLatitude()), strval($garden->getLongitude()), "41483201f4e8d0ac0d8fd986ac4adb01");
+            $currentWeatherData = $currentWeatherProvider->getCurrentWeatherData();
+            $currentWeather = $currentWeatherProvider->formatCurrentWeatherArray($currentWeatherData);
+            if ($currentWeather['rain_1h'] > 0.5) {
                 $now = new \DateTimeImmutable('now');
-                $this->waterize($specimen->getId(), true, $now);
+                $this->waterizeGarden($garden->getId(), true, $now);
             }
         }
     }
@@ -148,6 +148,7 @@ class SpecimenService
         $specimens = $this->specimenRepository->findAll();
 
         foreach ($specimens as $specimen) {
+
             if (!$specimen->getLastWateredDate()) {
                 $waterEfficiency = 0;
             } else {
@@ -155,9 +156,20 @@ class SpecimenService
                 $specimenWaterFrequency = $specimen->getPlant()->getWaterFrequency();
                 $waterEfficiency = 100;
                 if ($specimenWaterFrequency < $daysWithoutWater)
-                    $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * 100 / $specimenWaterFrequency);
+                    $waterEfficiency = $waterEfficiency - (($daysWithoutWater - $specimenWaterFrequency) * ($waterEfficiency / $specimenWaterFrequency));
             }
-            $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
+
+            if (!$specimen->getLastFertilizedDate()) {
+                $fertilizerEfficiency = 0;
+            } else {
+                $daysSinceLastFertilizing = $specimen->getLastFertilizedDate()->diff($today)->days;
+                $specimenPlantFertilizerType = $specimen->getFertilizer()->getSpecimenFertilizerTypes($specimen->getPlant());
+                $fertilizerFrequency = $specimenPlantFertilizerType->getNbDayBeforeFertilizing();
+                $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
+                if ($fertilizerFrequency < $daysSinceLastFertilizing)
+                    $fertilizerEfficiency = $fertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * ($fertilizerEfficiency / $fertilizerFrequency));
+            }
+
             $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
             $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
             $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $today, $specimen));
