@@ -41,21 +41,6 @@ class PlantLifeCycleStep
     private $order;
 
     /**
-     * PlantLifeCycleStep constructor.
-     * @param $plant
-     * @param $lifeCycleStep
-     * @param $stepDaysDuration
-     * @param $order
-     */
-    /*public function __construct(Plant $plant, LifeCycleStep $lifeCycleStep, int $stepDaysDuration, int $order)
-    {
-        $this->plant = $plant;
-        $this->lifeCycleStep = $lifeCycleStep;
-        $this->stepDaysDuration = $stepDaysDuration;
-        $this->order = $order;
-    }*/
-
-    /**
      * @return int
      */
     public function getId()

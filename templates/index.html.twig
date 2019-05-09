@@ -26,7 +26,6 @@
 
         $(document).on('hidden.bs.modal', () =>{
             $('#modal').remove();
-            $('script[role="modal-script"]').remove();
             modalShown = 0;
         });
 
@@ -49,9 +48,7 @@
                 route = '{{ path("garden_create") }}';
             }
 
-            $.get(route, {
-
-            }, (modal) => {
+            $.get(route, {}, (modal) => {
                 $('body').append(modal);
                 $('#modal').modal({
                     backdrop: 'static',

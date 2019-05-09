@@ -41,21 +41,6 @@ class PlantFertilizerType
     private $nbDayBeforeFertilizing;
 
     /**
-     * PlantFertilizerType constructor.
-     * @param $id
-     * @param $plant
-     * @param $fertilizer
-     * @param $nbDayBeforeFertilizing
-     */
-    /*public function __construct(Plant $plant, FertilizerType $fertilizer,int $efficiency, int $nbDayBeforeFertilizing)
-    {
-        $this->plant = $plant;
-        $this->fertilizer = $fertilizer;
-        $this->nbDayBeforeFertilizing = $nbDayBeforeFertilizing;
-        $this->efficiency = $efficiency;
-    }*/
-
-    /**
      * @return int
      */
     public function getId()

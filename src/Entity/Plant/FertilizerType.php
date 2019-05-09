@@ -4,6 +4,8 @@ namespace App\Entity\Plant;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -113,13 +115,14 @@ class FertilizerType
         return $this->plantFertilizerTypes;
     }
 
-    public function getSpecimenFertilizerTypes(Plant $reference):PlantFertilizerType
+    public function getSpecimenFertilizerTypes(Plant $reference):?PlantFertilizerType
     {
         foreach($this->plantFertilizerTypes as $plantFertilizerType){
-            if($plantFertilizerType->getPlant() == $reference){
+            if($plantFertilizerType->getPlant()->getName() == $reference->getName()){
                 return $plantFertilizerType;
             }
         }
+        return null;
     }
 
     public function addPlantFertilizerType(PlantFertilizerType $plantFertilizerType): self

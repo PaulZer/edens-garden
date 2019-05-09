@@ -242,7 +242,6 @@ class SpecimenController extends AbstractController
 
             return new JsonResponse(1);
         }
-        dump('wesh les iencli');
         return $this->render('garden/specimen_fertilizer_form.html.twig', [
             'form' => $form->createView()
         ]);
