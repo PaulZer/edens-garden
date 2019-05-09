@@ -23,15 +23,19 @@ class SpecimenService
 {
     private $specimenRepository;
     private $om;
+    private $mailer;
+    private $templating;
 
     /**
      * SpecimenService constructor.
      * @param $specimenRepository
      */
-    public function __construct(SpecimenRepository $specimenRepository, ObjectManager $objectManager)
+    public function __construct(\Swift_Mailer $mailer, $templating,SpecimenRepository $specimenRepository, ObjectManager $objectManager)
     {
         $this->specimenRepository = $specimenRepository;
         $this->om = $objectManager;
+        $this->mailer = $mailer;
+        $this->templating = $templating;
     }
 
     private function updateSpecimen(Specimen $specimen)
@@ -118,7 +122,7 @@ class SpecimenService
         $specimen = $this->specimenRepository->find($specimenId);
         $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
         $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
-        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn),"41483201f4e8d0ac0d8fd986ac4adb01");
+        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn), "41483201f4e8d0ac0d8fd986ac4adb01");
         $currentWeatherData = $currentWeatherProvider->getCurrentWeatherData();
         $currentWeather = $currentWeatherProvider->formatCurrentWeatherArray($currentWeatherData);
         if ($currentWeather['rain_1h'] > 2) {
@@ -165,16 +169,55 @@ class SpecimenService
                 $daysSinceLastFertilizing = $specimen->getLastFertilizedDate()->diff($today)->days;
                 $specimenPlantFertilizerType = $specimen->getFertilizer()->getSpecimenFertilizerTypes($specimen->getPlant());
                 $fertilizerFrequency = $specimenPlantFertilizerType->getNbDayBeforeFertilizing();
-                $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
+                $optimalFertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
                 if ($fertilizerFrequency < $daysSinceLastFertilizing)
-                    $fertilizerEfficiency = $fertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * ($fertilizerEfficiency / $fertilizerFrequency));
-            }
+                    $fertilizerEfficiency = $optimalFertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * ($optimalFertilizerEfficiency / $fertilizerFrequency));
 
+            }
             $soilEfficiency = $this->specimenRepository->getSpecimenSoilTypeEfficiency($specimen);
             $sunExposureEfficiency = $this->specimenRepository->getSpecimenSunExposureTypeEfficiency($specimen);
             $specimen->addSpecimenLifeResult(new SpecimenLifeResult($waterEfficiency, $fertilizerEfficiency, $soilEfficiency, $sunExposureEfficiency, $today, $specimen));
 
             $this->updateSpecimen($specimen);
         }
+    }
+
+    public function dailyGardenFeedback()
+    {
+        $gardens = $this->om->getRepository(Garden::class)->findAll();
+        foreach ($gardens as $garden) {
+            $specimenToWaterize = [];
+            $specimenToFertilize = [];
+            foreach ($garden->getPlots() as $plot) {
+                foreach ($plot->getSpecimens() as $specimen) {
+                    $lifeResults =$specimen->getSpecimenLifeResults();
+                    $currrentLifeResult = $lifeResults[count($lifeResults)-1];
+                    if ($currrentLifeResult->getWaterEfficiency() < 100) {
+                        $specimenToWaterize[] = $specimen;
+                    }
+                    if ($currrentLifeResult->getFertilizerEfficiency() < $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen)) {
+                        $specimenToFertilize[] = $specimen;
+                    }
+                }
+            }
+            $message = (new \Swift_Message('Retour sur vos jardins'))
+                ->setFrom("feeback@eden-garden.fr")
+                ->setTo('yoann01.d@gmail.com')
+                ->setBody(
+                    $this->templating->render(
+                        'emails/feedback_email.html.twig',
+                        [
+                            'gardenName' => $garden->getName(),
+                            'gardenLat' => $garden->getLatitude(),
+                            'gardenLng' => $garden->getLongitude(),
+                            'specimenToWaterizes' => $specimenToWaterize,
+                            'specimenToFertilizes' => $specimenToFertilize,
+                        ]
+                    ),
+                    'text/html'
+                );
+            $this->mailer->send($message);
+        }
+
     }
 }

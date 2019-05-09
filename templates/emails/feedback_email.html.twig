@@ -1,0 +1,30 @@
+{% extends "@email/base_email.html.twig" %}
+
+{% block body %}
+    <h1>Dans le Jardin : {{ gardenName }} aux coordonnées Lat:{{ gardenLat }},Lng {{ gardenLng }}</h1>
+    {% if specimenToWaterizes|length > 0 %}
+        <h2>Nous vous conseillons d'arroser les plantes : ({{ specimenToWaterizes|length }} spécimen(s) concerné(s))</h2>
+        <table>
+
+            {% for specimenToWaterize in specimenToWaterizes %}
+                <tr>
+                    <p>{{ specimenToWaterize.plant.getName() }} dans la parcelle {{ specimenToWaterize.plot.getName() }}</p>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    {% if specimenToWaterizes|length > 0 and specimenToFertilizes|length > 0 %}
+        <h2>Nous vous conseillons également de mettre de l'engrais sur les plantes : ({{ specimenToFertilizes|length }} spécimen(s) concerné(s))</h2>
+    {% elseif specimenToFertilizes|length > 0 %}
+        <h2>Nous vous conseillons de mettre de l'engrais sur les plantes :</h2>
+    {% endif %}
+    {% if specimenToFertilizes|length > 0 %}
+        <table>
+            {% for specimenToFertilize in specimenToFertilizes %}
+                <tr>
+                    <p>{{ specimenToFertilize.plant.getName() }} dans la parcelle {{ specimenToFertilize.plot.getName() }}</p>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock body %}

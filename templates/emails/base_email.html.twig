@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<head>
+    <title>Retour sur vos jardins</title>
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            font-size: 13px;
+        }
+
+        a {
+            color: #019de7;
+            text-decoration: none;
+        }
+
+        p {
+            margin-bottom: 9px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+            table-layout: auto;
+        }
+
+        img {
+            display: block;
+        }
+
+        table.corps {
+            width: 100%;
+            height: 100%;
+            background-color: #e5e5e5;
+        }
+
+        table.mention {
+            border-top: 1px solid #c0c0c0;
+            font-size: 11px;
+        }
+
+        td.corps-center {
+            width: 33.3%;
+            vertical-align: top;
+        }
+
+        table.container {
+            background-color: #fff;
+            width: 600px;
+            box-shadow: 0 0 10px 0 #AAAAAA;
+        }
+
+        .margin-height-40 {
+            height: 40px;
+            text-align: center;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<html>
+<body>
+<table class="corps">
+    <tr>
+        <td colspan="3" class="margin-height-40">
+        </td>
+    </tr>
+    <tr>
+        <td class="corps-center"></td>
+        <td class="corps-center">
+            <table class="container">
+                <tr>
+                    <td>
+                        <img src="https://s3-eu-west-1.amazonaws.com/miimosa/production/images/raws/000/000/923/original/banniere-hortillonnages-barque.jpg?1433928401"
+                             alt="photo" width="600" height="152"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="35">
+                            <tr>
+                                <td>
+                                    {% block body %}
+                                    {% endblock %}
+                                    <p>En espérant que cet email vous auras été utile,</p>
+                                    <p><em><b>L'équipe Eden Garden</b></em></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="corps-center"></td>
+    </tr>
+    <tr>
+        <td colspan="3" class="margin-height-40">&nbsp;</td>
+    </tr>
+</table>
+</body>
+</html>
