@@ -30,6 +30,10 @@
             modalShown = 0;
         });
 
+        $("#plantButton").on('click', (event) => {
+            modalShown = 1;
+        });
+
 
         $("#addGarden, #editGarden").on('click', (event) => {
             if(modalShown) {
