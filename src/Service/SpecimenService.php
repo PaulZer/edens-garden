@@ -126,6 +126,7 @@ class SpecimenService
         if ($currentWeather['rain_1h'] > 2) {
             $now = new \DateTimeImmutable('now');
             $this->waterize($specimenId, true, $now);
+            return true;
         } else {
             return false;
         }

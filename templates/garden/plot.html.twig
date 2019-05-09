@@ -40,6 +40,18 @@
                                         <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="50vh"></canvas>
                                         <br>
                                     </div>
+                                    <div class="row d-flex justify-content-around">
+                                        <form class="form-inline formLifeResults">
+                                            <button class="btn btn-sm btn-secondary"><</button>
+                                            <div class="input-daterange input-group" data-spec-id="{{ specimen.id }}">
+                                                <span class="input-group-addon">Du</span>
+                                                <input type="text" class="input-sm form-control" name="dateBegin"/>
+                                                <span class="input-group-addon">Au</span>
+                                                <input type="text" class="input-sm form-control" name="dateEnd" />
+                                            </div>
+                                            <button class="btn btn-sm btn-secondary">></button>
+                                        </form>
+                                    </div>
                                     <div class="row">
                                         {% for result in specimen.specimenLifeResults %}
                                             {#{{ dump(result) }}#}
@@ -92,6 +104,14 @@
             background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');
         }
 
+        .input-daterange .input-group-addon {
+            padding: 0.5rem;
+        }
+
+        .formLifeResults .btn-secondary {
+            margin: 0.5rem;
+        }
+
         .plantName {
             margin-top:2rem;
         }
@@ -102,7 +122,7 @@
 
 {% block javascripts %}
     <script>
-        var config = [];
+        var specChartConfig = [];
         var ctx = [];
         var charts = [];
         var specChartData = [];
@@ -138,7 +158,7 @@
                     return res;
                 };
 
-                config[specimenId] = {
+                specChartConfig[specimenId] = {
                     type: 'line',
                     data: {
                         labels: getChartData('dates'),
@@ -192,8 +212,7 @@
                             xAxes: [{
                                 display: true,
                                 scaleLabel: {
-                                    display: true,
-                                    labelString: 'Date'
+                                    display: true
                                 }
                             }],
                             yAxes: [{
@@ -207,7 +226,24 @@
                     }
                 };
                 ctx[specimenId] = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
-                charts[specimenId] = new Chart(ctx[specimenId], config[specimenId]);
+                charts[specimenId] = new Chart(ctx[specimenId], specChartConfig[specimenId]);
+
+                $('.input-daterange[data-spec-id="'+ specimenId +'"]').children('input').datepicker({
+
+                }).css('width', '7rem').on('change', (event) => {
+                    console.log(event.target.value);
+                    dateBeginTmstp = new Date(this.value);
+                    let url = "{{ path('specimen_get_life_result', {
+                        id: "XXX",
+                        dateBegin_tmstp: "YYY"
+
+                    }) }}";
+                    url = url.replace("XXX", specimenId);
+                    url = url.replace("YYY", dateBeginTmstp);
+                    $.get(url, (data) => {
+                       console.log(data);
+                    });
+                });
             });
         });
     </script>

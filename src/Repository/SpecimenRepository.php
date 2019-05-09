@@ -43,16 +43,22 @@ class SpecimenRepository extends ServiceEntityRepository
         return $stmt->fetch();
     }
 
-    public function getSpecimenLifeResults(int $specimenId, \DateTimeImmutable $dateBegin, \DateTimeImmutable $dateEnd)
+    public function getSpecimenLifeResults(int $specimenId, \DateTimeImmutable $dateBegin, int $maxResults = 10)
     {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "Select * from specimen_life_result where specimen_id=:specimen_id and where life_result_date between life_result_date_begin and life_result_date_end";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
+        $dateEnd = $dateBegin->modify('+'.strval($maxResults).' days');
+
+        $em = $this->getEntityManager();
+
+        $dql = "SELECT r FROM App\Entity\Garden\SpecimenLifeResult r WHERE r.specimen =:specimen_id and r.date between :life_result_date_begin and :life_result_date_end";
+        $query = $em->createQuery($dql);
+
+        $query->setParameters([
             'specimen_id' => $specimenId,
-            'life_result_date_begin' => $dateBegin,
-            'life_result_date_end' => $dateEnd,
-        ]);
+            'life_result_date_begin' => $dateBegin->format('y-m-d h:i:s'),
+            'life_result_date_end' => $dateEnd->format('y-m-d h:i:s')
+        ])->setMaxResults($maxResults);
+
+        return $query->getResult();
     }
 
     public function getSpecimenSoilTypeEfficiency(Specimen $specimen)

@@ -198,11 +198,19 @@ class SpecimenController extends AbstractController
 
     public function getSpecimenLifeResults(Request $request, SpecimenRepository $specimenRepository): Response
     {
+
+        $dateBegin = new \DateTimeImmutable($request->request->get('dateBegin_tmtsp'));
+        if(!(is_object($dateBegin))){
+            $dateBegin = new \DateTimeImmutable('now');
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $tempResponse = [];
         $specimen = $specimenRepository->find($request->get("id"));
-        $lifeResults = $specimen->getSpecimenLifeResults();
+        //$lifeResults = $specimen->getSpecimenLifeResults();
+        $lifeResults = $specimenRepository->getSpecimenLifeResults($request->get("id"), $dateBegin->modify('-11 days'));
+        dump($lifeResults);
         foreach ($lifeResults as $lifeResult) {
             $tempContent = [
                 "waterEfficiency" => $lifeResult->getWaterEfficiency(),
