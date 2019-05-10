@@ -3,5 +3,44 @@
 {% block title %}Account{% endblock %}
 
 {% block body %}
-    This is your account page
+    {{ form_start(accountInfo) }}
+
+<br>
+<h2 class=" w-100 text-center">Mon Compte</h2><hr><br>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            {{ form_row(accountInfo.firstName, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            {{ form_row(accountInfo.lastName, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            {{ form_row(accountInfo.email, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            {{ form_row(accountInfo.wantFeedBack, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            {{ form_row(accountInfo.save    , {'attr': {'class': 'btn btn-success', 'autofocus': true}}) }}
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock %}
