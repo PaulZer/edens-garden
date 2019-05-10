@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="row">
                                         {% for result in specimen.specimenLifeResults %}
-                                        {#{{ dump(result) }}#}
+                                            {#{{ dump(result) }}#}
                                         {% endfor %}
                                     </div>
                                 </ul>
@@ -124,6 +124,7 @@
             var specimenId = el.getAttribute('data-specimen-id');
 
             $.get(dataURL.replace('XXX', specimenId), (data) => {
+                console.log(data);
                 var getChartData = (type) => {
                     let res = [];
                     for(let result of data.values()){

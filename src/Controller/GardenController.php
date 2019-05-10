@@ -90,4 +90,16 @@ class GardenController extends AbstractController
             'view' => $form->createView()
         ]);
     }
+
+    public function addPlant(Request $request, int $id = null): Response
+    {
+        $form = $this->createForm(GardenType::class);
+        $form->handleRequest($request);
+
+        return $this->render('modals.html.twig', [
+            'modalTitle' => 'Planter une plante dans le jardin',
+            'template' => 'garden/form_garden',
+            'view' => $form->createView()
+        ]);
+    }
 }

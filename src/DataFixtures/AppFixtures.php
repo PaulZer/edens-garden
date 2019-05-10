@@ -521,19 +521,38 @@ class AppFixtures extends Fixture
             $plant = new Plant($p['name'], $p['latinName'], $p['picturePath'], $p['waterFrequency']);
             $plant->setPlantFamily($p['plantFamily']);
             foreach ($p['plantingDateIntervals'] as $pdi){
-                $plant->addPlantingDateInterval($this->getPlantingDateIntervalByCode( $pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']));
+                $plantingDateInterval = $this->getPlantingDateIntervalByCode($pdi['climaticAreaCode'], $pdi['numMonthBegin'], $pdi['numMonthEnd']);
+                $plant->addPlantingDateInterval($plantingDateInterval);
             }
             foreach ($p['preferedSoilTypes'] as $pst){
-                $plant->addPreferedSoilType(new PlantSoilType($plant, $this->getSoilTypeByCode($pst['code']), $pst['efficiency']));
+                $plantSoilType = new PlantSoilType();
+                $plantSoilType->setPlant($plant);
+                $plantSoilType->setSoilType($this->getSoilTypeByCode($pst['code']));
+                $plantSoilType->setEfficiency($pst['efficiency']);
+                $plant->addPreferedSoilType($plantSoilType);
             }
             foreach ($p['preferedSunExposureType'] as $pset){
-                $plant->addPreferedSunExposureType(new PlantSunExposureType($plant, $this->getSunExposureTypeByCode( $pset['code']), $pset['efficiency']));
+                $plantSunExposureType = new PlantSunExposureType();
+                $plantSunExposureType->setPlant($plant);
+                $plantSunExposureType->setSunExposureType($this->getSunExposureTypeByCode($pset['code']));
+                $plantSunExposureType->setEfficiency($pset['efficiency']);
+                $plant->addPreferedSunExposureType($plantSunExposureType);
             }
             foreach ($p['preferedFertilizerType'] as $pft){
-                $plant->addPreferedFertilizerType(new PlantFertilizerType($plant, $this->getFertilizerTypeByCode( $pft['code']), $pft['efficiency'], $pft['nbDaysBeforeFertilizing']));
+                $plantFertilizerType = new PlantFertilizerType();
+                $plantFertilizerType->setPlant($plant);
+                $plantFertilizerType->setFertilizer($this->getFertilizerTypeByCode( $pft['code']));
+                $plantFertilizerType->setEfficiency($pft['efficiency']);
+                $plantFertilizerType->setNbDayBeforeFertilizing($pft['nbDaysBeforeFertilizing']);
+                $plant->addPreferedFertilizerType($plantFertilizerType);
             }
             foreach ($p['lifeCycleSteps'] as $pls){
-                $plant->addLifeCycleStep(new PlantLifeCycleStep($plant, $this->getLifeCycleStepByCode( $pls['code']), $pls['stepDaysDuration'], $pls['order']));
+                $plantLifecycleStep = new PlantLifeCycleStep();
+                $plantLifecycleStep->setPlant($plant);
+                $plantLifecycleStep->setLifeCycleStep($this->getLifeCycleStepByCode( $pls['code']));
+                $plantLifecycleStep->setStepDaysDuration($pls['stepDaysDuration']);
+                $plantLifecycleStep->setOrder($pls['order']);
+                $plant->addLifeCycleStep($plantLifecycleStep);
             }
 
             $this->manager->persist($plant);
@@ -548,18 +567,22 @@ class AppFixtures extends Fixture
 
     protected function loadGardens(): bool
     {
+        $gardenMaxNumber = random_int(1, 1);
+        $gardenMaxSize = random_int(1, 1);
+        $plotMaxSpecimens = random_int(1, 1);
+
         $gardens = [
-            ['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],
+            /*['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],*/
         ];
 
-        for($i = 0 ; $i < random_int(1, 5); $i++){
+        for($i = 0 ; $i < $gardenMaxNumber; $i++){
             array_push($gardens, [
                 'user' => $this->userTest,
                 'name' => 'Random garden '.strval($i+1),
                 'latitude' => random_int(42000000, 48000000)/1000000,
                 'longitude' => random_int(-500000, 8000000)/1000000,
-                'height' => random_int(1, 5),
-                'length' => random_int(1, 5)
+                'height' => $gardenMaxSize,
+                'length' => $gardenMaxSize
             ]);
         }
 
@@ -575,11 +598,11 @@ class AppFixtures extends Fixture
                     $this->getSoilTypeByCode($this->soilTypes[array_rand($this->soilTypes)])
                 );
 
-                for ($j = 0 ; $j < random_int(1, 5) ; $j++){
+                for ($j = 0 ; $j < $plotMaxSpecimens ; $j++){
                     $plantName = $this->plants[array_rand($this->plants)];
                     $specimen = new Specimen(
                         $this->$plantName,
-                        $this->getRandomPlantationDate()
+                        $this->getRandomPlantationDate($this->$plantName)
                     );
 
                     $plot->addSpecimen($specimen);
@@ -636,15 +659,25 @@ class AppFixtures extends Fixture
             'monthEnd' => $monthEnd,
             'climaticArea' => $climaticArea
         ]);
-        if(!$plantingDateInterval) return new PlantingDateInterval($monthBegin, $monthEnd, $climaticArea);
-        else return $plantingDateInterval;
+        if(!$plantingDateInterval){
+            $plantingDateInterval = new PlantingDateInterval();
+            $plantingDateInterval->setClimaticArea($climaticArea);
+            $plantingDateInterval->setMonthBegin($monthBegin);
+            $plantingDateInterval->setMonthEnd($monthEnd);
+        }
+        return $plantingDateInterval;
     }
 
-    protected function getRandomPlantationDate(): \DateTimeImmutable
+    protected function getRandomPlantationDate(Plant $plant): \DateTimeImmutable
     {
-        $days = array_rand([8, 9, 10, 11, 12]);
+        $nbDaysInSpecimenLifecycle = 0;
+        foreach($plant->getLifeCycleSteps() as $specimenLifecycleStep){
+            $nbDaysInSpecimenLifecycle += $specimenLifecycleStep->getStepDaysDuration();
+        }
+        
+        $rDays = array_rand([8, 9, 10, 11, 12]);
         $date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $date = $date->modify('-'.$days.' day');
+        $date = $date->modify('-'.strval($nbDaysInSpecimenLifecycle + $rDays).' day');
         return $date;
     }
 }

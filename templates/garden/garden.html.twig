@@ -23,7 +23,7 @@
                 </table>
             </div>
             <div class="col-4 text-center ">
-                <a class="btn btn-success text-white" style="margin-top:20px;">Planter <i class="fas fa-seedling"></i></a>
+                <a class="btn btn-success text-white" style="margin-top:20px;" href="{{ path('add_plant') }}">Planter<i class="fas fa-seedling"></i></a>
             </div>
             <div class="col-4">
                 <table  class="table table-striped" >
@@ -65,12 +65,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="collapse multi-collapse" id="{{ date }}">
-                            
+
                             {% for time,forecast in forecastData %}
                                 {% if forecast.weather.conditions is defined and forecast.weather.fontawsome is defined  %}
                                     <div class="card card-body">
                                         {{ time }} : {{ forecast.weather.fontawsome | raw  }}  {{ forecast.weather.conditions }} : {{ forecast.main.temp }}°C
                                     </div>
+                                {% else %}
+                                    <div class="card card-body">Absence de données</div>
                                 {% endif %}
                             {% endfor %}
 
@@ -194,7 +196,6 @@
 
         $(document).on('hidden.bs.modal', () =>{
             $('#modal').remove();
-            $('script[role="modal-script"]').remove();
             modalShown = 0;
         });
 
@@ -205,7 +206,7 @@
             }
             modalShown = 1;
             let route = "{{ path('plot', {'id': 'XXX' }) }}";
-                route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
+            route = route.replace('XXX', event.target.getAttribute('data-plot-id'));
 
             $.get(route, {
 

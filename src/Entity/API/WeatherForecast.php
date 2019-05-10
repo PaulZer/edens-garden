@@ -137,13 +137,9 @@ class WeatherForecast
             {
                 $formattedWeatherForecastArray[$formattedDate][date('H', $forecastData['dt']).'h']['weather'] = null;
             }
-
-
-
         }
         if(isset($formattedWeatherForecastArray))
         {
-            dump($formattedWeatherForecastArray);
             return $formattedWeatherForecastArray;
         }
         else

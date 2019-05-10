@@ -189,7 +189,7 @@
                 NEW_PLANTING_DATE_INTERVAL_DIV,
                 PLANTING_DATE_INTERVAL_OBJECT_NAME,
                 PLANTING_DATE_INTERVAL_CLASS_NAME,
-                ['monthStart', 'monthEnd']
+                ['monthBegin', 'monthEnd']
             )
         }
         function setClickListenersOnAddButtons() {
@@ -246,7 +246,7 @@
                    NEW_PLANTING_DATE_INTERVAL_DIV,
                    PLANTING_DATE_INTERVAL_OBJECT_NAME,
                    PLANTING_DATE_INTERVAL_CLASS_NAME,
-                   ['monthStart', 'monthEnd']
+                   ['monthBegin', 'monthEnd']
                );
                 disableIfMaxInputIsReached(plantPlantingDateIntervalsCollectionHolder, 3, ADD_PLANTING_DATE_INTERVAL_TYPE_BUTTON_CLASS_NAME);
             });
@@ -353,7 +353,7 @@
         function addStyle(objectName, divClassName, index) {
             const row = $('#plant_' + divClassName + '_' + index);
             row.addClass('row mb-3 mx-auto');
-            row.children().addClass('col-3');
+            row.children().addClfass('col-3');
         }
     </script>
 {% endblock %}
