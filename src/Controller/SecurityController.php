@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use App\Controller\AccountController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,8 @@ class SecurityController extends AbstractController
 
     public function account(): Response
     {
-        return $this->render('account/account.html.twig');
+        $response = $this->forward('App\Controller\AccountController::renderAccountPage');
+        return $response;
     }
 
     public function login(AuthenticationUtils $authenticationUtils): Response
