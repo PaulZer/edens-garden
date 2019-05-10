@@ -1,14 +1,15 @@
 {% extends "@email/base_email.html.twig" %}
 
 {% block body %}
-    <h1>Dans le Jardin : {{ gardenName }} aux coordonnées Lat:{{ gardenLat }},Lng {{ gardenLng }}</h1>
+    <h1>Dans le Jardin : {{ gardenName }}</h1>
+
     {% if specimenToWaterizes|length > 0 %}
         <h2>Nous vous conseillons d'arroser les plantes : ({{ specimenToWaterizes|length }} spécimen(s) concerné(s))</h2>
         <table>
 
             {% for specimenToWaterize in specimenToWaterizes %}
                 <tr>
-                    <p>{{ specimenToWaterize.plant.getName() }} dans la parcelle {{ specimenToWaterize.plot.getName() }}</p>
+                    <p>{{ specimenToWaterize.plant.getName() }}, dans la parcelle "{{ specimenToWaterize.plot.getName() }}"</p>
                 </tr>
             {% endfor %}
         </table>
@@ -22,7 +23,7 @@
         <table>
             {% for specimenToFertilize in specimenToFertilizes %}
                 <tr>
-                    <p>{{ specimenToFertilize.plant.getName() }} dans la parcelle {{ specimenToFertilize.plot.getName() }}</p>
+                    <p>{{ specimenToFertilize.plant.getName() }}, dans la parcelle "{{ specimenToFertilize.plot.getName() }}"</p>
                 </tr>
             {% endfor %}
         </table>

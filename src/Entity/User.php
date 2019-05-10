@@ -55,9 +55,55 @@ class User implements UserInterface
      */
     private $gardens;
 
+    /**
+     * @ORM\Column(type="boolean",nullable=false,options={"default":true},name="want_feedback")
+     */
+    private $wantFeedBack;
+
+    /**
+     * @ORM\Column(type="integer",nullable=false,options={"default":7},name="days_between_feedback")
+     */
+    private $daysBetweenFeedBack;
+
+    /**
+     * @ORM\Column(type="datetime", name ="last_feedback_date")
+     */
+    private $lastFeedBackDate;
+
     public function __construct()
     {
         $this->gardens = new ArrayCollection();
+        $this->lastFeedBackDate = new \DateTimeImmutable('now');
+    }
+
+    public function getWantFeedBack()
+    {
+        return $this->wantFeedBack;
+    }
+
+    public function setWantFeedBack($wantFeedback)
+    {
+        $this->wantFeedBack = $wantFeedback;
+    }
+
+    public function getDaysBetweenFeedBack()
+    {
+        return $this->daysBetweenFeedBack;
+    }
+
+    public function setDaysBetweenFeedBack($daysBetweenFeedBack)
+    {
+        $this->daysBetweenFeedBack = $daysBetweenFeedBack;
+    }
+
+    public function getLastFeedBackDate()
+    {
+        return $this->lastFeedBackDate;
+    }
+
+    public function setLastFeedBackdate($lastFeedBackDate)
+    {
+        $this->lastFeedBackDate = $lastFeedBackDate;
     }
 
     /**
@@ -67,8 +113,6 @@ class User implements UserInterface
     {
         return $this->gardens;
     }
-
-
 
     public function getId(): ?int
     {
@@ -189,4 +233,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }

@@ -30,7 +30,7 @@ class SpecimenService
      * SpecimenService constructor.
      * @param $specimenRepository
      */
-    public function __construct(\Swift_Mailer $mailer, $templating,SpecimenRepository $specimenRepository, ObjectManager $objectManager)
+    public function __construct(\Swift_Mailer $mailer, $templating, SpecimenRepository $specimenRepository, ObjectManager $objectManager)
     {
         $this->specimenRepository = $specimenRepository;
         $this->om = $objectManager;
@@ -190,19 +190,23 @@ class SpecimenService
             $specimenToFertilize = [];
             foreach ($garden->getPlots() as $plot) {
                 foreach ($plot->getSpecimens() as $specimen) {
-                    $lifeResults =$specimen->getSpecimenLifeResults();
-                    $currrentLifeResult = $lifeResults[count($lifeResults)-1];
+                    $lifeResults = $specimen->getSpecimenLifeResults();
+                    $currrentLifeResult = $lifeResults[count($lifeResults) - 1];
                     if ($currrentLifeResult->getWaterEfficiency() < 100) {
                         $specimenToWaterize[] = $specimen;
                     }
                     if ($currrentLifeResult->getFertilizerEfficiency() < $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen)) {
+                        $specimenToFertilize[] = $specimen;
+                    } elseif ($specimen->getLastFertilizedDate()) {
+                        $specimenToFertilize[] = $specimen;
+                    } elseif ($this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen) == 0) {
                         $specimenToFertilize[] = $specimen;
                     }
                 }
             }
             $message = (new \Swift_Message('Retour sur vos jardins'))
                 ->setFrom("feeback@eden-garden.fr")
-                ->setTo('yoann01.d@gmail.com')
+                ->setTo($garden->getUser()->getEmail())
                 ->setBody(
                     $this->templating->render(
                         'emails/feedback_email.html.twig',
