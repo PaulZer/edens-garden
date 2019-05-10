@@ -24,16 +24,20 @@ class SpecimenService
 {
     private $specimenRepository;
     private $om;
+    private $mailer;
+    private $templating
     private $fertilizerTypes = ['N', 'K', 'P', 'N-K', 'N-P', 'K-P'];
 
     /**
      * SpecimenService constructor.
      * @param $specimenRepository
      */
-    public function __construct(SpecimenRepository $specimenRepository, ObjectManager $objectManager)
+    public function __construct(\Swift_Mailer $mailer, $templating, SpecimenRepository $specimenRepository, ObjectManager $objectManager)
     {
         $this->specimenRepository = $specimenRepository;
         $this->om = $objectManager;
+        $this->mailer = $mailer;
+        $this->templating = $templating;
     }
 
     private function updateSpecimen(Specimen $specimen)
@@ -120,7 +124,7 @@ class SpecimenService
         $specimen = $this->specimenRepository->find($specimenId);
         $specimenLat = $specimen->getPlot()->getGarden()->getLatitude();
         $specimenLn = $specimen->getPlot()->getGarden()->getLongitude();
-        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn),"41483201f4e8d0ac0d8fd986ac4adb01");
+        $currentWeatherProvider = new CurrentWeather(strval($specimenLat), strval($specimenLn), "41483201f4e8d0ac0d8fd986ac4adb01");
         $currentWeatherData = $currentWeatherProvider->getCurrentWeatherData();
         $currentWeather = $currentWeatherProvider->formatCurrentWeatherArray($currentWeatherData);
         if ($currentWeather['rain_1h'] > 2) {
@@ -201,6 +205,7 @@ class SpecimenService
             foreach ($specimen->getSpecimenLifeResults() as $lifeResult){
                 $specimen->removeSpecimenLifeResult($lifeResult);
             }
+
             $now = new \DateTimeImmutable('now');
             $specLifetimeInDays = $this->getSpecimenLifetimeInDays($specimen);
             $now = $now->modify('-'.strval($specLifetimeInDays + 1).' day');
@@ -238,5 +243,48 @@ class SpecimenService
         }
 
         return $nbDays;
+    }
+
+    public function dailyGardenFeedback()
+    {
+        $gardens = $this->om->getRepository(Garden::class)->findAll();
+        foreach ($gardens as $garden) {
+            $specimenToWaterize = [];
+            $specimenToFertilize = [];
+            foreach ($garden->getPlots() as $plot) {
+                foreach ($plot->getSpecimens() as $specimen) {
+                    $lifeResults = $specimen->getSpecimenLifeResults();
+                    $currrentLifeResult = $lifeResults[count($lifeResults) - 1];
+                    if ($currrentLifeResult->getWaterEfficiency() < 100) {
+                        $specimenToWaterize[] = $specimen;
+                    }
+                    if ($currrentLifeResult->getFertilizerEfficiency() < $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen)) {
+                        $specimenToFertilize[] = $specimen;
+                    } elseif ($specimen->getLastFertilizedDate()) {
+                        $specimenToFertilize[] = $specimen;
+                    } elseif ($this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen) == 0) {
+                        $specimenToFertilize[] = $specimen;
+                    }
+                }
+            }
+            $message = (new \Swift_Message('Retour sur vos jardins'))
+                ->setFrom("feeback@eden-garden.fr")
+                ->setTo($garden->getUser()->getEmail())
+                ->setBody(
+                    $this->templating->render(
+                        'emails/feedback_email.html.twig',
+                        [
+                            'gardenName' => $garden->getName(),
+                            'gardenLat' => $garden->getLatitude(),
+                            'gardenLng' => $garden->getLongitude(),
+                            'specimenToWaterizes' => $specimenToWaterize,
+                            'specimenToFertilizes' => $specimenToFertilize,
+                        ]
+                    ),
+                    'text/html'
+                );
+            $this->mailer->send($message);
+        }
+
     }
 }
