@@ -25,7 +25,7 @@ class SpecimenService
     private $specimenRepository;
     private $om;
     private $mailer;
-    private $templating
+    private $templating;
     private $fertilizerTypes = ['N', 'K', 'P', 'N-K', 'N-P', 'K-P'];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Entity\Garden;
 use App\Entity\API\CurrentWeather;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Util\Country;
 /**

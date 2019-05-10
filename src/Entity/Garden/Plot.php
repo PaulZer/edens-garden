@@ -3,6 +3,7 @@
 namespace App\Entity\Garden;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plant\SunExposureType;
 use App\Entity\Plant\SoilType;
