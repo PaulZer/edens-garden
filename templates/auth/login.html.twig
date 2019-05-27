@@ -7,7 +7,7 @@
         {% if error %}
             <div class="alert alert-danger" style="margin-top: 1em;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
-        <h2 class="">Please sign in</h2>
+        <h2 class="">Veuillez vous connecter</h2>
         <div class="form-group">
             <label for="_username">Email</label>
             <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
@@ -19,9 +19,9 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <div class="form-group">
             <button class="btn btn-primary" type="submit">
-                Sign in
+                Connexion
             </button>
         </div>
     </form>
-    <h2>or <a href="{{ path('register') }}">Register</a></h2>
+    <h2>ou <a href="{{ path('register') }}">Créer un compte</a></h2>
 {% endblock %}
