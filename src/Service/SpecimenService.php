@@ -151,8 +151,8 @@ class SpecimenService
         } else {
             $daysSinceLastFertilizing = $specimen->getLastFertilizedDate()->diff($today)->days;
             $specimenPlantFertilizerType = $specimen->getFertilizer()->getSpecimenFertilizerTypes($specimen->getPlant());
-            if($specimenPlantFertilizerType == null){
-                if($random){
+            if ($specimenPlantFertilizerType == null) {
+                if ($random) {
                     $fertilizerEfficiency = 0;
                     $fertilizer = $this->om->getRepository("App\Entity\Plant\FertilizerType")->findOneBy([
                         'code' => $this->fertilizerTypes[array_rand($this->fertilizerTypes)]
@@ -163,7 +163,7 @@ class SpecimenService
             } else {
                 $fertilizerFrequency = $specimenPlantFertilizerType->getNbDayBeforeFertilizing();
                 $fertilizerEfficiency = $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen);
-                if ($fertilizerFrequency < $daysSinceLastFertilizing){
+                if ($fertilizerFrequency < $daysSinceLastFertilizing) {
                     $fertilizerEfficiency = $fertilizerEfficiency - (($daysSinceLastFertilizing - $fertilizerFrequency) * ($fertilizerEfficiency / $fertilizerFrequency));
                 }
 
@@ -201,27 +201,27 @@ class SpecimenService
 
     public function generateRandomLifeResults(array $specimens)
     {
-        foreach ($specimens as $specimen){
-            foreach ($specimen->getSpecimenLifeResults() as $lifeResult){
+        foreach ($specimens as $specimen) {
+            foreach ($specimen->getSpecimenLifeResults() as $lifeResult) {
                 $specimen->removeSpecimenLifeResult($lifeResult);
             }
 
             $now = new \DateTimeImmutable('now');
             $specLifetimeInDays = $this->getSpecimenLifetimeInDays($specimen);
-            $now = $now->modify('-'.strval($specLifetimeInDays + 1).' day');
-            for ($i = 1; $i <= $specLifetimeInDays; $i++){
-                $dates[] = $now->modify('+'.$i.' day');
+            $now = $now->modify('-' . strval($specLifetimeInDays + 1) . ' day');
+            for ($i = 1; $i <= $specLifetimeInDays; $i++) {
+                $dates[] = $now->modify('+' . $i . ' day');
             }
-            foreach ($dates as $date){
-                if($date->getTimeStamp() >= $specimen->getPlantationDate()->getTimeStamp()){
+            foreach ($dates as $date) {
+                if ($date->getTimeStamp() >= $specimen->getPlantationDate()->getTimeStamp()) {
 
                     $specWaterFrequency = $specimen->getPlant()->getWaterFrequency();
                     $fertilizerFrequency = $specimen->getPlant()->getPreferedFertilizerTypes()[0]->getNbDayBeforeFertilizing();
-                    if(random_int(0, 1000)/1000 < 1/$specWaterFrequency){
+                    if (random_int(0, 1000) / 1000 < 1 / $specWaterFrequency) {
                         $this->waterize($specimen->getId(), random_int(0, 1), $date);
                     }
-                    if(random_int(0, 1000)/1000 < 1/$fertilizerFrequency){
-                        if($specimen->getFertilizer() == null){
+                    if (random_int(0, 1000) / 1000 < 1 / $fertilizerFrequency) {
+                        if ($specimen->getFertilizer() == null) {
                             $fertilizer = $this->om->getRepository("App\Entity\Plant\FertilizerType")->findOneBy([
                                 'code' => $this->fertilizerTypes[array_rand($this->fertilizerTypes)]
                             ]);
@@ -238,7 +238,7 @@ class SpecimenService
     protected function getSpecimenLifetimeInDays(Specimen $specimen)
     {
         $nbDays = 0;
-        foreach($specimen->getPlant()->getLifeCycleSteps() as $specimenLifecycleStep){
+        foreach ($specimen->getPlant()->getLifeCycleSteps() as $specimenLifecycleStep) {
             $nbDays += $specimenLifecycleStep->getStepDaysDuration();
         }
 
@@ -249,42 +249,48 @@ class SpecimenService
     {
         $gardens = $this->om->getRepository(Garden::class)->findAll();
         foreach ($gardens as $garden) {
-            $specimenToWaterize = [];
-            $specimenToFertilize = [];
-            foreach ($garden->getPlots() as $plot) {
-                foreach ($plot->getSpecimens() as $specimen) {
-                    $lifeResults = $specimen->getSpecimenLifeResults();
-                    $currrentLifeResult = $lifeResults[count($lifeResults) - 1];
-                    if ($currrentLifeResult->getWaterEfficiency() < 100) {
-                        $specimenToWaterize[] = $specimen;
+            $user = $garden->getUser();
+            if ($user->getWantFeedBack()) {
+                $today = new \DateTimeImmutable('now');
+                $daysSinceLastFeedback = $user->getLastFeedBackDate()->diff($today)->days;
+                if ($daysSinceLastFeedback == $user->getDaysBetweenFeedBack()) {
+                    $specimenToWaterize = [];
+                    $specimenToFertilize = [];
+                    foreach ($garden->getPlots() as $plot) {
+                        foreach ($plot->getSpecimens() as $specimen) {
+                            $lifeResults = $specimen->getSpecimenLifeResults();
+                            $currrentLifeResult = $lifeResults[count($lifeResults) - 1];
+                            if ($currrentLifeResult->getWaterEfficiency() < 100) {
+                                $specimenToWaterize[] = $specimen;
+                            }
+                            if ($currrentLifeResult->getFertilizerEfficiency() < $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen)) {
+                                $specimenToFertilize[] = $specimen;
+                            } elseif ($specimen->getLastFertilizedDate()) {
+                                $specimenToFertilize[] = $specimen;
+                            } elseif ($this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen) == 0) {
+                                $specimenToFertilize[] = $specimen;
+                            }
+                        }
                     }
-                    if ($currrentLifeResult->getFertilizerEfficiency() < $this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen)) {
-                        $specimenToFertilize[] = $specimen;
-                    } elseif ($specimen->getLastFertilizedDate()) {
-                        $specimenToFertilize[] = $specimen;
-                    } elseif ($this->specimenRepository->getSpecimenFertilizerTypeEfficiency($specimen) == 0) {
-                        $specimenToFertilize[] = $specimen;
-                    }
+                    $message = (new \Swift_Message('Retour sur vos jardins'))
+                        ->setFrom("feeback@eden-garden.fr")
+                        ->setTo($user->getEmail())
+                        ->setBody(
+                            $this->templating->render(
+                                'emails/feedback_email.html.twig',
+                                [
+                                    'gardenName' => $garden->getName(),
+                                    'gardenLat' => $garden->getLatitude(),
+                                    'gardenLng' => $garden->getLongitude(),
+                                    'specimenToWaterizes' => $specimenToWaterize,
+                                    'specimenToFertilizes' => $specimenToFertilize,
+                                ]
+                            ),
+                            'text/html'
+                        );
+                    $this->mailer->send($message);
                 }
             }
-            $message = (new \Swift_Message('Retour sur vos jardins'))
-                ->setFrom("feeback@eden-garden.fr")
-                ->setTo($garden->getUser()->getEmail())
-                ->setBody(
-                    $this->templating->render(
-                        'emails/feedback_email.html.twig',
-                        [
-                            'gardenName' => $garden->getName(),
-                            'gardenLat' => $garden->getLatitude(),
-                            'gardenLng' => $garden->getLongitude(),
-                            'specimenToWaterizes' => $specimenToWaterize,
-                            'specimenToFertilizes' => $specimenToFertilize,
-                        ]
-                    ),
-                    'text/html'
-                );
-            $this->mailer->send($message);
         }
-
     }
 }
