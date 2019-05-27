@@ -149,7 +149,7 @@ class AppFixtures extends Fixture
             ['firstName' => 'Elliot', 'lastName' => 'Edwards', 'roles'=> ['ROLE_ADMIN'], 'email' => 'elliot.edwards38@gmail.com', 'password' => '$argon2i$v=19$m=1024,t=2,p=2$SW1xNlhDSmtYZ2c1TDd6Qw$SYaqgchmD+uiZhjA4i1xqeYh4cxjaH6tv7Ua4LG5xhI'],
             /* mdp = user */['firstName' => 'User', 'lastName' => '2Test', 'roles'=> ['ROLE_USER'], 'email' => 'eden.garden.ptut@gmail.com', 'password' => '$argon2i$v=19$m=1024,t=2,p=2$Z1NVQTQ2WGw0OGhRWVo2Mg$ktPLwnKNcJBFy9tlBuc33Ze9W+movxiaQZTPdCkLKPA'],
         ];
-
+        $now = new \DateTimeImmutable('now');
         foreach ($users as $u){
             $user = new User();
             $user->setFirstName($u['firstName']);
@@ -157,6 +157,9 @@ class AppFixtures extends Fixture
             $user->setRoles($u['roles']);
             $user->setEmail($u['email']);
             $user->setPassword($u['password']);
+            $user->setWantFeedBack(true);
+            $user->setDaysBetweenFeedBack(7);
+            $user->setLastFeedBackdate($now);
             $this->manager->persist($user);
             if($u['email'] === 'eden.garden.ptut@gmail.com') $this->userTest = $user;
         }
