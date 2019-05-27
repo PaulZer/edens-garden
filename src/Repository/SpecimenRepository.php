@@ -43,10 +43,8 @@ class SpecimenRepository extends ServiceEntityRepository
         return $stmt->fetch();
     }
 
-    public function getSpecimenLifeResults(int $specimenId, \DateTimeImmutable $dateBegin, int $maxResults = 10)
+    public function getSpecimenLifeResults(int $specimenId, \DateTimeImmutable $dateBegin, \DateTimeImmutable $dateEnd)
     {
-        $dateEnd = $dateBegin->modify('+'.strval($maxResults).' days');
-
         $em = $this->getEntityManager();
 
         $dql = "SELECT r FROM App\Entity\Garden\SpecimenLifeResult r WHERE r.specimen =:specimen_id and r.date between :life_result_date_begin and :life_result_date_end";
@@ -56,7 +54,7 @@ class SpecimenRepository extends ServiceEntityRepository
             'specimen_id' => $specimenId,
             'life_result_date_begin' => $dateBegin->format('y-m-d h:i:s'),
             'life_result_date_end' => $dateEnd->format('y-m-d h:i:s')
-        ])->setMaxResults($maxResults);
+        ]);
 
         return $query->getResult();
     }

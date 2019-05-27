@@ -17,15 +17,19 @@
             {% for specimen in plot.specimens %}
                 <div class="card specimenCard" data-fertilizer-id="{{ specimen.fertilizer is same as(null) ? 0: specimen.fertilizer.id }}">
                     <div class="media">
-                        <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="200" class="rounded align-self-center mr-3" alt="...">
+                        <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="150" class="rounded align-self-center mr-3" alt="...">
                         <div class="media-body">
                             <h5 class="plantName">{{ specimen.plant.name }}</h5>
-                            <em>Planté(e) le {{ specimen.plantationDate|date('d/m/Y à H:i') }}</em>
+                            <div>
+                                <em>Planté(e) le {{ specimen.plantationDate|date('d/m/Y à H:i') }}</em>
+                            </div>
                             {% if specimen.lastWateredDate is not same as(null) %}
-                                <small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small>
+                                <div><small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small></div>
                             {% endif %}
                             {% if specimen.lastFertilizedDate is not same as(null) %}
-                                <small>Fertilisé(e) le <i>{{ specimen.lastFertilizedDate|date('d/m/Y à H:i') }}</i></small>
+                                <div>
+                                    <small>Fertilisé(e) le <i>{{ specimen.lastFertilizedDate|date('d/m/Y à H:i') }}</i></small>
+                                </div>
                             {% endif %}
                             <div class="container">
                                 <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
@@ -35,29 +39,22 @@
                                 <button class="btn btn-sm btn-secondary collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
                                     Cycle de vie
                                 </button>
-                                <ul class="list-group">
-                                    <div class="row">
-                                        <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="50vh"></canvas>
-                                        <br>
-                                    </div>
-                                    <div class="row d-flex justify-content-around">
-                                        <form class="form-inline formLifeResults">
-                                            <button class="btn btn-sm btn-secondary"><</button>
-                                            <div class="input-daterange input-group" data-spec-id="{{ specimen.id }}">
-                                                <span class="input-group-addon">Du</span>
-                                                <input type="text" class="input-sm form-control" name="dateBegin"/>
-                                                <span class="input-group-addon">Au</span>
-                                                <input type="text" class="input-sm form-control" name="dateEnd" />
-                                            </div>
-                                            <button class="btn btn-sm btn-secondary">></button>
-                                        </form>
-                                    </div>
-                                    <div class="row">
-                                        {% for result in specimen.specimenLifeResults %}
-                                            {#{{ dump(result) }}#}
-                                        {% endfor %}
-                                    </div>
-                                </ul>
+                                <div class="row d-flex justify-content-around">
+                                    <form class="form-inline formLifeResults">
+                                        {#<button class="btn btn-sm btn-secondary"><</button>#}
+                                        <div class="input-daterange input-group" data-spec-id="{{ specimen.id }}">
+                                            <label class="input-group-addon" for="dateBegin-{{ specimen.id }}">Du</label>
+                                            <input id="dateBegin-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateBegin" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ specimen.plantationDate|date('d/m/Y') }}"/>
+                                            <label class="input-group-addon" for="dateEnd-{{ specimen.id }}">Au</label>
+                                            <input id="dateEnd-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateEnd" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ "now"|date('d/m/Y') }}"/>
+                                        </div>
+                                        {#<button class="btn btn-sm btn-secondary">></button>#}
+                                    </form>
+                                </div>
+                                <div class="row">
+                                    <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="60vh"></canvas>
+                                    <br>
+                                </div>
                                 <div class="collapse collapseSpecimenLogs" id="collapseSpecimenLogs-{{ specimen.id }}">
                                     <ul class="list-group">
                                         {% for log in specimen.logs %}
@@ -128,6 +125,72 @@
         var specChartData = [];
         var dataURL = '{{ path('specimen_get_life_result', {id: "XXX"}) }}';
 
+        function getFormattedDate(date) {
+            var month = format(todayTime .getMonth() + 1);
+            var day = format(todayTime .getDate());
+            var year = format(todayTime .getFullYear());
+            return month + "/" + day + "/" + year;
+        }
+
+        var getChartData = (data, type) => {
+            let res = [];
+            for(let result of data.values()){
+                let timestamp = Object.getOwnPropertyNames(result)[0];
+                let date = new Date(parseInt(timestamp) * 1000);
+                if(type === 'dates') {
+                    res.push([pad(date.getDate()), pad(date.getMonth()+1), date.getFullYear()].join('/'));
+                } else res.push(result[timestamp][type]);
+                if(res.length === data.length) return res;
+            }
+            return res;
+        };
+
+        var getFullChartData = (data) => {
+            return {
+                labels: getChartData(data, 'dates'),
+                datasets: [{
+                    label: 'Apport en eau',
+                    code: 'waterEfficiency',
+                    fill: false,
+                    borderColor: window.chartColors.blue,
+                    data: getChartData(data, 'waterEfficiency'),
+                    pointRadius: 1
+                }, {
+                    label: 'Apport en engrais',
+                    code: 'fertilizerEfficiency',
+                    fill: false,
+                    backgroundColor: window.chartColors.purple,
+                    borderColor: window.chartColors.purple,
+                    data: getChartData(data, 'fertilizerEfficiency'),
+                    pointRadius: 1
+                }, {
+                    label: 'Type de sol',
+                    code: 'soilEfficiency',
+                    fill: false,
+                    backgroundColor: window.chartColors.brown,
+                    borderColor: window.chartColors.brown,
+                    data: getChartData(data, 'soilEfficiency'),
+                    pointRadius: 1
+                }, {
+                    label: 'Exposition au soleil',
+                    code: 'sunExposureEfficiency',
+                    fill: false,
+                    backgroundColor: window.chartColors.orange,
+                    borderColor: window.chartColors.orange,
+                    data: getChartData(data, 'sunExposureEfficiency'),
+                    pointRadius: 1
+                }, {
+                    label: 'Optimisation globale',
+                    fill: false,
+                    code: 'totalEfficiency',
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: getChartData(data, 'totalEfficiency'),
+                    pointRadius: 1
+                }]
+            }
+        };
+
         $('.actionButton').on('click', (event) => {
             if(event.target.classList.contains('fertilize')) {
                 if($(event.target).parents('.specimenCard').attr('data-fertilizer-id') > 0) {
@@ -144,56 +207,9 @@
             var specimenId = el.getAttribute('data-specimen-id');
 
             $.get(dataURL.replace('XXX', specimenId), (data) => {
-                console.log(data);
-                var getChartData = (type) => {
-                    let res = [];
-                    for(let result of data.values()){
-                        let timestamp = Object.getOwnPropertyNames(result)[0];
-                        let date = new Date(parseInt(timestamp) * 1000);
-                        if(type == 'dates') {
-                            res.push([pad(date.getDate()), pad(date.getMonth()+1), date.getFullYear()].join('/'));
-                        } else res.push(result[timestamp][type]);
-                        if(res.length == 10) return res;
-                    }
-                    return res;
-                };
-
                 specChartConfig[specimenId] = {
                     type: 'line',
-                    data: {
-                        labels: getChartData('dates'),
-                        datasets: [{
-                            label: 'Apport en eau',
-                            backgroundColor: window.chartColors.blue,
-                            borderColor: window.chartColors.blue,
-                            data: getChartData('waterEfficiency'),
-                            fill: false,
-                        }, {
-                            label: 'Apport en engrais',
-                            fill: false,
-                            backgroundColor: window.chartColors.purple,
-                            borderColor: window.chartColors.purple,
-                            data: getChartData('fertilizerEfficiency'),
-                        }, {
-                            label: 'Type de sol',
-                            fill: false,
-                            backgroundColor: window.chartColors.brown,
-                            borderColor: window.chartColors.brown,
-                            data: getChartData('soilEfficiency'),
-                        }, {
-                            label: 'Exposition au soleil',
-                            fill: false,
-                            backgroundColor: window.chartColors.orange,
-                            borderColor: window.chartColors.orange,
-                            data: getChartData('sunExposureEfficiency'),
-                        }, {
-                    label: 'Optimisation globale',
-                        fill: false,
-                        backgroundColor: window.chartColors.red,
-                        borderColor: window.chartColors.red,
-                        data: getChartData('totalEfficiency'),
-                }]
-                    },
+                    data: getFullChartData(data),
                     options: {
                         responsive: true,
                         title: {
@@ -228,20 +244,42 @@
                 ctx[specimenId] = document.getElementById('specimenLifeChart-' + specimenId).getContext('2d');
                 charts[specimenId] = new Chart(ctx[specimenId], specChartConfig[specimenId]);
 
+                var startDate = document.getElementById('dateBegin-' + specimenId).value;
+                var endDate = document.getElementById('dateEnd-' + specimenId).value;
+
                 $('.input-daterange[data-spec-id="'+ specimenId +'"]').children('input').datepicker({
+                    format: 'dd/mm/yyyy',
+                    startDate: startDate,
+                    endDate: endDate
+                }).css('width', '7rem').on('change', function(){
+                    let dateParts = this.value.split("/");
+                    let property = this.getAttribute('name');
 
-                }).css('width', '7rem').on('change', (event) => {
-                    console.log(event.target.value);
-                    dateBeginTmstp = new Date(this.value);
-                    let url = "{{ path('specimen_get_life_result', {
-                        id: "XXX",
-                        dateBegin_tmstp: "YYY"
+                    let $otherInput = $(this).siblings('input').first();
+                    let otherDateParts = $otherInput.val().split("/");
 
-                    }) }}";
+                    let dateBegin = new Date();
+                    let dateEnd = new Date();
+                    switch (property) {
+                        case 'dateBegin':
+                            dateBegin = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            dateEnd = new Date(+otherDateParts[2], otherDateParts[1] - 1, +otherDateParts[0]);
+                            break;
+                        case 'dateEnd':
+                            dateEnd = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            dateBegin = new Date(+otherDateParts[2], otherDateParts[1] - 1, +otherDateParts[0]);
+                            break;
+                    }
+
+                    let url = '{{ path("specimen_get_life_result", {id: "XXX", dateBeginTmstp: "YYY", dateEndTmstp: "ZZZ" }) }}';
                     url = url.replace("XXX", specimenId);
-                    url = url.replace("YYY", dateBeginTmstp);
-                    $.get(url, (data) => {
-                       console.log(data);
+                    url = url.replace("YYY", dateBegin.getTime());
+                    url = url.replace("ZZZ", dateEnd.getTime());
+                    url = url.replace("amp;", "");
+                    $.get(url, (upData) => {
+                       let chart = charts[specimenId];
+                       chart.data = getFullChartData(upData);
+                       chart.update();
                     });
                 });
             });
