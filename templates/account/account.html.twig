@@ -26,10 +26,22 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" id="wantFeedBack">
     <div class="col-3">
         <div class="form-group">
             {{ form_row(accountInfo.wantFeedBack, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+    <div class="col-3" id="daysBetweenFeedback">
+        <div class="form-group">
+            {{ form_row(accountInfo.days_between_feedback, {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+                {{ form_row(accountInfo.plainPassword    , {'attr': {'class': 'form-control', 'autofocus': true}}) }}
         </div>
     </div>
 </div>
@@ -43,4 +55,22 @@
 
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            $('#account_wantFeedBack').change(function(){
+
+                if ($('#account_wantFeedBack').prop('checked'))
+                {
+                    $('#daysBetweenFeedback').fadeIn('slow');
+                }
+                else
+                {
+                    $('#daysBetweenFeedback').fadeOut('slow');
+                }
+            });
+        });
+    </script>
 {% endblock %}
