@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -24,6 +26,21 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'type' => 'email'
                 ]
+            ])
+            ->add('wantFeedBack', CheckboxType::class, [
+                'label'    => 'Notifications mail',
+                'required' => false
+            ])
+            ->add('days_between_feedback', ChoiceType::class, [
+                'label'    => 'Nombre de jours entre nofifications',
+                'choices'  => [
+                    'Sélectionnez' => 0,
+                    '1 jour' => 1,
+                    '3 jours' => 3,
+                    '5 jours' => 5,
+                    '7 jours' => 7,
+                ],
+                'empty_data' => 0
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
