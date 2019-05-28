@@ -13,6 +13,8 @@
                     {% include template ~ '.html.twig' with {'formGarden': view} %}
                 {% elseif _route == 'plot' %}
                     {% include 'garden/plot.html.twig' with {'plot': plot} %}
+                {% elseif _route == 'add_plant' %}
+                    {% include 'garden/plantation.html.twig' with {'garden': garden} %}
                 {% endif %}
             </div>
         </div>

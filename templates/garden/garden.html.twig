@@ -28,8 +28,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-12 text-center">
-                    <a class="btn btn-success text-white add-plant-button" href="{{ path('add_plant') }}">Planter <span class="fas fa-seedling"></span></a>
+                <div class="row d-flex justify-content-around">
+                    <button id="editGarden" data-garden-id="{{ garden.id }}" class="btn btn-sm btn-warning">Paramètres</button>
+                    <button class="btn btn-success text-white add-plant-button">Planter <span class="fas fa-seedling"></span></button>
                 </div>
             </div>
 
@@ -53,6 +54,10 @@
                                     {% if currentWeather['weather_description'] == "overcast clouds" %}
                                         <i class="fas fa-cloud"></i>
                                         <br>Nuageux
+                                    {% endif %}
+                                    {% if currentWeather['weather_description'] == "light rain" %}
+                                        <i class="fas fa-cloud-rain"></i>
+                                        <br>Légère pluie
                                     {% endif %}
                                     {% if currentWeather['weather_description'] == "clear sky" %}
                                         <i class="fas fa-sun"></i>
@@ -248,7 +253,7 @@
             margin-top: 0.5%;
             padding: 0.5%;
         }
-        .add-plant-button{
+        .add-plant-button, #editGarden {
             margin-top: 2.25% !important;
             margin-bottom: 2% !important;
         }
@@ -276,10 +281,14 @@
             background: rgb(200,200,200);
         }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
 {% endblock %}
 
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <!-- OpenStreetMap JS library -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
     <script src="{{ asset('assets/js/chartUtil.js') }}"></script>
     <script>
         var modalShown = 0;
@@ -322,5 +331,43 @@
                     break;
             }
         });
+
+        $(document.body).on('click', '.add-plant-button', function(event){
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
+
+            let route = "{{ path('add_plant') }}";
+            $.get(route, {
+                gardenId: "{{ garden.id }}"
+            }, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
+        });
+
+        $("#editGarden").on('click', (event) => {
+            if(modalShown) {
+                event.stopPropagation();
+                return;
+            }
+            modalShown = 1;
+            let route = "{{ path('garden_edit', {'id': 'XXX' }) }}";
+            route = route.replace('XXX', event.target.getAttribute('data-garden-id'));
+
+            $.get(route, {}, (modal) => {
+                $('body').append(modal);
+                $('#modal').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                });
+            });
+        });
+
     </script>
 {% endblock %}

@@ -8,7 +8,7 @@
                 TODO plot params form
             </div>
         </div>
-        <button class="btn btn-primary w-100" type="button" data-toggle="collapse" data-target="#collapseSpecimens" aria-expanded="false" aria-controls="collapseSpecimens">
+        <button class="btn btn-primary w-100" type="button" data-toggle="collapse" data-target="#collapseSpecimens" aria-expanded="true" aria-controls="collapseSpecimens">
             <div class="container">
                 Vos spécimens plantés
             </div>
@@ -17,49 +17,79 @@
             {% for specimen in plot.specimens %}
                 <div class="card specimenCard" data-fertilizer-id="{{ specimen.fertilizer is same as(null) ? 0: specimen.fertilizer.id }}">
                     <div class="media">
-                        <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="150" class="rounded align-self-center mr-3" alt="...">
+                        <img src="{{ asset('assets/images/plants/' ~ specimen.plant.picturePath) }}" width="150" class="rounded align-self-top mr-3" alt="...">
                         <div class="media-body">
                             <h5 class="plantName">{{ specimen.plant.name }}</h5>
+                            <div class="lifeCycleStepInfo">
+                                {% include 'plant/lifecycle_steps/color_card.html.twig' with {'plantLifeCycleStep': specimen.currentLifeCycleStep} %}
+                            </div>
                             <div>
-                                <em>Planté(e) le {{ specimen.plantationDate|date('d/m/Y à H:i') }}</em>
+                                <span class=" text-success fas fa-seedling"></span><em>Planté(e) le {{ specimen.plantationDate|date('d/m/Y à H:i') }}</em>
                             </div>
                             {% if specimen.lastWateredDate is not same as(null) %}
-                                <div><small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small></div>
+                                <div>
+                                    <small>Arrosé(e) le <i>{{ specimen.lastWateredDate|date('d/m/Y à H:i') }}</i></small>
+                                </div>
                             {% endif %}
                             {% if specimen.lastFertilizedDate is not same as(null) %}
                                 <div>
                                     <small>Fertilisé(e) le <i>{{ specimen.lastFertilizedDate|date('d/m/Y à H:i') }}</i></small>
                                 </div>
                             {% endif %}
-                            <div class="container">
-                                <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
-                                <button class="btn btn-warning btn-sm actionButton fertilize" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}" data-formpath="{{ path('specimen_fertilizer_form', {id: specimen.id}) }}">Mettre de l'engrais</button>
-                                <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
-                                <div class="row d-flex justify-content-around">
-                                    <form class="form-inline formLifeResults">
-                                        <div class="input-daterange input-group" data-spec-id="{{ specimen.id }}">
-                                            <label class="input-group-addon" for="dateBegin-{{ specimen.id }}">Du</label>
-                                            <input id="dateBegin-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateBegin" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ specimen.plantationDate|date('d/m/Y') }}"/>
-                                            <label class="input-group-addon" for="dateEnd-{{ specimen.id }}">Au</label>
-                                            <input id="dateEnd-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateEnd" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ "now"|date('d/m/Y') }}"/>
-                                        </div>
-                                    </form>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <hr>
+                        <div class="text-center">
+                            <h6>Cycle de vie du spécimen</h6>
+                        </div>
+                        <div class="text-center prevTimeline">
+                            <small>{{ specimen.plant.name }} - Frise prévisionnelle conseillée</small>
+                            {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': specimen.plant.lifeCycleSteps} %}
+                        </div>
+                        <div class="text-center prevTimeline">
+                            <small>Frise réelle de votre spécimen</small>
+                            {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': specimen.plant.lifeCycleSteps, 'currentDayOfLife': specimen.getCurrentDayOfLife} %}
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <h6>Actions sur votre plante</h6>
+                        </div>
+                        <div class="row d-flex justify-content-around actionButtonsRow">
+                            <button class="btn btn-primary btn-sm actionButton" data-href="{{ path('specimen_waterize', {'id': specimen.id}) }}">Arrosage</button>
+                            <button class="btn btn-warning btn-sm actionButton fertilize" data-href="{{ path('specimen_fertilize', {'id': specimen.id}) }}" data-formpath="{{ path('specimen_fertilizer_form', {id: specimen.id}) }}">Mettre de l'engrais</button>
+                            <button class="btn btn-danger btn-sm actionButton" data-href="{{ path('specimen_go_to_next_life_cycle_step', {'id': specimen.id}) }}">Etape de cycle de vie suivante</button>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <h6>Suivi d'optimisation de votre plante</h6>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <form class="form-inline formLifeResults">
+                                <div class="input-daterange input-group" data-spec-id="{{ specimen.id }}">
+                                    <label class="input-group-addon" for="dateBegin-{{ specimen.id }}">Du</label>
+                                    <input id="dateBegin-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateBegin" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ specimen.plantationDate|date('d/m/Y') }}"/>
+                                    <label class="input-group-addon" for="dateEnd-{{ specimen.id }}">Au</label>
+                                    <input id="dateEnd-{{ specimen.id }}" type="text" class="input-sm form-control" name="dateEnd" min="{{ specimen.plantationDate|date('d/m/Y') }}" max="{{ "now"|date('d/m/Y') }}" value="{{ "now"|date('d/m/Y') }}"/>
                                 </div>
-                                <div class="row">
-                                    <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="60vh"></canvas>
-                                    <br>
-                                </div>
-                                <button class="btn btn-sm btn-secondary collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
-                                    Evénements du cycle de vie
-                                </button>
-                                <div class="collapse collapseSpecimenLogs" id="collapseSpecimenLogs-{{ specimen.id }}">
-                                    <ul class="list-group" id="listLogEvents">
-                                        {% for log in specimen.logs %}
-                                            <li class="list-group-item" data-action="{{ log.eventAction }}"><small>{{ log.eventDate|date('d/m/Y à H:i') }} - {{ log.eventMessage }}</small></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
+                            </form>
+                        </div>
+                        <div class="row chartWrapper">
+                            <canvas class="specimenLifeChart" id="specimenLifeChart-{{ specimen.id }}" data-specimen-id="{{ specimen.id }}" width="100%" height="50vh"></canvas>
+                            <br>
+                        </div>
+                        <hr>
+                        <div class="text-right">
+                            <button class="btn btn-sm btn-secondary collapseSpecimenLogsBtn" type="button" data-toggle="collapse" data-target="#collapseSpecimenLogs-{{ specimen.id }}" aria-expanded="false" aria-controls="collapseSpecimenLogs-{{ specimen.id }}">
+                                Evénements du cycle de vie
+                            </button>
+                        </div>
+                        <div class="collapse collapseSpecimenLogs" id="collapseSpecimenLogs-{{ specimen.id }}">
+                            <ul class="list-group listLogEvents">
+                                {% for log in specimen.logs %}
+                                    <li class="list-group-item" data-action="{{ log.eventAction }}"><small>{{ log.eventDate|date('d/m/Y à H:i') }} - {{ log.eventMessage }}</small></li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -89,6 +119,11 @@
             margin-bottom: 15px;
         }
 
+        .chartWrapper {
+            margin-left:1rem;
+            margin-right:1rem;
+        }
+
         .modal-body {
             background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');
         }
@@ -105,9 +140,35 @@
             margin-top:2rem;
         }
 
-        #listLogEvents > li {
+        .listLogEvents > li {
             padding:0.5rem;
             font-size: smaller;
+        }
+
+        .actionButtonsRow {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .lifecycleStepBadge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .lifeCycleStepInfo {
+            font-size: smaller;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            max-width: 240px;
+        }
+
+        .lifeCycleStepInfo .card-body {
+            padding: 0.3rem;
+        }
+
+        .lifeCycleStepInfo * {
+            margin-bottom: 0.3rem;
         }
 
     </style>
@@ -121,6 +182,11 @@
         var charts = [];
         var specChartData = [];
         var dataURL = '{{ path('specimen_get_life_result', {id: "XXX"}) }}';
+
+        $('button[data-target="#collapseSpecimens"]').trigger('click');
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
 
         function getFormattedDate(date) {
             var month = format(todayTime .getMonth() + 1);
@@ -210,8 +276,7 @@
                     options: {
                         responsive: true,
                         title: {
-                            display: true,
-                            text: 'Suivi d\'évolution de votre plante'
+                            display: false
                         },
                         tooltips: {
                             mode: 'index',

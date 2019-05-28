@@ -37,11 +37,12 @@ class DailyGardenFeedBackCommand extends Command
     {
         $this
             ->setDescription('Send notification to user if needed')
-            ->setHelp('Just set a chron with this command :  php bin/console app:daily_garden_feedback');
+            ->setHelp('Just set a cron firing this command, daily :  php bin/console app:daily_garden_feedback');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->specService->dailyGardenFeedback();
+
     }
 }

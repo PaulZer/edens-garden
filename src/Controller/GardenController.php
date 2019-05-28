@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\API\CurrentWeather;
 use App\Entity\API\WeatherForecast;
 use App\Entity\Garden\Garden;
+use App\Entity\Garden\Plot;
 use App\Form\GardenType;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,15 +94,25 @@ class GardenController extends AbstractController
         ]);
     }
 
-    public function addPlant(Request $request, int $id = null): Response
+    public function addPlant(Request $request, ObjectManager $om): Response
     {
-        $form = $this->createForm(GardenType::class);
-        $form->handleRequest($request);
+        if($request->getMethod() === "GET"){
+            $gardenId = intval($request->query->get('gardenId'));
+            $plotId = intval($request->query->get('plotId'));
 
-        return $this->render('modals.html.twig', [
-            'modalTitle' => 'Planter une plante dans le jardin',
-            'template' => 'garden/form_garden',
-            'view' => $form->createView()
-        ]);
+            if($gardenId > 0) $garden = $om->getRepository(Garden::class)->find($gardenId);
+            else $garden = null;
+            if($plotId > 0) $plot = $om->getRepository(Plot::class)->find($plotId);
+            else $plot = null;
+
+            return $this->render('modals.html.twig', [
+                'modalTitle' => 'Planter dans le jardin',
+                'template' => 'garden/form_garden',
+                'garden' => $garden,
+                'plot' => $plot
+            ]);
+        } elseif($request->getMethod() === "POST"){
+            //TODO
+        }
     }
 }

@@ -1,0 +1,42 @@
+{% block body %}
+    <div class="card life-cycle {{plantLifeCycleStep.lifeCycleStep.code}}-text">
+        <div class="card-body">
+            <h4>{{plantLifeCycleStep.lifeCycleStep.name}}</h4>
+            <p><i>{{ plantLifeCycleStep.stepDaysDuration  }} jours</i></p>
+            <p>{{plantLifeCycleStep.lifeCycleStep.description}}</p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block stylesheets %}
+    <style>
+        .life-cycle {
+            border: 2px solid;
+        }
+
+        .germing-text {
+            border-color: red;
+        }
+
+        .growth-text {
+            border-color: orangered;
+        }
+
+        .flowering-text {
+            border-color: orange;
+        }
+
+        .pollinate-text {
+            border-color: yellow;
+        }
+
+        .fruct-text {
+            border-color: yellowgreen;
+        }
+
+        .harvest-text {
+            border-color: green;
+        }
+    </style>
+{% endblock %}
