@@ -1,8 +1,14 @@
 {% extends "base.html.twig" %}
+
+{% set mode = path(app.request.attributes.get('_route')) %}
+{% set updateMode = (mode is same as('/editPlant'))? 1: 0 %}
+
 {% block body %}
+    {{ dump(mode) }}
+    {{ dump(updateMode) }}
     {{ form_start(formPlant) }}
     <br>
-    <h2 class=" w-100 text-center">Création d'une Plante</h2><hr><br>
+    <h2 class=" w-100 text-center">{{ updateMode ? 'Modification' : 'Création'}} d'une Plante</h2><hr><br>
     <div class="row">
         <div class="col-3">
             <div class="form-group">
@@ -35,8 +41,8 @@
         <br>
         <h3>Type de sol préféré</h3><hr>
         <div class="form-group" id="preferedSoilTypes">
-                <div class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
-                </div>
+            <div class="preferedSoilTypes" data-prototype="{{ form_widget(formPlant.preferedSoilTypes.vars.prototype)|e('html_attr') }}">
+            </div>
         </div>
 
         <br>
@@ -69,7 +75,16 @@
     </div>
     <hr>
 
-    {{ form_rest(formPlant) }}
+
+
+    <div class="form-group">
+        {{ form_row(formPlant.save) }}
+    </div>
+
+    <div id="subFormsFields">
+        {{ form_rest(formPlant) }}
+    </div>
+
     {{ form_end(formPlant) }}
 {% endblock %}
 
@@ -82,6 +97,7 @@
 {% endblock %}
 
 {% block javascripts %}
+
     <script type="text/javascript" src="{{ asset('assets/js/formUtil.js') }}" role="form-util"></script>
     <script type="text/javascript">
 
@@ -127,7 +143,12 @@
 
         $(document).ready(function() {
             setClickListenersOnAddButtons();
-            setFormsAtInit();
+            if({{ updateMode }}) {
+                initSubForms(true);
+                $('#subFormsFields').remove();
+            } else {
+                initSubForms(false);
+            }
         });
 
         function createAddButton(buttonClassName, ButtonText, CollectionClassName){
@@ -147,17 +168,17 @@
 
             //items counter
             collection.data('index', collection.find(':input').length);
-
             return collection;
         }
 
-        function setFormsAtInit() {
+        function initSubForms(retrieving) {
             addForm(
                 plantSoilTypeCollectionHolder,
                 NEW_SOIL_DIV,
                 SOIL_OBJECT_NAME,
                 SOIL_TYPE_CLASS_NAME,
-                ['efficiency']
+                ['efficiency'],
+                retrieving
             );
 
             addForm(
@@ -165,7 +186,8 @@
                 NEW_FERTILIZER_DIV,
                 FERTILIZER_OBJECT_NAME,
                 FERTILIZER_TYPE_CLASS_NAME,
-                ['efficiency', 'nbDayBeforeFertilizing']
+                ['efficiency', 'nbDayBeforeFertilizing'],
+                retrieving
             );
 
             addForm(
@@ -173,33 +195,40 @@
                 NEW_SUN_EXPOSURE_DIV,
                 SUN_EXPOSURE_OBJECT_NAME,
                 SUN_EXPOSURE_TYPE_CLASS_NAME,
-                ['efficiency']
+                ['efficiency'],
+                retrieving
             );
+
             addForm(
                 plantLifeCycleStepsCollectionHolder,
                 NEW_LIFE_CYCLE_STEP_DIV,
                 LIFE_CYCLE_STEP_OBJECT_NAME,
                 LIFE_CYCLE_STEPS_CLASS_NAME,
-                ['stepDaysDuration', 'order']
+                ['stepDaysDuration', 'order'],
+                retrieving
             );
-            fillOrderFieldLifeCycleStep();
+
+            if(!{{ updateMode }}) fillOrderFieldLifeCycleStep();
 
             addForm(
                 plantPlantingDateIntervalsCollectionHolder,
                 NEW_PLANTING_DATE_INTERVAL_DIV,
                 PLANTING_DATE_INTERVAL_OBJECT_NAME,
                 PLANTING_DATE_INTERVAL_CLASS_NAME,
-                ['monthBegin', 'monthEnd']
-            )
+                ['monthBegin', 'monthEnd'],
+                retrieving
+            );
         }
+
         function setClickListenersOnAddButtons() {
+
             addPlantSoilTypeButton.on('click', function(e) {
                 addForm(
                     plantSoilTypeCollectionHolder,
                     NEW_SOIL_DIV,
                     SOIL_OBJECT_NAME,
                     SOIL_TYPE_CLASS_NAME,
-                    ['efficiency']
+                    ['efficiency'],
                 );
 
                 disableIfMaxInputIsReached(plantSoilTypeCollectionHolder, 6, ADD_SOIL_TYPE_BUTTON_CLASS_NAME);
@@ -252,39 +281,52 @@
             });
         }
 
-        function addForm(CollectionHolder, newObjectDiv, objectName, ulClassName, fieldNameArrayForIntegerValidator) {
-            // Get the data-prototype
-            let prototype = CollectionHolder.data('prototype');
-
-            let index = CollectionHolder.data('index');
+        function addForm(CollectionHolder, newObjectDiv, objectName, divClassName, fieldNameArrayForIntegerValidator, retrievingSubFormFields = false) {
 
             let newForm = "";
+            let index = CollectionHolder.data('index');
 
-            newForm += prototype;
-            newForm = newForm.replace(/__name__label__/g, index);
-            newForm = newForm.replace(/__name__/g, index);
+            if(!retrievingSubFormFields){
+                // Get the data-prototype
+                newForm += CollectionHolder.data('prototype');
+                newForm = newForm.replace(/__name__label__/g, index);
+                newForm = newForm.replace(/__name__/g, index);
 
-            // Display the form in the page, before the addButton
-            let $newObjectDiv = $('.' + ulClassName).append(newForm);
-            newObjectDiv.before($newObjectDiv);
+                addSubFormToHTML(CollectionHolder, newObjectDiv, objectName, divClassName, fieldNameArrayForIntegerValidator, newForm, index);
 
-            if(index !== 0) {
-                addDeleteButton(objectName, ulClassName, index);
-                addClickListenerOnDeleteButton(CollectionHolder, objectName, ulClassName, index);
+            } else {
+                let i = index;
+
+                while (i >= 0){
+                    let parentHolder = document.getElementById('plant_' + divClassName + '_' + index);
+                    if(parentHolder){
+                        addSubFormToHTML(CollectionHolder, newObjectDiv, objectName, divClassName, fieldNameArrayForIntegerValidator, $(parentHolder), index);
+                        index = CollectionHolder.data('index');
+                    } else i = -1;
+                }
             }
+        }
+
+        function addSubFormToHTML(CollectionHolder, newObjectDiv, objectName, divClassName, fieldNameArrayForIntegerValidator, newForm, index){
+            // Display the form in the page, before the addButton
+            if(index !== 0) {
+                addDeleteButton(CollectionHolder, objectName, divClassName, index);
+            }
+            let $newObjectDiv = $('.' + divClassName).append(newForm);
+            newObjectDiv.before($newObjectDiv);
 
             // Validators
             for(let fieldName of fieldNameArrayForIntegerValidator){
-                addInputIntegerValidator(ulClassName, fieldName, index);
+                addInputIntegerValidator(divClassName, fieldName, index);
             }
 
-            addStyle(objectName, ulClassName, index);
+            addStyle(objectName, divClassName, index);
 
-            // increase the index with one for the next item
+            // Increase the index for the next item
             CollectionHolder.data('index', index + 1);
         }
 
-        function addDeleteButton(objectName, divClassName, index) {
+        function addDeleteButton(CollectionHolder, objectName, divClassName, index) {
             //setup "remove" button
             let deleteButton =
                 "<div class='col-3 d-flex align-items-end'>" +
@@ -297,13 +339,14 @@
             deleteButton = deleteButton.replace(/id_/g, index);
 
             let removeButton = $(deleteButton);
-            // console.log(document.getElementById());
             $('#plant_' + divClassName + '_' + index).append(removeButton);
 
+            addClickListenerOnDeleteButton(CollectionHolder, objectName, divClassName, index);
+
         }
-        function addClickListenerOnDeleteButton(collectionHolder, itemName, ulClass, index) {
+        function addClickListenerOnDeleteButton(collectionHolder, itemName, divClassName, index) {
             $('#deleteNewPlant' + itemName + 'TypeButton_' + index).on('click', function(e) {
-                $('#plant_' + ulClass + '_' + index).remove();
+                $('#plant_' + divClassName + '_' + index).remove();
 
                 collectionHolder.data('index', collectionHolder.data('index') - 1);
 
@@ -324,8 +367,6 @@
             }
         }
         function enableIfMaxInputIsNotReached(CollectionHolder, nbMaxInputs, buttonClassName){
-            console.log('enable index: ', CollectionHolder.data('index'));
-            console.log('enable: ', CollectionHolder.data('index') < nbMaxInputs);
             if(CollectionHolder.data('index') < nbMaxInputs){
                 document.getElementsByClassName(buttonClassName)[0].disabled = false;
             }
@@ -333,12 +374,15 @@
 
         function addInputIntegerValidator(divClassName, fieldName, index) {
             let field = document.getElementById('plant_' + divClassName + '_' + index + '_' + fieldName);
-            bindInputIntegerValidation(
-                field,
-                ['change'],
-                parseInt(field.getAttribute('min')),
-                parseInt(field.getAttribute('max'))
-            );
+
+            if(field){
+                bindInputIntegerValidation(
+                    field,
+                    ['change'],
+                    parseInt(field.getAttribute('min')),
+                    parseInt(field.getAttribute('max'))
+                );
+            }
         }
 
         function fillOrderFieldLifeCycleStep(){
@@ -350,13 +394,15 @@
 
         function addStyle(objectName, divClassName, index) {
             const row = $('#plant_' + divClassName + '_' + index);
-            row.addClass('row mb-3 mx-auto');
-            if(row.attr('id').includes('plantingDateInterval')) row.children().addClass('col-3');
-            else {
-                row.children().each((i, el) => {
-                    if(i === 0) $(el).hide();
-                    else $(el).addClass('col-3');
-                });
+            if(row.length > 0){
+                row.addClass('row mb-3 mx-auto');
+                if(row.attr('id').includes('plantingDateInterval')) row.children().addClass('col-3');
+                else {
+                    row.children().each((i, el) => {
+                        if(i === 0) $(el).hide();
+                        else $(el).addClass('col-3');
+                    });
+                }
             }
         }
     </script>

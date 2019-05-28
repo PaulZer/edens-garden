@@ -45,7 +45,7 @@ class PlantFertilizerTypeFormType extends AbstractType
                     'class' => 'form-control form-control-sm'
                 ]
             ])->add('nbDayBeforeFertilizing', NumberType::class, [
-                'label' => 'Nombre de jours avant fertilisation : ',
+                'label' => 'Nb jours avant fertilisation : ',
                 'attr' => [
                     'min' => 1,
                     'max' => 100,
