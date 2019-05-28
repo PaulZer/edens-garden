@@ -176,7 +176,7 @@ class SpecimenController extends AbstractController
         return $response;
     }
 
-    public function dailyLifeResult(Request $request, SpecimenService $specimenService): Response
+    public function dailyLifeResult(SpecimenService $specimenService): Response
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -196,13 +196,25 @@ class SpecimenController extends AbstractController
 
     }
 
-    public function getSpecimenLifeResults(Request $request, SpecimenRepository $specimenRepository): Response
+    public function getSpecimenLifeResults(Request $request, SpecimenRepository $specimenRepository, $id): Response
     {
+        $specimen = $specimenRepository->find($id);
+        $timestampBegin = intval($request->query->get('dateBeginTmstp') / 1000);
+        $timestampEnd = intval($request->query->get('dateEndTmstp') / 1000);
+
+        if(!$timestampBegin || !$timestampEnd){
+            $dateBegin = (new \DateTimeImmutable())->setTimestamp($specimen->getPlantationDate()->getTimestamp());
+            $dateEnd = new \DateTimeImmutable('now');
+        } else {
+            $dateBegin =  (new \DateTimeImmutable())->setTimestamp($timestampBegin);
+            $dateEnd =  (new \DateTimeImmutable())->setTimestamp($timestampEnd);
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $tempResponse = [];
-        $specimen = $specimenRepository->find($request->get("id"));
-        $lifeResults = $specimen->getSpecimenLifeResults();
+
+        $lifeResults = $specimenRepository->getSpecimenLifeResults($id, $dateBegin, $dateEnd);
         foreach ($lifeResults as $lifeResult) {
             $tempContent = [
                 "waterEfficiency" => $lifeResult->getWaterEfficiency(),

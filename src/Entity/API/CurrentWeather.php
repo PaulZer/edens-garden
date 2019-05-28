@@ -40,7 +40,7 @@ class CurrentWeather
 
     function formatCurrentWeatherArray($weatherArray)
     {
-        foreach ($weatherArray['weather'] as $weatherId => $weatherData) {
+        foreach($weatherArray['weather'] as $weatherId => $weatherData) {
             $formattedWeatherArray['weather'] = $weatherData['main'];
             $formattedWeatherArray['weather_description'] = $weatherData['description'];
         }

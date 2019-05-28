@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -25,14 +27,27 @@ class RegistrationFormType extends AbstractType
                     'type' => 'email'
                 ]
             ])
+            ->add('wantFeedBack', CheckboxType::class, [
+                'label'    => 'Notifications mail',
+                'required' => false
+            ])
+            ->add('days_between_feedback', ChoiceType::class, [
+                'label'    => 'Nombre de jours entre nofifications',
+                'choices'  => [
+                    'Sélectionnez' => 0,
+                    '1 jour' => 1,
+                    '3 jours' => 3,
+                    '5 jours' => 5,
+                    '7 jours' => 7,
+                ],
+                'empty_data' => 0
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'required' => true,
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Confirm Password'],
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([

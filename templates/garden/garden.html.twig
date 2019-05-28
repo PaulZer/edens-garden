@@ -2,126 +2,166 @@
 
 {% block title %}Jardins : {{garden.name}}{% endblock %}
 {% block body %}
-    <div class="container-fluid" width="100%">
-        <div class="row">
-            <div class="col-4">
-                <h3>Jardin {{garden.name}} - Infos</h3>
-                <table  class="table table-striped" >
-                    <th scope="col">Nom</th>
-                    <th scope="col">Latitude</th>
-                    <th scope="col">Longitude</th>
-                    <th scope="col">Longeur</th>
-                    <th scope="col">Largeur</th>
-
-                    <tr>
-                        <td>{{garden.name}}</td>
-                        <td>{{garden.latitude}}</td>
-                        <td>{{garden.longitude}}</td>
-                        <td>{{garden.length}}</td>
-                        <td>{{garden.height}}</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-4 text-center ">
-                <a class="btn btn-success text-white" style="margin-top:20px;" href="{{ path('add_plant') }}">Planter<i class="fas fa-seedling"></i></a>
-            </div>
-            <div class="col-4">
-                <table  class="table table-striped" >
-                    <th scope="col">Température</th>
-                    <th scope="col">Météo</th>
-                    <th scope="col">Pluie 1h</th>
-                    <th scope="col">Pluie 3h</th>
-                    <th scope="col">Humidité</th>
-                    <tr>
-                        <td>{{ currentWeather['current_temperature'] }}°C</td>
-                        <td align="center">
-                            {% if currentWeather['weather_description'] == "overcast clouds" %}
-                                <i class="fas fa-cloud"></i>
-                                <br>Nuageux
-                            {% endif %}
-                            {% if currentWeather['weather_description'] == "clear sky" %}
-                                <i class="fas fa-sun"></i>
-                                <br>Ensoleillé
-                            {% endif %}
-                            {% if currentWeather['weather_description'] == "shower rain" %}
-                                <i class="fas fa-cloud-sun-rain"></i>
-                                <br>Averses de pluie
-                            {% endif %}
-
-                        </td>
-                        <td>{{ currentWeather['rain_1h'] }}</td>
-                        <td>{{ currentWeather['rain_3h'] }}</td>
-                        <td>{{ currentWeather['humidity'] }}%</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <h3>Météo</h3>
-        <table>
-            {% for date,forecastData in weatherForecast %}
-                <td>
-                    <a class="btn btn-primary" data-toggle="collapse" href="#{{ date }}" role="button" aria-expanded="false" aria-controls="{{ date }}">{{ date }}</a>
-                </td>
-                <div class="row">
-                    <div class="col">
-                        <div class="collapse multi-collapse" id="{{ date }}">
-
-                            {% for time,forecast in forecastData %}
-                                {% if forecast.weather.conditions is defined and forecast.weather.fontawsome is defined  %}
-                                    <div class="card card-body">
-                                        {{ time }} : {{ forecast.weather.fontawsome | raw  }}  {{ forecast.weather.conditions }} : {{ forecast.main.temp }}°C
-                                    </div>
-                                {% else %}
-                                    <div class="card card-body">Absence de données</div>
-                                {% endif %}
-                            {% endfor %}
-
-                        </div>
-                    </div>
+    <div class="container-fluid backgroud" width="100%">
+        <div class="row mt-4">
+            <div class="garden-infos col-6">
+                <div class="col-12 text-center">
+                    <h3 class="title title-6">JARDIN {{garden.name | upper}} - INFOS</h3>
+                    <table class="tab" >
+                        <thead>
+                            <tr>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Latitude</th>
+                                <th scope="col">Longitude</th>
+                                <th scope="col">Longeur</th>
+                                <th scope="col">Largeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{garden.name}}</td>
+                                <td>{{garden.latitude}}</td>
+                                <td>{{garden.longitude}}</td>
+                                <td>{{garden.length}}</td>
+                                <td>{{garden.height}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            {% endfor %}
-        </table>
+                <div class="col-12 text-center">
+                    <a class="btn btn-success text-white add-plant-button" href="{{ path('add_plant') }}">Planter <span class="fas fa-seedling"></span></a>
+                </div>
+            </div>
 
-
-        <h3>Vos parcelles</h3>
-        <div>
-            <a href="{{ path('plot_create') }}" class="btn btn-warning">
-                Ajouter une parcelle
-            </a>
+            <div class="col-6 meteo">
+                <div class="col-12 text-center">
+                    <h3 class="title title-6">{{ "Météo Actuelle" | upper }}</h3>
+                    <table  class="tab" >
+                        <thead>
+                            <tr>
+                                <th scope="col">Température</th>
+                                <th scope="col">Météo</th>
+                                <th scope="col">Pluie 1h</th>
+                                <th scope="col">Pluie 3h</th>
+                                <th scope="col">Humidité</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ currentWeather['current_temperature'] }}°C</td>
+                                <td align="center">
+                                    {% if currentWeather['weather_description'] == "overcast clouds" %}
+                                        <i class="fas fa-cloud"></i>
+                                        <br>Nuageux
+                                    {% endif %}
+                                    {% if currentWeather['weather_description'] == "clear sky" %}
+                                        <i class="fas fa-sun"></i>
+                                        <br>Ensoleillé
+                                    {% endif %}
+                                    {% if currentWeather['weather_description'] == "shower rain" %}
+                                        <i class="fas fa-cloud-sun-rain"></i>
+                                        <br>Averses de pluie
+                                    {% endif %}
+                                </td>
+                                <td>{{ currentWeather['rain_1h'] }}</td>
+                                <td>{{ currentWeather['rain_3h'] }}</td>
+                                <td>{{ currentWeather['humidity'] }}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div id="gardenPlotContainer">
-            <div class="row">
-                {% for i, plot in garden.plots %}
-                    <div class="col">
-                        <div class="card gardenPlot mx-auto" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
-                            <div class="card-body" style="">
-                                <small class="plotName">{{ plot.name }}</small>
-                                <div class="plantCount">{{ plot.specimens|length }} <i class="fas fa-spa text-success"></i></div>
-                                <span class="plotSunExpType badge" data-code="{{ plot.sunExposureType.code }}">Exposition {{ plot.sunExposureType.name }}</span>
-                                <span class="plantSoilType badge badge-dark">{{ plot.soilType.name }}</span>
-                                <div class="plotInfos d-flex">
-                                    <div class="container text-center">
-                                        <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
-                                    </div>
-                                    <div class="container text-center">
-                                        <a id="editPlot" href="{{ path('plot_edit', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
-                                            Modifier
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <a id="deletePlot" href="{{ path('plot_delete', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
-                                            Supprimer
-                                        </a>
-                                    </div>
 
+        <div class="row prevision">
+            <div class="col-12 text-center">
+                <h3 class="title title-12">{{ "Prévisions Météo" | upper}}</h3>
 
-                                </div>
+                <nav class="col-12">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        {% for date,forecastData in weatherForecast %}
+                            {% if date is not same as("Aujourd'hui") %}
+                                <a class="day nav-link" id="nav-{{ date [:2] }}-tab" data-toggle="tab" href="#nav-{{ date [:2] }}" role="tab" aria-controls="{{ date [:2] }}" aria-selected="false">{{ date }}</a>
+                            {% else %}
+                                <a class="day nav-link active" id="nav-{{ date [:2] }}-tab" data-toggle="tab" href="#nav-{{ date [:2] }}" role="tab" aria-controls="{{ date [:2] }}" aria-selected="true">{{ date }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </nav>
+
+                <div class="tab-content" id="nav-tabContent">
+                    {% for date,forecastData in weatherForecast %}
+                    {% if date is not same as("Aujourd'hui") %}
+                    <div class="col-12 tab-pane fade" id="nav-{{ date [:2] }}" role="tabpanel" aria-labelledby="nav-{{ date [:2] }}-tab">
+                        {% else %}
+                        <div class="col-12 tab-pane fade show active" id="nav-{{ date [:2] }}" role="tabpanel" aria-labelledby="nav-{{ date [:2] }}-tab">
+                            {% endif %}
+                            <div class="row d-flex justify-content-around mt-2 mb-3" id="{{ date }}">
+                                {% for time,forecast in forecastData %}
+                                    <div class="col mt-0 mb-0">
+                                        <div class="card card-body meteoPrevCard">
+                                            {% if forecast.weather.conditions is defined and forecast.weather.fontawsome is defined  %}
+                                                <div>{{ time }}</div>
+                                                <div>{{ forecast.weather.fontawsome | raw}} : {{ forecast.weather.conditions }}</div>
+                                                <div>{{ forecast.main.temp }}°C</div>
+                                            {% else %}
+                                                Absence de données
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                </div>
             </div>
         </div>
+        <br>
+        <div class="row plots">
+            <div class="col-12 text-center">
+
+                <h3 class="title title-12">{{ "Vos parcelles" | upper}}</h3>
+                <div class="col-12 text-center">
+                    <a href="{{ path('plot_create') }}" class="btn btn-warning">
+                        Ajouter une parcelle
+                    </a>
+                </div>
+                <div id="gardenPlotContainer">
+                    <div class="row">
+                        {% for i, plot in garden.plots %}
+                            <div class="col">
+                                <div class="card gardenPlot mx-auto" style="background-image: url('{{ asset('assets/texture/soiltypes/' ~ plot.soiltype.code ~ '.png') }}');">
+                                    <div class="card-body" style="">
+                                        <small class="plotName">{{ plot.name }}</small>
+                                        <div class="plantCount">{{ plot.specimens|length }} <i class="fas fa-spa text-success"></i></div>
+                                        <span class="plotSunExpType badge" data-code="{{ plot.sunExposureType.code }}">Exposition {{ plot.sunExposureType.name }}</span>
+                                        <span class="plantSoilType badge badge-dark">{{ plot.soilType.name }}</span>
+                                        <div class="plotInfos d-flex">
+                                            <div class="container text-center">
+                                                <button class="btn btn-sm btn-primary seeSpecimensBtn" data-plot-id="{{ plot.id }}">Voir mes plantes</button>
+                                            </div>
+                                            <div class="container text-center">
+                                                <a id="editPlot" href="{{ path('plot_edit', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
+                                                    Modifier
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a id="deletePlot" href="{{ path('plot_delete', { 'id': plot.id }) }}" class="btn btn-sm btn-primary">
+                                                    Supprimer
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 {% endblock %}
 
@@ -184,6 +224,56 @@
             background: orange;
             border-radius: 2px;
             height: 8px;
+        }
+        .garden-infos{
+            background: url("{{ asset('assets/images/dirt.jpg')}}") no-repeat;
+            max-height: 220px;
+        }
+        .tab{
+            margin-top: 5%;
+            background-color: #e3e3e3;
+            border-radius: 0.25rem;
+            width: 100%;
+        }
+        .title{
+            color: white;
+            background-color: rgba(0,0,0, 0.8);
+            border-radius: 5px;
+        }
+        .title-6{
+            margin-top: 1%;
+            padding: 1%;
+        }
+        .title-12{
+            margin-top: 0.5%;
+            padding: 0.5%;
+        }
+        .add-plant-button{
+            margin-top: 2.25% !important;
+            margin-bottom: 2% !important;
+        }
+        .meteo{
+            background: url("{{ asset('assets/images/sky.jpg')}}") no-repeat;
+            max-height: 220px;
+        }
+        .prevision{
+            background: url("{{ asset('assets/images/previsions.jpg') }}") no-repeat;
+            max-height: 206px;
+        }
+        .meteoPrevCard{
+            background-color: rgba(200,200,200,0.9);
+            border: black solid 1px;
+            max-height: 81px;
+            padding: 0;
+        }
+        .day{
+            color: white;
+        }
+        .day:hover{
+            color: black;
+        }
+        .backgroud{
+            background: rgb(200,200,200);
         }
     </style>
 {% endblock %}
