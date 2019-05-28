@@ -41,7 +41,9 @@
 <div class="row">
     <div class="col-3">
         <div class="form-group">
-                {{ form_row(accountInfo.plainPassword    , {'attr': {'class': 'form-control', 'autofocus': true}}) }}
+            {{ form_row(accountInfo.plainPassword['first'], {'attr': {'class': 'form-control'}}) }}
+        
+            {{ form_row(accountInfo.plainPassword['second'], {'attr': {'class': 'form-control'}}) }}
         </div>
     </div>
 </div>
