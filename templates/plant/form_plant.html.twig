@@ -342,8 +342,6 @@
         }
 
         function fillOrderFieldLifeCycleStep(){
-
-            console.log('plant_' + LIFE_CYCLE_STEPS_CLASS_NAME + '_' + plantLifeCycleStepsCollectionHolder.data('index') - 1 + '_order');
             let field = document.getElementById('plant_' + LIFE_CYCLE_STEPS_CLASS_NAME + '_' + (plantLifeCycleStepsCollectionHolder.data('index') - 1) + '_order');
 
             field.value = plantLifeCycleStepsCollectionHolder.data('index');
@@ -353,7 +351,13 @@
         function addStyle(objectName, divClassName, index) {
             const row = $('#plant_' + divClassName + '_' + index);
             row.addClass('row mb-3 mx-auto');
-            row.children().addClfass('col-3');
+            if(row.attr('id').includes('plantingDateInterval')) row.children().addClass('col-3');
+            else {
+                row.children().each((i, el) => {
+                    if(i === 0) $(el).hide();
+                    else $(el).addClass('col-3');
+                });
+            }
         }
     </script>
 {% endblock %}

@@ -64,6 +64,7 @@ class PlantController extends AbstractController
 
     public function editPlant(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $id = $request->get('id');
         if($id > 0) {
@@ -102,6 +103,7 @@ class PlantController extends AbstractController
 
     public function deletePlant(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $id = $request->get('id');
 
@@ -121,6 +123,7 @@ class PlantController extends AbstractController
 
     public function addFertilizer(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $plant = $em->getRepository(Plant::class)->find($request->get('plantId'));
 
@@ -151,6 +154,7 @@ class PlantController extends AbstractController
 
     public function addSoil(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $plant = $em->getRepository(Plant::class)->find($request->get('plantId'));
 
@@ -178,6 +182,7 @@ class PlantController extends AbstractController
 
     public function addSunExposure(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $plant = $em->getRepository(Plant::class)->find($request->get('plantId'));
 

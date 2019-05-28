@@ -1,31 +1,84 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Plants{% endblock %}
-{% block body %}
 
-    <table class="table table-striped">
-        <th scope="col">Name</th>
-        <th scope="col">Latin Name</th>
-        <th scope="col">Modifier</th>
-        <th scope="col">Supprimer</th>
-        {% for plant in plants %}
-            <tr>
-                <td><a href='/plant/{{plant.id}}'>{{plant.name}}</a></td>
-                <td>{{plant.latinName}}</td>
-                <td>
-                    <a id="editPlant" href="{{ path('plant_edit', { 'id': plant.id }) }}" class="btn btn-warning">
-                        Modifier
-                    </a>
-                </td>
-                <td>
-                    <a id="deletePlant" href="{{ path('delete_plant', { 'id': plant.id }) }}" class="btn btn-warning">
-                        Supprimer
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    <a id="addPlant" href="{{ path('plant_create') }}" class="btn btn-warning">
-        Ajouter une plante
-    </a>
+{% block body %}
+    <div class="container">
+        <div id="plantListTitle" class="row text-center">
+            <h2>Liste des plantes</h2>
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="text-right">
+                <a id="addPlant" href="{{ path('plant_create') }}" class="btn btn-warning">
+                    Ajouter une plante
+                </a>
+            </div>
+        {% endif %}
+        <table id="plantListTable" class="table table-striped">
+            <thead>
+                <th scope="col">Name</th>
+                <th scope="col">Latin Name</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for plant in plants %}
+                    <tr>
+                        <td><a href='/plant/{{plant.id}}'>{{ plant.name }}</a></td>
+                        <td>{{plant.latinName}}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                <a id="editPlant" href="{{ path('plant_edit', { 'id': plant.id }) }}" class="btn btn-warning">
+                                    Modifier
+                                </a>
+                            </td>
+                            <td>
+                                <a id="deletePlant" href="{{ path('delete_plant', { 'id': plant.id }) }}" class="btn btn-warning">
+                                    Supprimer
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css"/>
+    <style>
+        #addPlant {
+            margin-bottom: 1rem;
+        }
+
+        #plantListTitle {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#plantListTable').DataTable( {
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ résultats par page",
+                    "zeroRecords": "Aucune plante correspondante",
+                    "info": "Page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Aucune donnée",
+                    "infoFiltered": "(filtré parmi _MAX_ résultats)",
+                    "search":         "Rechercher une plante :",
+                    "paginate": {
+                        "next":       "Précédendenyt",
+                        "previous":   "Suivant"
+                    },
+                }
+            });
+        } );
+    </script>
 {% endblock %}
