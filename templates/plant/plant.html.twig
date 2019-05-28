@@ -99,47 +99,25 @@
             </div>
             <div class="tab-pane fade" id="nav-life-cycle" role="tabpanel" aria-labelledby="nav-life-cycle-tab">
 
-                <div class="progress" style="height: 30px;">
-                    {% set lastDuration = 0 %}
-                    {% for lifeCycleStep in plant.lifeCycleSteps %}
-                        <div class="progress-bar {{ lifeCycleStep.lifeCycleStep.code }}"
-                             role="progressbar"
-                             style="width: {{ (lifeCycleStep.stepDaysDuration / totalDaysDuration) * 100 }}%"
-                             tooltip=""
-                             aria-valuenow="{{ lastDuration }}"
-                             aria-valuemin="0"
-                             aria-valuemax="{{ totalDaysDuration }}"
-                             data-toggle="tooltip"
-                             data-placement="bottom"
-                             title="{{ lifeCycleStep.stepDaysDuration }} jours">
-                        </div>
-                        {% set lastDuration = lifeCycleStep.stepDaysDuration %}
-                    {% endfor %}
-                </div>
+                {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': plant.lifeCycleSteps} %}
                 <hr>
 
                 <div class="container-fluid" id="life-cycles">
-                    {% for lifeCycleStep in plant.lifeCycleSteps %}
-                        <div class="card life-cycle {{lifeCycleStep.lifeCycleStep.code}}-text">
-                            <div class="card-body">
-                                <h4>{{lifeCycleStep.lifeCycleStep.name}}</h4>
-                                <p><i>{{ lifeCycleStep.stepDaysDuration  }} jours</i></p>
-                                <p>{{lifeCycleStep.lifeCycleStep.description}}</p>
-                            </div>
-                        </div>
+                    {% for plantLifeCycleStep in plant.lifeCycleSteps %}
+                        {% include 'plant/lifecycle_steps/color_card.html.twig' with {'plantLifeCycleStep': plantLifeCycleStep} %}
                     {% endfor %}
                 </div>
-
             </div>
         </div>
     </div>
-
 {% endblock %}
 
-
-
-{% block javascript %}
-
+{% block javascripts %}
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}
 
 
@@ -151,58 +129,6 @@
         grid-template-columns: repeat({{ plant.lifeCycleSteps |length }}, 1fr);
         grid-template-rows: repeat(1, auto);
         grid-gap: 5px;
-    }
-
-    .life-cycle {
-        border: 2px solid;
-    }
-
-    .germing-text {
-         border-color: red;
-     }
-
-    .growth-text {
-        border-color: orangered;
-    }
-
-    .flowering-text {
-        border-color: orange;
-    }
-
-    .pollinate-text {
-        border-color: yellow;
-    }
-
-    .fruct-text {
-        border-color: yellowgreen;
-    }
-
-    .harvest-text {
-        border-color: green;
-    }
-
-    .germing {
-        background-color: red;
-    }
-
-    .growth {
-        background-color: orangered;
-    }
-
-    .flowering {
-        background-color: orange;
-    }
-
-    .pollinate {
-        background-color: yellow;
-    }
-
-    .fruct {
-        background-color: yellowgreen;
-    }
-
-    .harvest {
-        background-color: green;
     }
 </style>
 {% endblock %}

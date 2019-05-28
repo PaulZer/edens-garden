@@ -1,0 +1,54 @@
+{% block body %}
+
+    {% set totalDaysDuration = 0 %}
+    {% for plantLifeCycleStep in plantLifeCycleSteps %}
+        {% set totalDaysDuration = totalDaysDuration + plantLifeCycleStep.stepDaysDuration %}
+    {% endfor %}
+    <div class="progress" style="height: 30px;">
+        {% set lastDuration = 0 %}
+        {% for plantLifeCycleStep in plantLifeCycleSteps %}
+            <div class="progress-bar {{ plantLifeCycleStep.lifeCycleStep.code }}"
+                 role="progressbar"
+                 style="width: {{ (plantLifeCycleStep.stepDaysDuration / totalDaysDuration) * 100 }}%"
+                 aria-valuenow="{{ lastDuration }}"
+                 aria-valuemin="0"
+                 aria-valuemax="{{ totalDaysDuration }}"
+                 title="{{ plantLifeCycleStep.lifeCycleStep.name }} - {{ plantLifeCycleStep.stepDaysDuration }} jours"
+                 data-toggle="tooltip"
+                 data-placement="bottom">
+            </div>
+            {% set lastDuration = plantLifeCycleStep.stepDaysDuration %}
+        {% endfor %}
+    </div>
+    {% if currentDayOfLife is defined %}
+        {{ dump(()currentDayOfLife / lastDuration) * 100 ~ '%') }}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .germing {
+            background-color: red;
+        }
+
+        .growth {
+            background-color: orangered;
+        }
+
+        .flowering {
+            background-color: orange;
+        }
+
+        .pollinate {
+            background-color: yellow;
+        }
+
+        .fruct {
+            background-color: yellowgreen;
+        }
+
+        .harvest {
+            background-color: green;
+        }
+    </style>
+{% endblock %}

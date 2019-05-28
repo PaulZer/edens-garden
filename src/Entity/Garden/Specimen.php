@@ -113,6 +113,12 @@ class Specimen
         throw new Exception('Plant does not have any lifecycle step.');
     }
 
+    public function getCurrentDayOfLife()
+    {
+        $interval = $this->getPlantationDate()->diff(new \DateTimeImmutable('now'));
+        return intval($interval->format('%R%a'));
+    }
+
     /**
      * @return int
      */
