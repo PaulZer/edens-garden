@@ -27,7 +27,10 @@ class PlantSunExposureTypeFormType extends AbstractType
                 },
                 'choice_attr' => function(Plant $plant) {
                     return ['class' => 'plant_'.strtolower($plant->getName())];
-                }
+                },
+                'attr' => [
+                    'hidden' => true
+                ]
             ])
             ->add('sunExposureType', EntityType::class, [
                 'label' => 'Type d\'ensolleillement :',

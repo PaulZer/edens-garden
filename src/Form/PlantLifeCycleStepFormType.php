@@ -35,7 +35,10 @@ class PlantLifeCycleStepFormType extends AbstractType
                 },
                 'choice_attr' => function(Plant $plant) {
                     return ['class' => 'plant_'.strtolower($plant->getName())];
-                }
+                },
+                'attr' => [
+                    'hidden' => true
+                ]
             ])
             ->add('lifeCycleStep', EntityType::class, [
                 'label' => 'Etape de cycle de vie : ',

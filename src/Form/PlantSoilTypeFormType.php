@@ -27,7 +27,10 @@ class PlantSoilTypeFormType extends AbstractType
                 },
                 'choice_attr' => function(Plant $plant) {
                     return ['class' => 'plant_'.strtolower($plant->getName())];
-                }
+                },
+                'attr' => [
+                    'hidden' => true
+                ]
             ])
             ->add('soilType', EntityType::class, [
                 'label' => 'Type de sol : ',

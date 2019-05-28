@@ -103,6 +103,12 @@
         const ADD_LIFE_CYCLE_STEP_BUTTON_CLASS_NAME = "add_plant_life_cycle_steps";
         const ADD_PLANTING_DATE_INTERVAL_TYPE_BUTTON_CLASS_NAME = "add_plant_planting_date_intervals";
 
+        const NEW_SOIL_DIV = $('.' + SOIL_TYPE_CLASS_NAME);
+        const NEW_FERTILIZER_DIV = $('.' + FERTILIZER_TYPE_CLASS_NAME);
+        const NEW_SUN_EXPOSURE_DIV = $('.' + SUN_EXPOSURE_TYPE_CLASS_NAME);
+        const NEW_LIFE_CYCLE_STEP_DIV = $('.' + LIFE_CYCLE_STEPS_CLASS_NAME);
+        const NEW_PLANTING_DATE_INTERVAL_DIV = $('.' + PLANTING_DATE_INTERVAL_CLASS_NAME);
+
         // CREATING ADD BUTTONS //
         const addPlantSoilTypeButton = createAddButton(ADD_SOIL_TYPE_BUTTON_CLASS_NAME, "Ajouter un type de sol", SOIL_TYPE_CLASS_NAME);
         const addPlantFertilizerTypeButton = createAddButton(ADD_FERTILIZER_TYPE_BUTTON_CLASS_NAME, "Ajouter un type d'engrais", FERTILIZER_TYPE_CLASS_NAME);
@@ -110,12 +116,6 @@
         const addPlantLifeCycleStepsButton = createAddButton(ADD_LIFE_CYCLE_STEP_BUTTON_CLASS_NAME, "Ajouter une étape de cycle de vie", LIFE_CYCLE_STEPS_CLASS_NAME);
         const addPlantPlantingDateIntervalsButton = createAddButton(ADD_PLANTING_DATE_INTERVAL_TYPE_BUTTON_CLASS_NAME, "Ajouter une période de plantation", PLANTING_DATE_INTERVAL_CLASS_NAME);
         // -------------------- //
-
-        const NEW_SOIL_DIV = $('.' + SOIL_TYPE_CLASS_NAME);
-        const NEW_FERTILIZER_DIV = $('.' + FERTILIZER_TYPE_CLASS_NAME);
-        const NEW_SUN_EXPOSURE_DIV = $('.' + SUN_EXPOSURE_TYPE_CLASS_NAME);
-        const NEW_LIFE_CYCLE_STEP_DIV = $('.' + LIFE_CYCLE_STEPS_CLASS_NAME);
-        const NEW_PLANTING_DATE_INTERVAL_DIV = $('.' + PLANTING_DATE_INTERVAL_CLASS_NAME);
 
         // INIT COLLECTIONS //
         const plantSoilTypeCollectionHolder = initCollection(NEW_SOIL_DIV, SOIL_TYPE_CLASS_NAME);
@@ -353,7 +353,7 @@
         function addStyle(objectName, divClassName, index) {
             const row = $('#plant_' + divClassName + '_' + index);
             row.addClass('row mb-3 mx-auto');
-            row.children().addClfass('col-3');
+            row.children().addClass('col-3');
         }
     </script>
 {% endblock %}

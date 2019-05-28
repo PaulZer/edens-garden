@@ -27,7 +27,10 @@ class PlantFertilizerTypeFormType extends AbstractType
                 },
                 'choice_attr' => function(Plant $plant) {
                     return ['class' => 'plant_'.strtolower($plant->getName())];
-                }
+                },
+                'attr' => [
+                    'hidden' => true
+                ]
             ])
             ->add('fertilizer', EntityType::class, [
                 'label' => 'Type d\'engrais : ',

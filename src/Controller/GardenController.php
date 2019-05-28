@@ -98,7 +98,7 @@ class GardenController extends AbstractController
 
         return $this->render('modals.html.twig', [
             'modalTitle' => 'Planter une plante dans le jardin',
-            'template' => 'garden/form_garden',
+            'template' => 'garden/add_plant',
             'view' => $form->createView()
         ]);
     }
