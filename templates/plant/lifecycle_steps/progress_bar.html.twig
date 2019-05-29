@@ -21,7 +21,7 @@
         {% endfor %}
     </div>
     {% if currentDayOfLife is defined %}
-        {{ dump(()currentDayOfLife / lastDuration) * 100 ~ '%') }}
+        <div class="text-center">{{ (currentDayOfLife / totalDaysDuration) * 100 ~ '%' }}</div>
     {% endif %}
 {% endblock %}
 

@@ -45,11 +45,7 @@
                         </div>
                         <div class="text-center prevTimeline">
                             <small>{{ specimen.plant.name }} - Frise prévisionnelle conseillée</small>
-                            {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': specimen.plant.lifeCycleSteps} %}
-                        </div>
-                        <div class="text-center prevTimeline">
-                            <small>Frise réelle de votre spécimen</small>
-                            {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': specimen.plant.lifeCycleSteps, 'currentDayOfLife': specimen.getCurrentDayOfLife} %}
+                            {% include 'plant/lifecycle_steps/progress_bar.html.twig' with {'plantLifeCycleSteps': specimen.plant.lifeCycleSteps, 'currentDayOfLife': specimen.currentDayOfLife} %}
                         </div>
                         <hr>
                         <div class="text-center">

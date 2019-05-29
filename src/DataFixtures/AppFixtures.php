@@ -574,9 +574,7 @@ class AppFixtures extends Fixture
         $gardenMaxSize = random_int(1, 1);
         $plotMaxSpecimens = random_int(1, 1);
 
-        $gardens = [
-            /*['user' => $this->userTest, 'name' => 'Jardin Test 1', 'latitude' => 46.215083, 'longitude' => 5.241825, 'height' => 5, 'length' => 5],*/
-        ];
+        $gardens = [];
 
         for($i = 0 ; $i < $gardenMaxNumber; $i++){
             array_push($gardens, [
